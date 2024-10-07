@@ -1,0 +1,35 @@
+name: Frontend validation
+on:
+  push:
+    branches-ignore:
+      - main
+    paths:
+      - 'frontend/**'
+
+  workflow_call:
+
+jobs:
+  frontend_validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Security audit
+        working-directory: ./frontend
+        run: npm run audit
+
+      - name: Run eslint
+        working-directory: ./frontend
+        run: npm run eslint
+
+      - name: Build frontend application
+        working-directory: ./frontend
+        run: npm run build
