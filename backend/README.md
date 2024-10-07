@@ -1,5 +1,5 @@
 DB_HOST=localhost
 DB_PORT=5432
 DB_DATABASE=plantogether
-DB_USER=backend_user
-DB_PASSWORD=12345
+DB_USER= à remplir
+DB_PASSWORD= à remplir
