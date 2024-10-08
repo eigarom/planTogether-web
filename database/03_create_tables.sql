@@ -48,7 +48,6 @@ CREATE TABLE account_member
     id_member     int PRIMARY KEY REFERENCES member (id_member) ON DELETE CASCADE,
     email         varchar NOT NULL UNIQUE,
     password_hash varchar NOT NULL,
-    password_salt varchar NOT NULL,
     lang          account_member_lang  DEFAULT 'fr',
     theme         account_member_theme DEFAULT 'light',
     location      varchar

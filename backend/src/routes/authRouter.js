@@ -28,7 +28,7 @@ router.post('/login', async (req, res, next) => {
 		res.status(200).json({token});
 
 	} catch (error) {
-		return next(err);
+		return next(error);
 	}
 });
 
