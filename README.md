@@ -12,8 +12,6 @@ l'organisation et la gestion quotidienne, tout en améliorant la communication e
   distinctes pour chaque membre.
 - **Listes de tâches et de courses** : Créez, modifiez et gérez des listes de tâches ou de courses partagées par tous
   les membres de la famille.
-- **Suivi simplifié** : Retrouvez toutes les informations en un coup d'œil et accédez facilement aux événements, tâches
-  et courses à venir.
 
 ## Installation
 
@@ -38,7 +36,7 @@ Depuis le répertoire `database` :
 
 ### Back-end (Node.js Express)
 
-1. Créez un fichier `.env` à la racine du répertoire `backend` et renseignez les variables suivantes.
+1. Créer un fichier `.env` à la racine du répertoire `backend` et renseigner les variables suivantes.
    Remplacer `{{DB_USER}}` et `{{DB_PASSWORD}}` par le nom d'utilisateur et le mot de passe choisis pour la base de données.
     ```
    DB_HOST=localhost
@@ -48,25 +46,25 @@ Depuis le répertoire `database` :
    DB_PASSWORD={{DB_PASSWORD}}
     ```
 
-2. Ouvrez un terminal dans le répertoire `backend`.
+2. Ouvrir un terminal dans le répertoire `backend`.
 
-3. Installez les dépendances :
+3. Installer les dépendances :
    ```
    npm install
    ```
-4. Lancez le serveur de développement :
+4. Lancer le serveur de développement :
    ```
    npm run dev
    ```
 
 ### Front-end (Vue.js)
 
-1. Ouvrez un terminal dans le répertoire `frontend`.
-2. Installez les dépendances :
+1. Ouvrir un terminal dans le répertoire `frontend`.
+2. Installer les dépendances :
    ```
    npm install
    ```
-3. Lancez le serveur de développement :
+3. Lancer le serveur de développement :
    ```
    npm run dev
    ```
