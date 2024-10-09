@@ -87,7 +87,7 @@ CREATE TABLE period
 CREATE TABLE alert
 (
     id_alert  serial PRIMARY KEY,
-    date_time timestamp PRIMARY KEY,
+    date_time timestamp NOT NULL,
     id_event  int NOT NULL REFERENCES event (id_event) ON DELETE CASCADE
 );
 
