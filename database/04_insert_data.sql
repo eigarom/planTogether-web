@@ -13,12 +13,11 @@ second_insert AS (
 ),
 -- Insertion dans la table 'account_member' avec l'ID du membre
 third_insert AS (
-    INSERT INTO account_member (id_member, email, password_hash, password_salt)
+    INSERT INTO account_member (id_member, email, password_hash)
     SELECT
         id_member, 
         'diddy_kong@banana.com', 
-        'icIDUHEWCC9YEN22vlZy899NInMVOIYzcZNJzZFTPSYj3tVJRcvEM6Q9nUaLSo/9TD2XVmOJUCRKoot6yKambg==', 
-        'L9UMT8Jxj6+u7E2NU4bw1A=='
+        '$2a$10$8Aix12EZ3wH/R5tU9tE23.ZN7d23KDrnnKepuSCJDuvthOsoJ2/QO'
     FROM second_insert
     RETURNING id_member
 ),

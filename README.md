@@ -29,6 +29,7 @@ Depuis le répertoire `database` :
     DB_DATABASE=plantogether
     DB_USER={{DB_USER}}
     DB_PASSWORD={{DB_PASSWORD}}
+    JWT_SECRET=Secret
     ```
    Remplacez `{{DB_USER}}` et `{{DB_PASSWORD}}` par les informations choisies lors de la configuration de la base de données.
 
