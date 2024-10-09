@@ -12,7 +12,8 @@
         "audit": "better-npm-audit audit --production"
     },
     "dependencies": {
-        "vue": "^3.4.29"
+        "vue": "^3.4.29",
+        "vue-router": "^4.4.5"
     },
     "devDependencies": {
         "@eslint/js": "^9.11.1",

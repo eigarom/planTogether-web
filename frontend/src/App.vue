@@ -1,47 +1,43 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+	<div class="app-container">
+		<SidebarNavigation class="sidebar"/>
+		<router-view class="main-content"></router-view>
+	</div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
+<script>
+
+import SidebarNavigation from './components/SidebarNavigation.vue';
+
+export default {
+	components: {
+		SidebarNavigation
+	}
+}
+</script>
+
+<style>
+* {
+	box-sizing: border-box;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+html, body, #app {
+	height: 100%;
+	margin: 0;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+.app-container {
+	display: flex;
+	height: 100%;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+.sidebar {
+	width: 250px;
+	height: 100%;
+}
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.main-content {
+	flex-grow: 1;
+	height: 100%;
 }
 </style>
