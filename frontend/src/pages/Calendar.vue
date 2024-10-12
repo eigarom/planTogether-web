@@ -1,12 +1,13 @@
 <template>
 	<div class="container">
-		<p>Hello World</p>
+		<p>Hello {{ this.user.name }} !!!! </p>
 	</div>
 </template>
 
 <script>
-
-export default {}
+export default {
+	inject: ['user'],
+}
 </script>
 
 <style scoped>

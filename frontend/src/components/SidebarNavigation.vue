@@ -6,16 +6,22 @@
 				<p>Planificateur familial</p>
 			</div>
 
-			<div class="connexion">
-				<p>Connexion</p>
+			<div>
+				<button @click="logout">Déconnexion</button>
 			</div>
 		</div>
 	</header>
 </template>
 
 <script>
-
-export default {}
+export default {
+	methods: {
+		logout() {
+			this.$cookies.remove("jwtToken");
+			window.location.href = "/";
+		}
+	}
+}
 </script>
 
 <style scoped>

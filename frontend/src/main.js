@@ -1,21 +1,24 @@
-import { createApp } from 'vue';
-import { createRouter, createWebHistory } from 'vue-router';
+import {createApp} from 'vue';
+import {createRouter, createWebHistory} from 'vue-router';
+import VueCookies from 'vue-cookies';
 import App from './App.vue';
-import Login from './pages/auth/Login.vue';
-import Home from './pages/Home.vue';
+import Home from './pages/Calendar.vue';
 
 const app = createApp(App);
+
+// Requis pour l'injection réactive
+app.config.unwrapInjectedRef = true;
+
+app.use(VueCookies, {expires: '100d'});
 
 // Déclaration de Vue Router
 const router = createRouter({
 	history: createWebHistory(),
 	routes: [
-		{ path: '', component: Home },
-		{ path: '/login', component: Login }
+		{path: '/calendar', component: Home},
 	]
 });
 
-// Ajout de Vue Router à l'application
 app.use(router);
 
 app.mount("#app");

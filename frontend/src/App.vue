@@ -1,5 +1,11 @@
 <template>
-	<div class="app-container">
+	<div v-if="loading" class="app-container">
+		<p>Loading...</p>
+	</div>
+	<div v-else-if="!user" class="app-container">
+		<Login/>
+	</div>
+	<div v-else class="app-container">
 		<SidebarNavigation class="sidebar"/>
 		<router-view class="main-content"></router-view>
 	</div>
@@ -7,11 +13,43 @@
 
 <script>
 
+import {computed} from 'vue';
 import SidebarNavigation from './components/SidebarNavigation.vue';
+import Login from "@/pages/auth/Login.vue";
+import {getUserInfo} from "@/services/userServices.js";
 
 export default {
 	components: {
+		Login,
 		SidebarNavigation
+	},
+	data() {
+		return {
+			user: null,
+			loading: true
+		};
+	},
+	methods: {
+		async getUserFromToken() {
+			const token = this.$cookies.get('jwtToken');
+			if (token) {
+				try {
+					this.user = await getUserInfo(token);
+					this.$router.push('/calendar');
+				} catch (error) {
+					console.error('Erreur:', error);
+				}
+			}
+			this.loading = false;
+		}
+	},
+	mounted() {
+		this.getUserFromToken();
+	},
+	provide() {
+		return {
+			user: computed(() => this.user)
+		}
 	}
 }
 </script>
