@@ -13,18 +13,23 @@ router.post('/login', async (req, res, next) => {
 		return next(new HttpError(400, `Le courriel est requis`));
 	}
 
+	const password = req.body.password;
+	if (!password || password === '') {
+		return next(new HttpError(400, `Le mot de passe est requis`));
+	}
+
 	try {
-		const user = await UserAccountServices.getUserByEmail(email);
+		const user = await UserAccountServices.getUserCredentialsByEmail(email);
 		if (!user) {
 			return next(new HttpError(401, `Identifiants invalides`));
 		}
 
-		const passwordMatch = await bcrypt.compare(req.body.password, user.password);
+		const passwordMatch = await bcrypt.compare(password, user.password);
 		if (!passwordMatch) {
 			return next(new HttpError(401, `Identifiants invalides`));
 		}
 
-		const token = jwt.sign({email: user.email}, process.env.JWT_SECRET, {expiresIn: '8766h'});
+		const token = jwt.sign({email: user.email}, process.env.JWT_SECRET, {expiresIn: '100d'});
 		res.status(200).json({token});
 
 	} catch (error) {
