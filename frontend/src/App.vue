@@ -2,11 +2,8 @@
 	<div v-if="loading" class="app-container">
 		<p>Loading...</p>
 	</div>
-	<div v-else-if="!user" class="app-container">
-		<Login/>
-	</div>
 	<div v-else class="app-container">
-		<SidebarNavigation class="sidebar"/>
+		<SidebarNavigation v-if="user" class="sidebar"/>
 		<router-view class="main-content"></router-view>
 	</div>
 </template>
@@ -15,12 +12,10 @@
 
 import {computed} from 'vue';
 import SidebarNavigation from './components/SidebarNavigation.vue';
-import Login from "@/pages/auth/Login.vue";
 import {getUserInfo} from "@/services/userServices.js";
 
 export default {
 	components: {
-		Login,
 		SidebarNavigation
 	},
 	data() {
@@ -35,7 +30,6 @@ export default {
 			if (token) {
 				try {
 					this.user = await getUserInfo(token);
-					this.$router.push('/calendar');
 				} catch (error) {
 					console.error('Erreur:', error);
 				}

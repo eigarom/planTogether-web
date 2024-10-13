@@ -10,10 +10,10 @@ export async function login(email, password) {
 		}),
 	});
 	const result = await response.json();
-	console.log(result.token);
+
 	if (response.ok) {
 		return result.token;
 	} else {
-		console.error("La connexion a échoué:", result.message);
+		throw new Error("La connexion a échoué:", result.message);
 	}
 }
