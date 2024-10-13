@@ -2,17 +2,11 @@ const express = require('express');
 const router = express.Router();
 const HttpError = require("../error/HttpError");
 const UserAccountServices = require("../services/UserAccountServices");
+const {authenticateUser} = require("../auth/authMiddleware");
 
-router.get('/me', async (req, res, next) => {
-	const authHeader = req.headers['authorization'];
-	const token = authHeader && authHeader.split(' ')[1];
-
-	if (!token || token === '') {
-		return next(new HttpError(401, "Erreur lors de la récupération du token"));
-	}
-
+router.get('/me', authenticateUser, async (req, res, next) => {
 	try {
-		const user = await UserAccountServices.getUserByToken(token);
+		const user = await UserAccountServices.getUserById(req.userId);
 		if (user) {
 			res.json(user);
 		} else {
