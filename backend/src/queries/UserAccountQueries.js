@@ -20,8 +20,9 @@ class UserAccountQueries {
 
 	static async getUserCredentialsByEmail(email) {
 		const result = await pool.query(
-			`SELECT email, password_hash
+			`SELECT email, password_hash, account_member.id_member, id_family
              FROM account_member
+                      INNER JOIN member ON account_member.id_member = member.id_member
              WHERE email = $1`,
 			[email]
 		);

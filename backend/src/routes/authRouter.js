@@ -29,9 +29,13 @@ router.post('/login', async (req, res, next) => {
 			return next(new HttpError(401, `Identifiants invalides`));
 		}
 
-		const token = jwt.sign({email: user.email}, process.env.JWT_SECRET, {expiresIn: '100d'});
-		res.status(200).json({token});
+		const token = jwt.sign({
+			email: user.email,
+			userId: user.userId,
+			familyId: user.familyId
+		}, process.env.JWT_SECRET);
 
+		res.json({token});
 	} catch (error) {
 		return next(error);
 	}

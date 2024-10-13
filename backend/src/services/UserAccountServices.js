@@ -23,7 +23,9 @@ class UserAccountServices {
 		if (result) {
 			return {
 				email: result.email,
-				password: result.password_hash
+				password: result.password_hash,
+				userId: result.id_member,
+				familyId: result.id_family
 			};
 		}
 		return undefined;
