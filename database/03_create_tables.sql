@@ -27,6 +27,7 @@ CREATE TABLE family
 (
     id_family              serial PRIMARY KEY,
     name                   varchar NOT NULL,
+    color                  varchar NOT NULL,
     image_content          bytea,
     image_content_type     text,
     invite_code            varchar UNIQUE,
