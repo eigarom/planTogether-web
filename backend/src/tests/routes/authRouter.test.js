@@ -13,7 +13,7 @@ describe('Test auth Router', () => {
 		it('should return 400 for invalid email', async () => {
 			const response = await request(app)
 				.post('/auth/login')
-				.send({email: 'invalid-email', password: 'password'})
+				.send({email: 'invalid-email', password: 'StrongPassword1*'})
 				.expect(400);
 
 			expect(response.body.message).toContain('"email"');
@@ -31,7 +31,7 @@ describe('Test auth Router', () => {
 		it('should return a token for valid credentials', async () => {
 			const mockUser = {
 				email: 'test@example.com',
-				password: 'password',
+				password: 'StrongPassword1*',
 				userId: 'userId',
 				familyId: 'familyId'
 			};
@@ -42,7 +42,7 @@ describe('Test auth Router', () => {
 
 			const response = await request(app)
 				.post('/auth/login')
-				.send({email: 'test@example.com', password: 'password'})
+				.send({email: 'test@example.com', password: 'StrongPassword1*'})
 				.expect(200);
 
 			expect(response.body.token).toEqual('mockToken');
@@ -53,18 +53,18 @@ describe('Test auth Router', () => {
 
 			const response = await request(app)
 				.post('/auth/login')
-				.send({email: 'test@example.com', password: 'password'})
+				.send({email: 'test@example.com', password: 'StrongPassword1*'})
 				.expect(401);
 
 			expect(response.body.message).toEqual('Identifiants invalides');
 		});
 
 		it('should return 500 for server errors', async () => {
-			UserAccountServices.getUserCredentialsByEmail.mockRejectedValue(new Error('Service error'));
+			UserAccountServices.getUserCredentialsByEmail.mockRejectedValue(new Error());
 
-			const response = await request(app)
+			await request(app)
 				.post('/auth/login')
-				.send({email: 'test@example.com', password: 'password'})
+				.send({email: 'test@example.com', password: 'StrongPassword1*'})
 				.expect(500);
 		});
 	});
