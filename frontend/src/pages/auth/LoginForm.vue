@@ -2,30 +2,46 @@
 	<div class="container">
 		<h1>LOGIN</h1>
 		<form @submit.prevent="submitLogin">
-			<input v-model="email" placeholder="email"/>
-			<input v-model="password" placeholder="password" type="password"/>
+			<div>
+				<input id="email" v-model.trim="email" name="email" type="text"/>
+			</div>
+			<div>
+				<input id="password" v-model.trim="password" name="password" type="password"/>
+			</div>
+			<div>
+				<span v-if="errorMessage">{{ errorMessage }}</span>
+			</div>
 			<button type="submit">Login</button>
 		</form>
 	</div>
 </template>
 <script>
 import {login} from "@/services/authServices.js";
+import {loginSchema} from "@/schemas/authSchemas.js";
 
 export default {
 	data: () => {
 		return {
 			email: "",
 			password: "",
+			errorMessage: ""
 		};
 	},
 	methods: {
 		async submitLogin() {
-			try {
-				const token = await login(this.email, this.password);
-				this.$cookies.set("jwtToken", token, "100d");
-				window.location.href = '/';
-			} catch (error) {
-				console.error("An error occurred:", error);
+			this.errorMessage = "";
+			const {error} = loginSchema.validate({email: this.email, password: this.password});
+
+			if (error) {
+				this.errorMessage = error.message;
+			} else {
+				try {
+					const token = await login(this.email, this.password);
+					this.$cookies.set("jwtToken", token);
+					window.location.href = '/';
+				} catch (err) {
+					console.error("An error occurred:", err);
+				}
 			}
 		}
 	}
