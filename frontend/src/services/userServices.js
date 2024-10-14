@@ -4,19 +4,19 @@ export async function getUserInfo(token) {
 			'Authorization': `Bearer ${token}`
 		}
 	});
-	if (response.ok) {
-		const respUser = await response.json();
+	const result = await response.json();
 
+	if (response.ok) {
 		return {
-			email: respUser.email,
-			name: respUser.name,
-			color: respUser.color,
-			imageContent: respUser.imageContent,
-			imageContentType: respUser.imageContentType,
-			lang: respUser.lang,
-			theme: respUser.theme
+			email: result.email,
+			name: result.name,
+			color: result.color,
+			imageContent: result.imageContent,
+			imageContentType: result.imageContentType,
+			lang: result.lang,
+			theme: result.theme
 		};
 	} else {
-		throw new Error(`Erreur lors de l'obtention des informations de l'utilisateur`);
+		throw new Error(result.message || 'Erreur lors de l\'obtention des informations de l\'utilisateur');
 	}
 }

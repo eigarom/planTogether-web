@@ -14,6 +14,6 @@ export async function login(email, password) {
 	if (response.ok) {
 		return result.token;
 	} else {
-		throw new Error("La connexion a échoué:");
+		throw new Error(result.message || "La connexion a échoué:");
 	}
 }

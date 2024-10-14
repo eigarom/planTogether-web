@@ -1,22 +1,19 @@
 require('dotenv').config();
-
+const express = require('express');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const express = require('express');
+const {loginSchema} = require('../schemas/authSchemas');
 const router = express.Router();
 const HttpError = require("../error/HttpError");
 const UserAccountServices = require("../services/UserAccountServices");
 
 router.post('/login', async (req, res, next) => {
-	const email = req.body.email;
-	if (!email || email === '') {
-		return next(new HttpError(400, `Le courriel est requis`));
+	const {error} = loginSchema.validate(req.body);
+	if (error) {
+		return next(new HttpError(400, error.message));
 	}
 
-	const password = req.body.password;
-	if (!password || password === '') {
-		return next(new HttpError(400, `Le mot de passe est requis`));
-	}
+	const {email, password} = req.body
 
 	try {
 		const user = await UserAccountServices.getUserCredentialsByEmail(email);

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const HttpError = require("../error/HttpError");
 
-const verifyJWT = async (req, res, next) => {
+const verifyJWT = (req, res, next) => {
 	const authHeader = req.headers['authorization'];
 	const token = authHeader && authHeader.split(' ')[1];  // Extraction du token si "Bearer <token>"
 
