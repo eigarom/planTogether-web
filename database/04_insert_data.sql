@@ -1,7 +1,7 @@
 -- Insertion dans la table 'family' et récupération de l'ID généré
 WITH first_insert AS (
-    INSERT INTO family (name)
-    VALUES ('Kong')
+    INSERT INTO family (name, color)
+    VALUES ('Kong', '#0002E1')
     RETURNING id_family
 ),
 -- Insertion dans la table 'member' en utilisant l'ID de la famille

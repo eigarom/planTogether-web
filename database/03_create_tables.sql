@@ -27,6 +27,7 @@ CREATE TABLE family
 (
     id_family              serial PRIMARY KEY,
     name                   varchar NOT NULL,
+    color                  varchar NOT NULL,       
     image_content          bytea,
     image_content_type     text,
     invite_code            varchar UNIQUE,
@@ -85,7 +86,8 @@ CREATE TABLE period
 
 CREATE TABLE alert
 (
-    date_time timestamp PRIMARY KEY,
+    id_alert  serial PRIMARY KEY,
+    date_time timestamp NOT NULL,
     id_event  int NOT NULL REFERENCES event (id_event) ON DELETE CASCADE
 );
 
