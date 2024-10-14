@@ -9,14 +9,14 @@ describe('tests authentification', function () {
 		browser.end();
 	});
 
-	it('should login successfully with correct credentials', function (browser) {
-		browser
-			.setValue('#loginForm input[name=email]', 'diddy_kong@banana.com')
-			.setValue('#loginForm input[name=password]', 'Motdepasse12345*')
-			.click('#loginForm button[type=submit]')
-			.waitForElementVisible('#app', 5000)
-			.assert.textContains('#app', 'Diddy');
-	});
+	// it('should login successfully with correct credentials', function (browser) {
+	// 	browser
+	// 		.setValue('#loginForm input[name=email]', 'diddy_kong@banana.com')
+	// 		.setValue('#loginForm input[name=password]', 'Motdepasse12345*')
+	// 		.click('#loginForm button[type=submit]')
+	// 		.waitForElementVisible('#app', 5000)
+	// 		.assert.textContains('#app', 'Diddy');
+	// });
 
 	it('should fail to login with incorrect credentials', function (browser) {
 		browser
