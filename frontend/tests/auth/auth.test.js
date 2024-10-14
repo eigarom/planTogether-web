@@ -10,7 +10,7 @@ describe('tests authentification', function () {
 	});
 
 	describe('login', function () {
-		it('should login with corrects credentials', function (browser) {
+		it('should login successfully with correct credentials', function (browser) {
 			browser
 				.setValue('#loginForm input[name=email]', 'diddy_kong@banana.com')
 				.setValue('#loginForm input[name=password]', 'Motdepasse12345*')
