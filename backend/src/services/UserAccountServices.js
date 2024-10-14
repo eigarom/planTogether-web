@@ -8,8 +8,8 @@ class UserAccountServices {
 				email: result.email,
 				name: result.name,
 				color: result.color,
-				imageContent: result.imageContent,
-				imageContentType: result.imageContentType,
+				imageContent: result.image_content,
+				imageContentType: result.image_content_type,
 				lang: result.lang,
 				theme: result.theme
 			}
@@ -27,14 +27,6 @@ class UserAccountServices {
 				userId: result.id_member,
 				familyId: result.id_family
 			};
-		}
-		return undefined;
-	}
-
-	static async getUserIdByEmail(email) {
-		const result = await UserAccountQueries.getUserIdByEmail(email);
-		if (result) {
-			return result.id_member;
 		}
 		return undefined;
 	}

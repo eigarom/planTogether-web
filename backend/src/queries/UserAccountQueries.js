@@ -28,16 +28,6 @@ class UserAccountQueries {
 		);
 		return result.rows[0];
 	}
-
-	static async getUserIdByEmail(email) {
-		const result = await pool.query(
-			`SELECT id_member
-             FROM account_member
-             WHERE email = $1`,
-			[email]
-		);
-		return result.rows[0];
-	}
 }
 
 module.exports = UserAccountQueries;
