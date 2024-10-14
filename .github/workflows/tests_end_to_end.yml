@@ -46,7 +46,7 @@ jobs:
           PGPASSWORD: ${{ env.DB_PASSWORD }}
         run: |
           psql -h $DB_HOST -U $DB_USER -d $DB_DATABASE -f ./database/03_create_tables.sql
-          psql -h $DB_HOST -U $DB_USER -d $DB_DATABASE -f ./database/04_insert_donnees.sql
+          psql -h $DB_HOST -U $DB_USER -d $DB_DATABASE -f ./database/04_insert_data.sql
 
       - name: Install backend dependencies
         working-directory: ./backend
