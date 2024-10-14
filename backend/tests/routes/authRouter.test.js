@@ -1,10 +1,10 @@
 const request = require('supertest');
-const app = require('../../app');
-const UserAccountServices = require('../../services/UserAccountServices');
+const app = require('../../src/app');
+const UserAccountServices = require('../../src/services/UserAccountServices');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-jest.mock('../../services/UserAccountServices');
+jest.mock('../../src/services/UserAccountServices');
 jest.mock('bcryptjs');
 jest.mock('jsonwebtoken');
 

@@ -1,7 +1,7 @@
-const UserAccountServices = require('../../services/UserAccountServices');
+const UserAccountServices = require('../../src/services/UserAccountServices');
 
-jest.mock('../../queries/UserAccountQueries');
-const mockUserAccountQueries = require('../../queries/UserAccountQueries');
+jest.mock('../../src/queries/UserAccountQueries');
+const mockUserAccountQueries = require('../../src/queries/UserAccountQueries');
 
 describe('Test user account services', () => {
 	describe('getUserById', () => {

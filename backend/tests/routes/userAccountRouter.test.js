@@ -1,7 +1,7 @@
 const request = require('supertest');
-const app = require('../../app');
+const app = require('../../src/app');
 
-jest.mock('../../auth/authMiddleware', () => jest.fn((req, res, next) => {
+jest.mock('../../src/auth/authMiddleware', () => jest.fn((req, res, next) => {
 	req.user = {
 		email: 'email',
 		userId: 'mockUserId',
@@ -10,8 +10,8 @@ jest.mock('../../auth/authMiddleware', () => jest.fn((req, res, next) => {
 	next();
 }));
 
-jest.mock('../../services/UserAccountServices');
-const mockUserAccountServices = require('../../services/UserAccountServices');
+jest.mock('../../src/services/UserAccountServices');
+const mockUserAccountServices = require('../../src/services/UserAccountServices');
 
 describe('Tests routes', () => {
 
