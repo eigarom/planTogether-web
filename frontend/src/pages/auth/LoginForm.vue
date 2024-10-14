@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
 		<h1>LOGIN</h1>
-		<form @submit.prevent="submitLogin">
+		<form id="loginForm" @submit.prevent="submitLogin">
 			<div>
 				<input id="email" v-model.trim="email" name="email" type="text"/>
 			</div>
@@ -40,6 +40,7 @@ export default {
 					this.$cookies.set("jwtToken", token);
 					window.location.href = '/';
 				} catch (err) {
+					this.errorMessage = "Échec de l'authentification."
 					console.error("An error occurred:", err);
 				}
 			}
