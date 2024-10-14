@@ -9,7 +9,7 @@
 				<input id="password" v-model.trim="password" name="password" type="password"/>
 			</div>
 			<div>
-				<span v-if="errorMessage">{{ errorMessage }}</span>
+				<span v-if="errorMessage" class="error-message">{{ errorMessage }}</span>
 			</div>
 			<button type="submit">Login</button>
 		</form>
