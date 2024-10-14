@@ -33,8 +33,8 @@ router.post('/login', async (req, res, next) => {
 		}, process.env.JWT_SECRET);
 
 		res.json({token});
-	} catch (error) {
-		return next(error);
+	} catch (err) {
+		return next(err);
 	}
 });
 

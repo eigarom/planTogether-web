@@ -2,8 +2,8 @@ import {createApp} from 'vue';
 import {createRouter, createWebHistory} from 'vue-router';
 import VueCookies from 'vue-cookies';
 import App from './App.vue';
-import Calendar from './pages/Calendar.vue';
-import Login from "@/pages/auth/Login.vue";
+import EventsList from './pages/events/EventsList.vue';
+import LoginForm from "@/pages/auth/LoginForm.vue";
 
 
 const app = createApp(App);
@@ -17,9 +17,9 @@ app.use(VueCookies, {expires: '100d'});
 const router = createRouter({
 	history: createWebHistory(),
 	routes: [
-		{path: '/calendar', component: Calendar},
-		{path: '/login', component: Login},
-		{path: '/', redirect: '/calendar'}
+		{path: '/events', component: EventsList},
+		{path: '/login', component: LoginForm},
+		{path: '/', redirect: '/events'}
 	]
 });
 

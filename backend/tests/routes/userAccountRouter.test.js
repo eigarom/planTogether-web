@@ -50,7 +50,7 @@ describe('Tests routes', () => {
 		it('should return 500 if service fails', async () => {
 			mockUserAccountServices.getUserById.mockRejectedValue(new Error());
 
-			const response = await request(app)
+			await request(app)
 				.get('/users/me')
 				.expect(500);
 		});
