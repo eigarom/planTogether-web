@@ -15,10 +15,7 @@ describe('tests authentification', function () {
 			.setValue('#loginForm input[name=password]', 'Motdepasse12345*')
 			.click('#loginForm button[type=submit]')
 			.waitForElementVisible('#app', 5000)
-			.getText('#app', function (result) {
-				console.log(result.value);
-			})
-			.assert.visible('header')
+			.assert.visible('#loginForm')
 			.assert.textContains('header h1', 'PlanTogether')
 	});
 
