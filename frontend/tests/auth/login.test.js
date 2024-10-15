@@ -14,7 +14,10 @@ describe('tests authentification', function () {
 			.setValue('#loginForm input[name=email]', 'diddy_kong@banana.com')
 			.setValue('#loginForm input[name=password]', 'Motdepasse12345*')
 			.click('#loginForm button[type=submit]')
-			.waitForElementVisible('header', 10000)
+			.waitForElementVisible('#app', 5000)
+			.getText('#app', function (result) {
+				console.log(result.value);
+			})
 			.assert.visible('header')
 			.assert.textContains('header h1', 'PlanTogether')
 	});
