@@ -20,6 +20,7 @@ import {login} from "@/services/authServices.js";
 import {loginSchema} from "@/schemas/authSchemas.js";
 
 export default {
+	inject: ['getUserFromToken'],
 	data: () => {
 		return {
 			email: "",
@@ -38,7 +39,8 @@ export default {
 				try {
 					const token = await login(this.email, this.password);
 					this.$cookies.set("jwtToken", token);
-					window.location.href = '/';
+					await this.getUserFromToken(token);
+					this.$router.push('/');
 				} catch (err) {
 					this.errorMessage = "Échec de l'authentification."
 					console.error("An error occurred:", err);

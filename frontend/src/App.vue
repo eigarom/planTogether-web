@@ -42,7 +42,8 @@ export default {
 	},
 	provide() {
 		return {
-			user: computed(() => this.user)
+			user: computed(() => this.user),
+			getUserFromToken: this.getUserFromToken
 		}
 	}
 }
