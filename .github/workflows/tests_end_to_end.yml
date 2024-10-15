@@ -48,6 +48,12 @@ jobs:
           psql -h $DB_HOST -U $DB_USER -d $DB_DATABASE -f ./database/03_create_tables.sql
           psql -h $DB_HOST -U $DB_USER -d $DB_DATABASE -f ./database/04_insert_data.sql
 
+      - name: Verify data insertion
+        env:
+          PGPASSWORD: ${{ env.DB_PASSWORD }}
+        run: |
+          psql -h $DB_HOST -U $DB_USER -d $DB_DATABASE -c "SELECT email, password_hash, account_member.id_member, id_family FROM account_member INNER JOIN member ON account_member.id_member = member.id_member WHERE email = 'diddy_kong@banana.com';"
+
       - name: Install backend dependencies
         working-directory: ./backend
         run: npm ci
