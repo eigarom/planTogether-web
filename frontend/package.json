@@ -1,27 +1,35 @@
 {
-    "name": "plantogether",
-    "version": "0.0.0",
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview",
-        "test": "nightwatch --config ./config/nightwatch.conf.cjs",
-        "eslint": "eslint ./src --config ./config/eslint.config.js",
-        "audit": "better-npm-audit audit --production"
-    },
-    "dependencies": {
-        "vue": "^3.4.29"
-    },
-    "devDependencies": {
-        "@eslint/js": "^9.11.1",
-        "@vitejs/plugin-vue": "^5.0.5",
-        "better-npm-audit": "^3.11.0",
-        "eslint": "^9.11.1",
-        "eslint-plugin-vue": "^9.28.0",
-        "globals": "^15.10.0",
-        "nightwatch": "^3.8.0",
-        "vite": "^5.3.1"
-    }
+	"name": "plantogether",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"test": "nightwatch --config ./config/nightwatch.conf.cjs",
+		"eslint": "eslint ./src --config ./config/eslint.config.js",
+		"audit": "better-npm-audit audit --production"
+	},
+	"dependencies": {
+		"@nightwatch/vue": "^3.1.2",
+		"@primevue/themes": "^4.1.0",
+		"joi": "^17.13.3",
+		"primeflex": "^3.3.1",
+		"primeicons": "^7.0.0",
+		"primevue": "^4.1.0",
+		"vue": "^3.4.29",
+		"vue-cookies": "^1.8.4",
+		"vue-router": "^4.4.5"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.11.1",
+		"@vitejs/plugin-vue": "^5.0.5",
+		"better-npm-audit": "^3.11.0",
+		"eslint": "^9.11.1",
+		"eslint-plugin-vue": "^9.28.0",
+		"globals": "^15.10.0",
+		"nightwatch": "^3.8.0",
+		"vite": "^5.3.1"
+	}
 }
