@@ -54,13 +54,7 @@ jobs:
 
       - name: Start backend
         working-directory: ./backend
-        env:
-          DB_HOST: ${{ env.DB_HOST }}
-          DB_PORT: ${{ env.DB_PORT }}
-          DB_DATABASE: ${{ env.DB_DATABASE }}
-          DB_USER: ${{ env.DB_USER }}
-          DB_PASSWORD: ${{ env.DB_PASSWORD }}
-        run: npm run start &
+        run: npm run start > ../backend.log 2>&1 &
 
       - name: Install frontend dependencies
         working-directory: ./frontend
@@ -68,7 +62,13 @@ jobs:
 
       - name: Start frontend
         working-directory: ./frontend
-        run: npm run dev &
+        run: npm run dev > ../frontend.log 2>&1 &
+
+      - name: Check if database is ready
+        env:
+          PGPASSWORD: ${{ env.DB_PASSWORD }}
+        run: |
+          psql -h $DB_HOST -U $DB_USER -d $DB_DATABASE -c "SELECT email FROM users WHERE email='diddy_kong@banana.com';"
 
       - name: Check if backend is ready
         run: |
@@ -78,7 +78,12 @@ jobs:
       - name: Check if frontend is ready
         run: |
           echo "Check if frontend is ready"
-          until curl -s http://localhost:5173; do sleep 5; done
+          until curl -s http://localhost:5173; do sleep 5; 
+
+      - name: Test frontend to backend communication
+        run: |
+          echo "Testing frontend to backend communication"
+          curl -X POST http://localhost:5173/api/login -H "Content-Type: application/json" -d '{"email":"diddy_kong@banana.com", "password":"Motdepasse12345*"}' -v
 
       - name: Install Xvfb
         run: sudo apt-get install -y xvfb
@@ -86,3 +91,13 @@ jobs:
       - name: Run end-to-end tests
         working-directory: ./frontend
         run: xvfb-run --auto-servernum npm test -- --env chrome
+
+      - name: Output backend logs
+        if: failure()
+        run:
+          cat backend.log
+
+      - name: Output frontend logs
+        if: failure()
+        run: cat frontend.log
+
