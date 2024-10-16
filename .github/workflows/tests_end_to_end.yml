@@ -68,7 +68,8 @@ jobs:
         env:
           PGPASSWORD: ${{ env.DB_PASSWORD }}
         run: |
-          psql -h $DB_HOST -U $DB_USER -d $DB_DATABASE -c "SELECT email FROM users WHERE email='diddy_kong@banana.com';"
+          psql -h $DB_HOST -U $DB_USER -d $DB_DATABASE -c "SELECT email FROM account_member WHERE 
+          email='diddy_kong@banana.com';"
 
       - name: Check if backend is ready
         run: |
