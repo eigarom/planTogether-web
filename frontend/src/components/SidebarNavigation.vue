@@ -1,6 +1,6 @@
 <template>
 	<header>
-		<div class="container">
+		<div id="sidebar">
 			<div class="title">
 				<h1>PlanTogether</h1>
 				<p>Planificateur familial</p>

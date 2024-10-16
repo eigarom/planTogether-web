@@ -14,8 +14,8 @@ describe('tests authentification', function () {
 			.setValue('#loginForm #email', 'diddy_kong@banana.com')
 			.setValue('#loginForm #password', 'Motdepasse12345*')
 			.click('#loginForm button[type=submit]')
-			.waitForElementVisible('#app', 5000)
-			.assert.textContains('#app', 'PlanTogether')
+			.waitForElementVisible('#sidebar', 5000)
+			.assert.textContains('#sidebar', 'PlanTogether')
 	});
 
 	it('should fail to login with incorrect credentials', function (browser) {
