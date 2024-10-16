@@ -24,13 +24,6 @@ export default {
 }
 </script>
 
-<style scoped>
-.container {
-	background: pink;
-	height: 100%;
-}
+<style>
 
-h1 {
-	margin: 0;
-}
 </style>

@@ -1,19 +1,32 @@
 import {createApp} from 'vue';
 import {createRouter, createWebHistory} from 'vue-router';
 import VueCookies from 'vue-cookies';
+import PrimeVue from 'primevue/config';
+import Aura from '@primevue/themes/aura';
+
 import App from './App.vue';
 import EventsList from './pages/events/EventsList.vue';
 import LoginForm from "@/pages/auth/LoginForm.vue";
-
 
 const app = createApp(App);
 
 // Requis pour l'injection réactive
 app.config.unwrapInjectedRef = true;
 
+// PrimeVue pour css
+app.use(PrimeVue, {
+	theme: {
+		preset: Aura,
+		options: {
+			darkModeSelector: '.my-app-dark',
+		}
+	}
+});
+
+// Cookies
 app.use(VueCookies, {expires: '100d'});
 
-// Déclaration de Vue Router
+// Router
 const router = createRouter({
 	history: createWebHistory(),
 	routes: [
@@ -22,16 +35,16 @@ const router = createRouter({
 		{path: '/', redirect: '/events'}
 	]
 });
-
 router.beforeEach((to, from, next) => {
 	const token = app.config.globalProperties.$cookies.get('jwtToken');
-	if (to.path !== '/login' && !token) {
+	if (to.path === '/login' && token) {
+		next('/');
+	} else if (to.path !== '/login' && !token) {
 		next('/login');
 	} else {
 		next();
 	}
 });
-
 app.use(router);
 
 app.mount("#app");

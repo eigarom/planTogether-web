@@ -5,8 +5,7 @@ export const loginSchema = Joi.object({
 		.email({tlds: {allow: false}})
 		.required()
 		.messages({
-			'string.email': `Le courriel n'est pas valide.`,
-			'string.empty': 'Le courriel est requis.'
+			'string.email': `Le courriel n'est pas valide.`
 		}),
 	password: Joi.string()
 		.pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*]).{16,}$'))
@@ -14,7 +13,6 @@ export const loginSchema = Joi.object({
 		.messages({
 			'string.pattern.base':
 				'Le mot de passe doit contenir au moins 16 caractères, une majuscule, une minuscule, un chiffre et' +
-				' un caractère spécial.',
-			'string.empty': 'Le mot de passe est requis.'
+				' un caractère spécial.'
 		}),
 });
