@@ -79,7 +79,7 @@ jobs:
       - name: Check if frontend is ready
         run: |
           echo "Check if frontend is ready"
-          until curl -s http://localhost:5173; do sleep 5; 
+          until curl -s http://localhost:5173; do sleep 5; done
 
       - name: Test frontend to backend communication
         run: |
