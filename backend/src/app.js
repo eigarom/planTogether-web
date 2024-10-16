@@ -9,6 +9,8 @@ app.use(express.json());
 
 app.use('/auth', authRouter);
 
+app.use('/families/my-family/events', eventRouter);
+
 app.get('/health', (req, res) => {
 	res.status(200).send('OK');
 });
