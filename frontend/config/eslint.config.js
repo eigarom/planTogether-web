@@ -17,7 +17,8 @@ export default [
 			"no-var": "error",
 			"eqeqeq": "error",
 			"no-shadow": "error",
-			"no-eq-null": "error"
+			"no-eq-null": "error",
+			'vue/no-reserved-component-names': 'off',
 		}
 	}
 
