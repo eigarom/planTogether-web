@@ -19,12 +19,12 @@
 						<i class="pi pi-lock"></i>
 					</InputGroupAddon>
 					<FloatLabel variant="in">
-						<Password v-model.trim="password" :feedback="false" toggleMask/>
+						<Password v-model.trim="password" :feedback="false" inputId="password" toggleMask/>
 						<label for="password">Mot de passe</label>
 					</FloatLabel>
 				</InputGroup>
 
-				<Message v-if="errorMessage" severity="error">{{ errorMessage }}</Message>
+				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
 				<Button :disabled="isLoginDisabled" label="Se connecter" type="submit"/>
 			</form>
@@ -37,7 +37,6 @@ import {login} from "@/services/authServices.js";
 import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
 import Password from 'primevue/password';
-import InputIcon from 'primevue/inputicon';
 import Message from 'primevue/message';
 import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
@@ -45,7 +44,7 @@ import FloatLabel from "primevue/floatlabel";
 
 export default {
 	components: {
-		InputText, Button, Password, Message, InputIcon, InputGroup, InputGroupAddon, FloatLabel
+		InputText, Button, Password, Message, InputGroup, InputGroupAddon, FloatLabel
 	},
 	data: () => {
 		return {
