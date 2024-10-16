@@ -1,5 +1,5 @@
 <template>
-	<div class="container">
+	<div>
 		<p>Hello {{ this.user.name }} !!!! </p>
 	</div>
 </template>
@@ -11,8 +11,5 @@ export default {
 </script>
 
 <style scoped>
-.container {
-	background: aqua;
-	height: 100%;
-}
+
 </style>
