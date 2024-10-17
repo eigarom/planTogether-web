@@ -5,6 +5,7 @@ const errorMiddleware = require('./error/errorMiddleware');
 
 const authRouter = require('./routes/authRouter');
 const userAccountRouter = require('./routes/userAccountRouter');
+const eventRouter = require('./routes/eventRouter')
 
 const app = express();
 

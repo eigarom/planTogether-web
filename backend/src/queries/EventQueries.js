@@ -20,6 +20,16 @@ class EventQueries {
         );
         return result.rows;
     }
+
+    static async getAlertsByIdEvent(eventId) {
+        const result = await pool.query(
+            `SELECT *
+            FROM alert
+            WHERE id_event = $1`,
+            [eventId]
+        );
+        return result.rows;
+    }
 }
 
 module.exports = EventQueries;
