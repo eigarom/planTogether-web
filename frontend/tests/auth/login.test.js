@@ -24,6 +24,6 @@ describe('tests authentification', function () {
 			.setValue('#loginForm #password', 'WrongPassword123!')
 			.click('#loginForm button[type=submit]')
 			.waitForElementVisible('#loginForm .error-message', 5000)
-			.assert.textContains('#loginForm .error-message', `Échec de l'authentification`);
+			.assert.textContains('#loginForm .error-message', `Échec de l'authentification.`);
 	});
 });
