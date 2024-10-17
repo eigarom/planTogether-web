@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-
+const HttpError = require("../error/HttpError");
 const FamilyQueries = require("../queries/FamilyQueries");
 
-router.post("", (req, res, next) => {
+router.post("/", (req, res, next) => {
     const name = req.body.name;
     if (!name || name === "") {
-        return next({ status: 400, message: "The name field is required" });
+        return next(new HttpError(400, `Le champ nom est requis`));
     }
 
     const newFamily = {
@@ -26,3 +26,5 @@ router.post("", (req, res, next) => {
             return next(err);
         });
 });
+
+module.exports = router;

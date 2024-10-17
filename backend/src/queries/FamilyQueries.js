@@ -21,11 +21,13 @@ class FamilyQueries {
                 family.inviteExpirationDate,
             ]
         );
-
+        return result.rows[0].id_family;
         // à faire getFamilyById(familyId)
         // const familyKey = result.rows[0].id_family
-        // return getFamilyById(familyId);
+         //return getFamilyById(familyName);
     }
+
+    
 }
 
 module.exports = FamilyQueries;

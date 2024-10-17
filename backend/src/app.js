@@ -14,7 +14,7 @@ app.use(helmet());
 app.use(morgan("dev"));
 
 app.use('/auth', authRouter);
-app.use('/familyRouter', familyRouter);
+app.use('/families', familyRouter);
 app.use('/users', userAccountRouter);
 
 app.get('/health', (req, res) => {
