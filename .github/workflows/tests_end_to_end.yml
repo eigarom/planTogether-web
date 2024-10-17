@@ -36,7 +36,7 @@ jobs:
 
       - name: Set up database
         env:
-          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_DATABASE: ${{ secrets.DB_DATABASE }}
