@@ -13,20 +13,13 @@ jobs:
   e2e-tests:
     runs-on: ubuntu-latest
 
-    env:
-      DB_HOST: 127.0.0.1
-      DB_PORT: 5432
-      DB_DATABASE: plantogether
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-
     services:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: ${{ env.DB_DATABASE }}
-          POSTGRES_USER: ${{ env.DB_USER }}
-          POSTGRES_PASSWORD: ${{ env.DB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.DB_DATABASE }}
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
           - 5432:5432
         options: >-
@@ -43,7 +36,10 @@ jobs:
 
       - name: Set up database
         env:
-          PGPASSWORD: ${{ env.DB_PASSWORD }}
+          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
         run: |
           psql -h $DB_HOST -U $DB_USER -d $DB_DATABASE -f ./database/03_create_tables.sql
           psql -h $DB_HOST -U $DB_USER -d $DB_DATABASE -f ./database/04_insert_data.sql
@@ -55,8 +51,13 @@ jobs:
       - name: Start backend
         working-directory: ./backend
         env:
-          JWT_SECRET: JWT_SECRET
-        run: npm run start > ../backend.log 2>&1 &
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: npm run start &
 
       - name: Install frontend dependencies
         working-directory: ./frontend
@@ -64,14 +65,7 @@ jobs:
 
       - name: Start frontend
         working-directory: ./frontend
-        run: npm run dev > ../frontend.log 2>&1 &
-
-      - name: Check if database is ready
-        env:
-          PGPASSWORD: ${{ env.DB_PASSWORD }}
-        run: |
-          psql -h $DB_HOST -U $DB_USER -d $DB_DATABASE -c "SELECT email FROM account_member WHERE 
-          email='diddy_kong@banana.com';"
+        run: npm run dev &
 
       - name: Check if backend is ready
         run: |
@@ -83,24 +77,10 @@ jobs:
           echo "Check if frontend is ready"
           until curl -s http://localhost:5173; do sleep 5; done
 
-      - name: Test frontend to backend communication
-        run: |
-          echo "Testing frontend to backend communication"
-          curl -X POST http://localhost:5173/api/login -H "Content-Type: application/json" -d '{"email":"diddy_kong@banana.com", "password":"Motdepasse12345*"}' -v
-
       - name: Install Xvfb
         run: sudo apt-get install -y xvfb
 
       - name: Run end-to-end tests
         working-directory: ./frontend
         run: xvfb-run --auto-servernum npm test -- --env chrome
-
-      - name: Output backend logs
-        if: failure()
-        run:
-          cat backend.log
-
-      - name: Output frontend logs
-        if: failure()
-        run: cat frontend.log
 
