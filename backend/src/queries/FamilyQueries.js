@@ -15,16 +15,21 @@ class FamilyQueries {
                 family.name,
                 family.color,
                 family.imageContent,
-                family.imageContentType
+                family.imageContentType,
             ]
         );
         return result.rows[0].id_family;
-        // à faire getFamilyById(familyId)
-        // const familyKey = result.rows[0].id_family
-         //return getFamilyById(familyName);
     }
 
-    
+    static async getFamilyById(familyId) {
+        const result = await pool.query(
+            `SELECT id_family, name, color, image_content, image_content_type
+            FROM family
+            WHERE id_family = $1`
+            [familyId]
+        );
+        const row = result.rows[0];
+    }
 }
 
 module.exports = FamilyQueries;

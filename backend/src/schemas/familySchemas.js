@@ -8,4 +8,5 @@ const familySchema = Joi.object({
 });
 
 module.exports = {
+    familySchema
 };
