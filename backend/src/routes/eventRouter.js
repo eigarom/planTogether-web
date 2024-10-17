@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const HttpError = require("../error/HttpError");
 const EventServices = require("../services/EventServices");
+const verifyJWT = require("../auth/authMiddleware");
 
-router.get('/', async (req, res, next) => {
-	const familyId = 1;
+router.get('/', verifyJWT, async (req, res, next) => {
+	const familyId = req.user.familyId;
 
 	try {
 		const events = await EventServices.getEventsByIdFamily(familyId);
