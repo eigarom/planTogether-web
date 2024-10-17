@@ -37,10 +37,11 @@ Depuis le répertoire `database` :
     DB_DATABASE=plantogether
     DB_USER={{DB_USER}}
     DB_PASSWORD={{DB_PASSWORD}}
-    JWT_SECRET=Secret
+    JWT_SECRET={{Secret}}
     ```
    Remplacez `{{DB_USER}}` et `{{DB_PASSWORD}}` par les informations choisies lors de la configuration de la base de
    données.
+   Remplacer `{{Secret}}`par le code de votre choix.
 
 2. Dans un terminal, placez-vous dans le répertoire `backend`.
 
