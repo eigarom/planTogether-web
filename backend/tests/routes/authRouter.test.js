@@ -13,16 +13,16 @@ describe('Test auth Router', () => {
 		it('should return 400 for invalid email', async () => {
 			const response = await request(app)
 				.post('/auth/login')
-				.send({email: 'invalid-email', password: 'StrongPassword1*'})
+				.send({email: 'invalid-email', password: 'password'})
 				.expect(400);
 
 			expect(response.body.message).toContain('"email"');
 		});
 
-		it('should return 400 for invalid password', async () => {
+		it('should return 400 for empty password', async () => {
 			const response = await request(app)
 				.post('/auth/login')
-				.send({email: 'test@example.com', password: 'short'})
+				.send({email: 'test@example.com', password: ''})
 				.expect(400);
 
 			expect(response.body.message).toContain('"password"');
