@@ -2,29 +2,26 @@ const express = require("express");
 const router = express.Router();
 const HttpError = require("../error/HttpError");
 const FamilyQueries = require("../queries/FamilyQueries");
+const { familySchema } = require("../schemas/familySchemas");
 
-router.post("/", (req, res, next) => {
-    const name = req.body.name;
-    if (!name || name === "") {
-        return next(new HttpError(400, `Le champ nom est requis`));
+router.post("/", async (req, res, next) => {
+    const { error } = familySchema.validate(req.body);
+    if (error) {
+        return next(new HttpError(400, error.message));
     }
 
     const newFamily = {
-        name: "" + name,
+        name: "" + req.body.name,
         color: "" + req.body.color,
         imageContent: "" + req.body.imageContent,
         imageContentType: "" + req.body.imageContentType,
-        inviteCode: "" + req.body.inviteCode,
-        inviteExpirationDate: "" + req.body.inviteExpirationDate,
     };
-
-    FamilyQueries.insertFamily(newFamily)
-        .then((family) => {
-            res.json(family);
-        })
-        .catch((err) => {
-            return next(err);
-        });
+    try {
+        const family = await FamilyQueries.insertFamily(newFamily);
+        res.status(201).json(family);
+    } catch (err) {
+        return next(err);
+    }
 });
 
 module.exports = router;
