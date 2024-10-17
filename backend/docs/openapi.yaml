@@ -1,0 +1,43 @@
+openapi: "3.1.0"
+info:
+  title: "planTogether_web API"
+  description: "planTogether_web API"
+  version: "1.0.k0"
+servers:
+  - url: "http://localhost:3000"
+tags:
+  - name: "Statut du serveur"
+
+  - name: "Authentification"
+    description: "Connexion et inscription"
+
+  - name: "Utilisateur"
+    description: "Opérations concernant l'utilisateur"
+
+  - name: "Famille"
+    description: "Opérations concernant la famille de l'utilisateur"
+
+  - name: "Événements"
+    description: "Opérations concernant les événements"
+
+paths:
+  /health:
+    get:
+      tags:
+        - "Statut du serveur"
+      summary: "GET health"
+      responses:
+        "200":
+          description: "OK"
+  /auth/login:
+    post:
+      summary: "POST auth/login"
+      responses:
+        "200":
+          description: "OK"
+  /users/me:
+    get:
+      summary: "GET users/me"
+      responses:
+        "200":
+          description: "OK"
