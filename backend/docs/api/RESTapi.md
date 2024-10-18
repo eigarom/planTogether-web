@@ -17,4 +17,4 @@ Un token peut être obtenu depuis la route de [connexion](auth/login.md).
 Chaque route manipule ou fournit de l'information associée à l'utilisateur correspondant au token fournit dans la
 requête.
 
-* [Affiche les informations](users/get.md) : `GET /api/users/me`
+* [Récupération des informations](users/get.md) : `GET /api/users/me`
