@@ -1,10 +1,11 @@
-const app = require('../../src/app');
 const AuthServices = require('../../src/services/AuthServices');
+const UserAccountQueries = require('../../src/queries/UserAccountQueries');
 const UserAccountServices = require('../../src/services/UserAccountServices');
 const authUtils = require('../../src/utils/authUtils');
 const HttpError = require("../../src/middlewares/error/HttpError");
 
 jest.mock('../../src/services/UserAccountServices');
+jest.mock('../../src/queries/UserAccountQueries');
 jest.mock('../../src/utils/authUtils');
 
 
@@ -44,6 +45,36 @@ describe('Test authentification services', () => {
 			authUtils.isValidPassword.mockResolvedValue(false);
 
 			await expect(AuthServices.login('email', 'password')).rejects.toThrow(expectedError);
+		});
+	});
+
+	describe('register', () => {
+		it('should throw 401 if email is already taken', async () => {
+			UserAccountServices.getUserCredentialsByEmail.mockResolvedValue(true);
+
+			await expect(AuthServices.register('test@example.com', 'StrongPassword1*', 'Test User'))
+				.rejects
+				.toThrow(new HttpError(401, 'Courriel non disponible'));
+		});
+
+		it('should return a token for successful registration', async () => {
+			UserAccountServices.getUserCredentialsByEmail.mockResolvedValue(null);
+			authUtils.hashPassword.mockResolvedValue('hashedPassword');
+			UserAccountQueries.InsertUserAccount.mockResolvedValue('newUserId');
+			authUtils.generateToken.mockReturnValue('mockToken');
+
+			const token = await AuthServices.register('test@example.com', 'StrongPassword1*', 'Test User');
+			expect(token).toEqual('mockToken');
+		});
+
+		it('should throw an error if inserting user account fails', async () => {
+			UserAccountServices.getUserCredentialsByEmail.mockResolvedValue(null);
+			authUtils.hashPassword.mockResolvedValue('hashedPassword');
+			UserAccountQueries.InsertUserAccount.mockRejectedValue(new Error('Insert failed'));
+
+			await expect(AuthServices.register('test@example.com', 'StrongPassword1*', 'Test User'))
+				.rejects
+				.toThrow('Insert failed');
 		});
 	});
 });
