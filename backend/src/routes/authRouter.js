@@ -22,4 +22,21 @@ router.post('/login', async (req, res, next) => {
 	}
 });
 
+router.post('/register', async (req, res, next) => {
+	const {error} = registerSchema.validate(req.body);
+	if (error) {
+		return next(new HttpError(400, error.message));
+	}
+
+	const {email, password, name} = req.body
+
+	try {
+		const token = await AuthServices.register(email, password, name);
+
+		res.json({token});
+	} catch (err) {
+		return next(err);
+	}
+});
+
 module.exports = router;
