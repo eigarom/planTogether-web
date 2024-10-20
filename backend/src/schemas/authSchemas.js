@@ -14,7 +14,13 @@ const registerSchema = Joi.object({
 		.messages({
 			'string.pattern.base': 'Le mot de passe doit contenir au moins 16 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial'
 		}),
-	name: Joi.string().trim().max(50).required()
+	name: Joi.string()
+		.pattern(new RegExp('^[a-zA-Z0-9- ]+$'))
+		.trim().max(50)
+		.required()
+		.messages({
+			'string.pattern.base': `Le nom n'est pas valide`
+		})
 });
 
 module.exports = {
