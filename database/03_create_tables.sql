@@ -27,7 +27,7 @@ CREATE TABLE family
 (
     id_family              serial PRIMARY KEY,
     name                   varchar NOT NULL,
-    color                  varchar NOT NULL,       
+    color                  varchar NOT NULL,
     image_content          bytea,
     image_content_type     text,
     invite_code            varchar UNIQUE,
@@ -41,7 +41,7 @@ CREATE TABLE member
     image_content      bytea,
     image_content_type text,
     color              varchar NOT NULL,
-    id_family          int     NOT NULL REFERENCES family (id_family)
+    id_family          int REFERENCES family (id_family)
 );
 
 CREATE TABLE account_member
@@ -88,7 +88,7 @@ CREATE TABLE alert
 (
     id_alert  serial PRIMARY KEY,
     date_time timestamp NOT NULL,
-    id_event  int NOT NULL REFERENCES event (id_event) ON DELETE CASCADE
+    id_event  int       NOT NULL REFERENCES event (id_event) ON DELETE CASCADE
 );
 
 CREATE TABLE shopping_list
