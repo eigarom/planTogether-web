@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const {loginSchema} = require('../schemas/authSchemas');
 const router = express.Router();
-const HttpError = require("../error/HttpError");
+const HttpError = require("../middlewares/error/HttpError");
 const UserAccountServices = require("../services/UserAccountServices");
 
 router.post('/login', async (req, res, next) => {
