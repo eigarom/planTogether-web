@@ -1,18 +1,20 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const UserAccountServices = require("./UserAccountServices");
+const HttpError = require("../middlewares/error/HttpError");
+const {isValidPassword, generateToken} = require("../utils/authUtils");
 
 class AuthServices {
-	static async generateToken(user) {
-		return jwt.sign({
-			email: user.email,
-			userId: user.userId,
-			familyId: user.familyId
-		}, process.env.JWT_SECRET);
-	};
+	static async login(email, password) {
+		const user = await UserAccountServices.getUserCredentialsByEmail(email);
+		if (!user) {
+			throw (new HttpError(401, `Identifiants invalides`));
+		}
 
-	static async isValidPassword(password, user) {
-		return await bcrypt.compare(password, user.password);
-	};
+		if (!await isValidPassword(password, user)) {
+			throw (new HttpError(401, `Identifiants invalides`));
+		}
+
+		return generateToken(user);
+	}
 }
 
 module.exports = AuthServices;
