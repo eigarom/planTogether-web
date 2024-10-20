@@ -28,6 +28,8 @@
 
 				<Button :disabled="isLoginDisabled" label="Se connecter" type="submit"/>
 			</form>
+
+			<p class="align-self-center">Vous n'avez pas de compte ? <a href="/register">Inscrivez-vous</a></p>
 		</div>
 	</div>
 </template>
