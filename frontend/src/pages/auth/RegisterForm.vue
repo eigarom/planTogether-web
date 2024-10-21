@@ -2,7 +2,6 @@
 	<div class="flex align-items-center justify-content-center min-h-screen">
 		<div class="flex flex-column ">
 			<h1 class="align-self-center">Créer un compte</h1>
-			modification
 			<form id="registerForm" class="flex flex-column row-gap-3 align-content-center w-20rem"
 				  @submit.prevent="submitRegistration">
 				<InputGroup>
