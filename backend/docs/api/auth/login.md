@@ -64,7 +64,7 @@ Récupère un token pour un utilisateur enregistré.
 ```json
 {
     "status":400,
-    "message":"\"password\" is not allowed to be empty"email\" must be a valid email"
+    "message":"\"password\" is not allowed to be empty"
 }
 ```
 
