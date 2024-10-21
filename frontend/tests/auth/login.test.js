@@ -15,7 +15,7 @@ describe('tests authentification', function () {
 			.setValue('#loginForm #password', 'Motdepasse12345*')
 			.click('#loginForm button[type=submit]')
 			.waitForElementVisible('#sidebar', 5000)
-			.assert.urlEquals('http://localhost:5173/');
+			.assert.urlEquals('http://localhost:5173/events');
 	});
 
 	it('should fail to login with incorrect credentials', function (browser) {
