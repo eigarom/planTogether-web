@@ -50,7 +50,7 @@ Récupère un token pour un utilisateur enregistré.
 
 ```json
 {
-    "status":401,
+    "status":400,
     "message":"\"email\" must be a valid email"
 }
 ```
@@ -63,7 +63,7 @@ Récupère un token pour un utilisateur enregistré.
 
 ```json
 {
-    "status":401,
+    "status":400,
     "message":"\"password\" is not allowed to be empty"email\" must be a valid email"
 }
 ```
