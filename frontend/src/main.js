@@ -7,6 +7,7 @@ import Aura from '@primevue/themes/aura';
 import App from './App.vue';
 import EventsList from './pages/events/EventsList.vue';
 import LoginForm from "@/pages/auth/LoginForm.vue";
+import FamilyCreationForm from "@/pages/families/FamilyCreationForm.vue";
 
 const app = createApp(App);
 
@@ -32,7 +33,9 @@ const router = createRouter({
 	routes: [
 		{path: '/events', component: EventsList},
 		{path: '/login', component: LoginForm},
-		{path: '/', redirect: '/events'}
+		{path: '/families/add', component: FamilyCreationForm},
+		{path: '/', redirect: '/events'},
+		
 	]
 });
 router.beforeEach((to, from, next) => {
