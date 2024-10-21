@@ -69,7 +69,6 @@ export default {
 				window.location.href = '/';
 			} catch (err) {
 				this.errorMessage = "Échec de l'authentification.";
-				console.error("An error occurred:", err);
 			}
 		}
 	}
