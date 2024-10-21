@@ -67,7 +67,7 @@ export default {
 				const token = await login(this.email, this.password);
 				this.$cookies.set("jwtToken", token);
 				window.location.href = '/';
-			} catch (err) {
+			} catch {
 				this.errorMessage = "Échec de l'authentification.";
 			}
 		}
