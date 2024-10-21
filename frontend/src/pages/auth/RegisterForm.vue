@@ -2,7 +2,8 @@
 	<div class="flex align-items-center justify-content-center min-h-screen">
 		<div class="flex flex-column ">
 			<h1 class="align-self-center">Créer un compte</h1>
-			<form id="loginForm" class="flex flex-column row-gap-3 align-content-center w-20rem"
+			modification
+			<form id="registerForm" class="flex flex-column row-gap-3 align-content-center w-20rem"
 				  @submit.prevent="submitRegistration">
 				<InputGroup>
 					<InputGroupAddon>
@@ -104,8 +105,10 @@ export default {
 				this.$cookies.set("jwtToken", token);
 				window.location.href = '/';
 			} catch (err) {
-				this.errorMessage = "Échec de l'authentification.";
-				console.error("An error occurred:", err);
+				if (err.message === "Courriel non disponible")
+					this.errorMessage = "Le courriel n'est pas disponible";
+				else
+					this.errorMessage = "Échec de l'authentification.";
 			}
 		}
 	}
