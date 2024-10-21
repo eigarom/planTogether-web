@@ -68,7 +68,7 @@ describe('Test auth Router', () => {
 				.send({email: 'test@example.com', password: 'invalid-password', name: 'Test User'})
 				.expect(400);
 
-			expect(response.body.message).toContain('Le mot de passe doit contenir au moins 16 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.');
+			expect(response.body.message).toContain('Le mot de passe doit contenir au moins 16 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial');
 		});
 
 		it('should return 400 for empty name', async () => {
