@@ -41,7 +41,7 @@ const router = createRouter({
 });
 router.beforeEach((to, from, next) => {
 		const token = app.config.globalProperties.$cookies.get('jwtToken');
-		if (to.path === '/register') {
+		if (to.path === '/register' && !token) {
 			next();
 		} else if (to.path === '/login' && token) {
 			next('/');

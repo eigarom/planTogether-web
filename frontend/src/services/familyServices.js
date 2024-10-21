@@ -1,19 +1,22 @@
-export async function createFamily(family) {
-	const response = await fetch("/api/families/", {
+export async function createFamily(family,token) {
+	const response = await fetch("/api/families", {
 		method: "POST",
 		headers: {
-			"Content-Type": "application/json",
+			'Authorization': `Bearer ${token}`,
+			"Content-Type": "application/json"
 		},
 		body: JSON.stringify({
-			email: email,
-			password: password,
+			name: family.name,
+			color: family.color,
+			imageContent: family.imageContent,
+        	imageContentType: family.imageContentType
 		}),
 	});
 	const result = await response.json();
 
 	if (response.ok) {
-		return result.token;
+		return result;
 	} else {
-		throw new Error(result.message || "La connexion a échoué:");
+		throw new Error(result.message || "La famille n'a pas pu être créée:");
 	}
 }

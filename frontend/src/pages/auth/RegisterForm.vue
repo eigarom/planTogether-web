@@ -3,13 +3,13 @@
 		<div class="flex flex-column ">
 			<h1 class="align-self-center">Créer un compte</h1>
 			<form id="registerForm" class="flex flex-column row-gap-3 align-content-center w-20rem"
-				  @submit.prevent="submitRegistration">
+				@submit.prevent="submitRegistration">
 				<InputGroup>
 					<InputGroupAddon>
 						<i class="pi pi-envelope"></i>
 					</InputGroupAddon>
 					<FloatLabel variant="in">
-						<InputText id="email" v-model.trim="email"/>
+						<InputText id="email" v-model.trim="email" />
 						<label for="email">Courriel</label>
 					</FloatLabel>
 				</InputGroup>
@@ -19,7 +19,7 @@
 						<i class="pi pi-lock"></i>
 					</InputGroupAddon>
 					<FloatLabel variant="in">
-						<Password v-model.trim="password" :feedback="false" inputId="password" toggleMask/>
+						<Password v-model.trim="password" :feedback="false" inputId="password" toggleMask />
 						<label for="password">Mot de passe</label>
 					</FloatLabel>
 				</InputGroup>
@@ -30,7 +30,7 @@
 					</InputGroupAddon>
 					<FloatLabel variant="in">
 						<Password v-model.trim="repeat_password" :feedback="false" inputId="repeat_password"
-								  toggleMask/>
+							toggleMask />
 						<label for="repeat_password">Confirmation mot de passe</label>
 					</FloatLabel>
 				</InputGroup>
@@ -40,14 +40,14 @@
 						<i class="pi pi-user"></i>
 					</InputGroupAddon>
 					<FloatLabel variant="in">
-						<InputText id="name" v-model.trim="name"/>
+						<InputText id="name" v-model.trim="name" />
 						<label for="name">Nom</label>
 					</FloatLabel>
 				</InputGroup>
 
 				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-				<Button :disabled="isRegistrationDisabled" label="S'inscrire" type="submit"/>
+				<Button :disabled="isRegistrationDisabled" label="S'inscrire" type="submit" />
 			</form>
 
 			<p class="align-self-center">Vous avez déjà un compte ? <a href="/login">Connectez-vous</a></p>
@@ -63,8 +63,8 @@ import Message from 'primevue/message';
 import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
 import FloatLabel from "primevue/floatlabel";
-import {registrationSchema} from "@/schemas/authSchemas.js";
-import {register} from "@/services/authServices.js";
+import { registrationSchema } from "@/schemas/authSchemas.js";
+import { register } from "@/services/authServices.js";
 
 export default {
 	components: {
@@ -93,7 +93,7 @@ export default {
 				repeat_password: this.repeat_password,
 				name: this.name
 			}
-			const {error} = registrationSchema.validate(userInformations);
+			const { error } = registrationSchema.validate(userInformations);
 			if (error) {
 				this.errorMessage = error.message;
 				return

@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const HttpError = require("../error/HttpError");
+const HttpError = require("../middlewares/error/HttpError");
 const FamilyServices = require("../services/FamilyServices");
 const { familySchema } = require("../schemas/familySchemas");
-const verifyJWT = require("../auth/authMiddleware");
+const verifyJWT = require("../middlewares/auth/authMiddleware");
 
 router.post("/",verifyJWT , async (req, res, next) => {
     const { error } = familySchema.validate(req.body);
