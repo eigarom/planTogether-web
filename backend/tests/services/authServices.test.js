@@ -19,8 +19,8 @@ const mockUser = {
 describe('Test authentification services', () => {
 	describe('login', () => {
 		it('should return a token for valid credentials', async () => {
-			mockToken = 'mockToken';
-			expectedToken = mockToken;
+			const mockToken = 'mockToken';
+			const expectedToken = mockToken;
 
 			UserAccountServices.getUserCredentialsByEmail.mockResolvedValue(mockUser);
 			authUtils.isValidPassword.mockResolvedValue(true);
