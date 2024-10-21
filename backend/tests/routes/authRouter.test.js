@@ -1,12 +1,8 @@
 const request = require('supertest');
 const app = require('../../src/app');
-const UserAccountServices = require('../../src/services/UserAccountServices');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const AuthServices = require('../../src/services/AuthServices');
 
-jest.mock('../../src/services/UserAccountServices');
-jest.mock('bcryptjs');
-jest.mock('jsonwebtoken');
+jest.mock('../../src/services/AuthServices');
 
 describe('Test auth Router', () => {
 	describe('POST /login', () => {
@@ -28,17 +24,8 @@ describe('Test auth Router', () => {
 			expect(response.body.message).toContain('"password"');
 		});
 
-		it('should return a token for valid credentials', async () => {
-			const mockUser = {
-				email: 'test@example.com',
-				password: 'StrongPassword1*',
-				userId: 'userId',
-				familyId: 'familyId'
-			};
-
-			UserAccountServices.getUserCredentialsByEmail.mockResolvedValue(mockUser);
-			bcrypt.compare.mockResolvedValue(true);
-			jwt.sign.mockReturnValue('mockToken');
+		it('should return a token with successful login', async () => {
+			AuthServices.login.mockReturnValue('mockToken');
 
 			const response = await request(app)
 				.post('/auth/login')
@@ -48,23 +35,61 @@ describe('Test auth Router', () => {
 			expect(response.body.token).toEqual('mockToken');
 		});
 
-		it('should return 401 for invalid credentials', async () => {
-			UserAccountServices.getUserCredentialsByEmail.mockResolvedValue(undefined);
-
-			const response = await request(app)
-				.post('/auth/login')
-				.send({email: 'test@example.com', password: 'StrongPassword1*'})
-				.expect(401);
-
-			expect(response.body.message).toEqual('Identifiants invalides');
-		});
-
 		it('should return 500 for server errors', async () => {
-			UserAccountServices.getUserCredentialsByEmail.mockRejectedValue(new Error());
+			AuthServices.login.mockRejectedValue(new Error());
 
 			await request(app)
 				.post('/auth/login')
 				.send({email: 'test@example.com', password: 'StrongPassword1*'})
+				.expect(500);
+		});
+	});
+
+	describe('POST /register', () => {
+		it('should return 400 for invalid email', async () => {
+			const response = await request(app)
+				.post('/auth/register')
+				.send({email: 'invalid-email', password: 'password', name: 'Test User'})
+				.expect(400);
+
+			expect(response.body.message).toContain('"email"');
+		});
+
+		it('should return 400 for invalid password', async () => {
+			const response = await request(app)
+				.post('/auth/register')
+				.send({email: 'test@example.com', password: 'invalid-password', name: 'Test User'})
+				.expect(400);
+
+			expect(response.body.message).toContain('Le mot de passe doit contenir au moins 16 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial');
+		});
+
+		it('should return 400 for empty name', async () => {
+			const response = await request(app)
+				.post('/auth/register')
+				.send({email: 'test@example.com', password: 'StrongPassword1*', name: ''})
+				.expect(400);
+
+			expect(response.body.message).toContain('"name"');
+		});
+
+		it('should return a token with successful registration', async () => {
+			AuthServices.register.mockReturnValue('mockToken');
+
+			const response = await request(app)
+				.post('/auth/register')
+				.send({email: 'test@example.com', password: 'StrongPassword1*', name: 'Test User'})
+				.expect(200);
+
+			expect(response.body.token).toEqual('mockToken');
+		});
+
+		it('should return 500 for server errors', async () => {
+			AuthServices.register.mockRejectedValue(new Error());
+
+			await request(app)
+				.post('/auth/register')
+				.send({email: 'test@example.com', password: 'StrongPassword1*', name: 'Test User'})
 				.expect(500);
 		});
 	});

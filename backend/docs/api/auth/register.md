@@ -1,8 +1,8 @@
-# Connexion
+# Inscription
 
-Récupère un token pour un utilisateur enregistré.
+Inscrit un nouvel utilisateur et récupère un token d'authentification.
 
-**URL** : `/api/login/`
+**URL** : `/api/register/`
 
 **Méthode** : `POST`
 
@@ -15,7 +15,8 @@ Récupère un token pour un utilisateur enregistré.
 ```json
 {
     "username": "[courriel valide]",
-    "password": "[mot de passe correspondant]"
+    "password": "[mot de passe valide]",
+    "name": "[nom valide]"
 }
 ```
 
@@ -24,7 +25,8 @@ Récupère un token pour un utilisateur enregistré.
 ```json
 {
     "username": "email@example.com",
-    "password": "Motdepasse12345$"
+    "password": "Motdepasse12345$",
+    "name": "John"
 }
 ```
 
@@ -55,7 +57,7 @@ Récupère un token pour un utilisateur enregistré.
 }
 ```
 
-### Si le mot de passe est vide ou manquant.
+### Si le mot de passe n'est pas valide.
 
 **Code** : `400 Unauthorized`
 
@@ -64,11 +66,24 @@ Récupère un token pour un utilisateur enregistré.
 ```json
 {
     "status":400,
-    "message":"\"password\" is not allowed to be empty"
+    "message":"Le mot de passe doit contenir au moins 16 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial"
 }
 ```
 
-### Si la combinaison du courriel et du mot de passe est mauvaise.
+### Si le nom n'est pas valide.
+
+**Code** : `400 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status":400,
+    "message":"Le nom n'est pas valide"
+}
+```
+
+### Si le courriel n'est pas disponible.
 
 **Code** : `401 Unauthorized`
 
@@ -77,9 +92,10 @@ Récupère un token pour un utilisateur enregistré.
 ```json
 {
     "status":401,
-    "message":"Identifiants invalides"
+    "message":"Courriel non disponible"
 }
 ```
+
 ### Si une erreur survient côté serveur.
 
 **Code** : `500 Internal Server Error`

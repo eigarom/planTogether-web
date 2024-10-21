@@ -28,6 +28,8 @@
 
 				<Button :disabled="isLoginDisabled" label="Se connecter" type="submit"/>
 			</form>
+
+			<p class="align-self-center">Vous n'avez pas de compte ? <a href="/register">Inscrivez-vous</a></p>
 		</div>
 	</div>
 </template>
@@ -65,9 +67,8 @@ export default {
 				const token = await login(this.email, this.password);
 				this.$cookies.set("jwtToken", token);
 				window.location.href = '/';
-			} catch (err) {
+			} catch {
 				this.errorMessage = "Échec de l'authentification.";
-				console.error("An error occurred:", err);
 			}
 		}
 	}

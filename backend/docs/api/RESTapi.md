@@ -6,6 +6,7 @@ Ne requiert pas d'authentication.
 
 * [Vérification du statut du serveur](health/health.md): `GET /health`
 * [Connexion](auth/login.md) : `POST /api/login`
+* [Inscription](auth/register.md) : `POST /api/register`
 
 ## Routes nécessitant l'authentication
 

@@ -1,7 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan')
-const errorMiddleware = require('./error/errorMiddleware');
+const errorMiddleware = require('./middlewares/error/errorMiddleware');
 
 const authRouter = require('./routes/authRouter');
 const userAccountRouter = require('./routes/userAccountRouter');

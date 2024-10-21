@@ -1,8 +1,7 @@
 const Joi = require('joi');
 
 const loginSchema = Joi.object({
-	email: Joi.string().email().required(),
-	password: Joi.string().required()
+	email: Joi.string().email().required(), password: Joi.string().required()
 });
 
 const registerSchema = Joi.object({
@@ -13,12 +12,17 @@ const registerSchema = Joi.object({
 		.max(50)
 		.required()
 		.messages({
-			'string.pattern.base':
-				'"password" must be at least 16 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.'
+			'string.pattern.base': 'Le mot de passe doit contenir au moins 16 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial'
+		}),
+	name: Joi.string()
+		.pattern(new RegExp('^[a-zA-Z0-9- ]+$'))
+		.trim().max(50)
+		.required()
+		.messages({
+			'string.pattern.base': `Le nom n'est pas valide`
 		})
 });
 
 module.exports = {
-	loginSchema,
-	registerSchema
+	loginSchema, registerSchema
 };
