@@ -1,9 +1,40 @@
 const pool = require("../queries/dbPool");
 
 class UserAccountQueries {
-    static async getUserByID(userId) {
-        const result = await pool.query(
-            `SELECT email,
+	static async InsertUserAccount(email, hashedPassword, name) {
+		const client = await pool.connect();
+
+		try {
+			await client.query('BEGIN');
+
+			const result = await client.query(
+				`INSERT INTO member (name)
+                 VALUES ($1)
+                 RETURNING id_member`,
+				[name]
+			);
+			const memberId = result.rows[0].id_member;
+
+
+			await client.query(
+				`INSERT INTO account_member (email, password_hash, id_member)
+                 VALUES ($1, $2, $3)`,
+				[email, hashedPassword, memberId]
+			);
+
+			await client.query('COMMIT');
+			return memberId;
+		} catch (err) {
+			await client.query('ROLLBACK');
+			throw err;
+		} finally {
+			client.release();
+		}
+	}
+
+	static async getUserByID(userId) {
+		const result = await pool.query(
+			`SELECT email,
                     name,
                     color,
                     image_content,

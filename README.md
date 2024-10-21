@@ -75,3 +75,8 @@ Utilisez les identifiants suivants pour vous connecter à l'application :
 
 - **Courriel** : diddy_kong@banana.com
 - **Mot de passe** : Motdepasse12345*
+
+## Documentation API
+
+Pour accéder à toutes les informations concernant les endpoints, les méthodes HTTP, et les paramètres associés,
+veuillez consulter la [documentation api](backend/docs/api/RESTapi.md).
