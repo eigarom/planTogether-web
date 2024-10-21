@@ -42,7 +42,33 @@ Récupère un token pour un utilisateur enregistré.
 
 ## Opération échouée
 
-### Si la combinaison 'username' et 'password' est mauvaise.
+### Si le courriel n'est pas valide.
+
+**Code** : `400 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status":401,
+    "message":"\"email\" must be a valid email"
+}
+```
+
+### Si le mot de passe est vide ou manquant.
+
+**Code** : `400 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status":401,
+    "message":"\"password\" is not allowed to be empty"email\" must be a valid email"
+}
+```
+
+### Si la combinaison du courriel et du mot de passe est mauvaise.
 
 **Code** : `401 Unauthorized`
 
