@@ -39,6 +39,7 @@ export default {
 	},
 	mounted() {
 		this.getUserFromToken();
+		// TODO	this.getFamilyFromToken (contient id familyId === null -> redirection creation famille
 	},
 	provide() {
 		return {

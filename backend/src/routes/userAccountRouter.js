@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const HttpError = require("../error/HttpError");
+const HttpError = require("../middlewares/error/HttpError");
 const UserAccountServices = require("../services/UserAccountServices");
-const verifyJWT = require("../auth/authMiddleware");
+const verifyJWT = require("../middlewares/auth/authMiddleware");
 
 router.get('/me', verifyJWT, async (req, res, next) => {
 	try {

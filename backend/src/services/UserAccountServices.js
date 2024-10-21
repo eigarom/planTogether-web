@@ -1,6 +1,7 @@
 const UserAccountQueries = require("../queries/UserAccountQueries");
 
 class UserAccountServices {
+
 	static async getUserById(userId) {
 		const result = await UserAccountQueries.getUserByID(userId);
 		if (result) {
