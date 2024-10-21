@@ -1,4 +1,4 @@
-export async function getEventsList() {
+export async function fetchEventsList(token) {
     const response = await fetch('/api/families/my-family/events', {
         headers: {
             'Authorization': `Bearer ${token}`
