@@ -7,8 +7,8 @@
 
 
                 <FloatLabel variant="in">
-                    <InputText id="email" v-model.trim="name" class="w-20rem" />
-                    <label for="email">Nom</label>
+                    <InputText id="name" v-model.trim="name" class="w-20rem" />
+                    <label for="name">Nom</label>
                 </FloatLabel>
 
 
