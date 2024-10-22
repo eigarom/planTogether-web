@@ -9,8 +9,6 @@ class UserAccountServices {
 				email: result.email,
 				name: result.name,
 				color: result.color,
-				imageContent: result.image_content,
-				imageContentType: result.image_content_type,
 				lang: result.lang,
 				theme: result.theme
 			}
