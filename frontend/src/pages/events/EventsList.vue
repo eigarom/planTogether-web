@@ -3,11 +3,12 @@
 		<p>Hello {{ this.user.name }} !!!! </p>
 		<div>
 			<h2>Événements du jour</h2>
-			<ul>
-				<li v-for="event in filteredEvents" :key="event.id">
-					{{ event.name }} <!-- Ou toute autre information pertinente -->
-				</li>
-			</ul>
+			<div v-for="event in filteredEvents" :key="event.id">
+				<h3>{{ event.name }}</h3>
+				<div v-for="period in event.periods" :key="period.id">
+					Début : {{ formatTime(period.startDateTime) }} - Fin : {{ formatTime(period.endDateTime) }}
+				</div>
+			</div>
 		</div>
 		<h2>Liste des événements</h2>
 		{{ currentDate }}
@@ -53,6 +54,11 @@ export default {
 			//const dateTime = date + ' ' + time;
 			this.currentDate = date;
 		},
+		formatTime(dateTime) {
+			const date = new Date(dateTime);
+			const time = date.toISOString().split('T')[1].substring(0, 5);
+			return time;
+		}
 	},
 	computed: {
 		filteredEvents() {
