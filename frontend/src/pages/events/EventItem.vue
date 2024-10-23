@@ -1,6 +1,5 @@
 <template>
     <div>Nom de l'événement: {{ name }}</div>
-    <div>Description de l'événement: {{ description }}</div>
     <div>Couleur de l'événement: {{ color }}</div>
     <div>Visibilité de l'événement: {{ isVisible }}</div>
     <div>
@@ -18,7 +17,6 @@ export default {
     props: {
         id: Number,
         name: String,
-        description: String,
         color: String,
         isVisible: Boolean,
         periods: Array,
