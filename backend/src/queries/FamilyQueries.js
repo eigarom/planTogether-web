@@ -33,6 +33,16 @@ class FamilyQueries {
 		return result.rows[0];
 	}
 
+	static async getFamilyImageContent(familyId) {
+		const result = await pool.query(
+			`SELECT image_content, image_content_type
+             FROM family
+             WHERE id_family = $1`,
+			[familyId]
+		);
+		return result.rows[0];
+	}
+
 	static async insertFamily(family, client) {
 		const result = await pool.query(
 			`INSERT INTO family(name, color)

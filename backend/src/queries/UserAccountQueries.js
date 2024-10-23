@@ -23,6 +23,16 @@ class UserAccountQueries {
 		return result.rows[0];
 	}
 
+	static async getUserImageContent(userId) {
+		const result = await pool.query(
+			`SELECT image_content, image_content_type
+             FROM member
+             WHERE id_member = $1`,
+			[userId]
+		);
+		return result.rows[0];
+	}
+
 	static async insertUserAccount(email, hashedPassword, name) {
 		const client = await pool.connect();
 

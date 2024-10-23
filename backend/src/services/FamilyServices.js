@@ -18,6 +18,18 @@ class FamilyServices {
 		}
 		return undefined;
 	}
+
+	static async getFamilyImageContent(familyId) {
+		const result = await FamilyQueries.getFamilyImageContent(familyId);
+
+		if (result) {
+			return {
+				imageContent: result.image_content,
+				imageContentType: result.image_content_type
+			};
+		}
+		return undefined;
+	}
 }
 
 module.exports = FamilyServices;
