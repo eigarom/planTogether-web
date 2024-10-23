@@ -1,36 +1,29 @@
 <template>
-	<div class="flex align-items-center justify-content-center min-h-screen">
-		<div class="flex flex-column ">
-			<h1 class="align-self-center">Bienvenue</h1>
-			<form id="loginForm" class="flex flex-column row-gap-3 align-content-center w-20rem"
-				  @submit.prevent="submitLogin">
-				<InputGroup>
-					<InputGroupAddon>
-						<i class="pi pi-envelope"></i>
-					</InputGroupAddon>
-					<FloatLabel variant="in">
-						<InputText id="email" v-model.trim="email"/>
-						<label for="email">Courriel</label>
-					</FloatLabel>
-				</InputGroup>
+	<div class="w-full max-w-md p-4">
 
-				<InputGroup>
-					<InputGroupAddon>
-						<i class="pi pi-lock"></i>
-					</InputGroupAddon>
-					<FloatLabel variant="in">
-						<Password v-model.trim="password" :feedback="false" inputId="password" toggleMask/>
-						<label for="password">Mot de passe</label>
-					</FloatLabel>
-				</InputGroup>
+		<h1 class="text-4xl mb-3 lato-regular">Bienvenue</h1>
+		<form id="loginForm" class="flex flex-col gap-3"
+			  @submit.prevent="submitLogin">
+			<FloatLabel variant="on">
+				<InputText id="email" v-model.trim="email" class="w-full"/>
+				<label for="email">Courriel</label>
+			</FloatLabel>
 
-				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
+			<FloatLabel variant="on">
+				<Password v-model.trim="password" :feedback="false" class="w-full" input-class="w-full"
+						  inputId="password"
+						  toggleMask/>
+				<label for="password">Mot de passe</label>
+			</FloatLabel>
 
-				<Button :disabled="isLoginDisabled" label="Se connecter" type="submit"/>
-			</form>
+			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-			<p class="align-self-center">Vous n'avez pas de compte ? <a href="/register">Inscrivez-vous</a></p>
-		</div>
+			<Button :disabled="isLoginDisabled" label="Se connecter" type="submit"/>
+		</form>
+
+		<p class="mt-3 lato-light">Vous n'avez pas de compte ? <a class="text-blue-400"
+																  href="/register">Inscrivez-vous</a>
+		</p>
 	</div>
 </template>
 
@@ -40,13 +33,11 @@ import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
 import Password from 'primevue/password';
 import Message from 'primevue/message';
-import InputGroup from 'primevue/inputgroup';
-import InputGroupAddon from 'primevue/inputgroupaddon';
 import FloatLabel from "primevue/floatlabel";
 
 export default {
 	components: {
-		InputText, Button, Password, Message, InputGroup, InputGroupAddon, FloatLabel
+		InputText, Button, Password, Message, FloatLabel
 	},
 	data: () => {
 		return {

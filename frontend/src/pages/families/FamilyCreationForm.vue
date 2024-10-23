@@ -6,15 +6,15 @@
                 @submit.prevent="submitCreateFamily">
 
 
-                <FloatLabel variant="in">
+                <FloatLabel variant="on">
                     <InputText id="name" v-model.trim="name" class="w-20rem" />
                     <label for="name">Nom</label>
                 </FloatLabel>
 
 
                 <div class="flex justify-content-between">
-                    <label for="color">Couleur de la famille </label>
-                    <ColorPicker v-model="color" inputId="color" format="hex" />
+                    <label for="color">Couleur des événements communs </label>
+                    <ColorPicker v-model="color" format="hex" inputId="color" />
                 </div>
 
                 <!-- <Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message> -->
