@@ -1,28 +1,29 @@
 <template>
-	<div class="flex align-items-center justify-content-center min-h-screen">
-		<div class="flex flex-column">
-			<h1 class="align-self-center">Bienvenue</h1>
-			<form id="loginForm" class="flex flex-column row-gap-3 align-content-center w-20rem"
-				  @submit.prevent="submitLogin">
-				<FloatLabel variant="on">
-					<InputText id="email" v-model.trim="email" class="w-full"/>
-					<label for="email">Courriel</label>
-				</FloatLabel>
+	<div class="w-full max-w-md p-4">
 
-				<FloatLabel variant="on">
-					<Password v-model.trim="password" :feedback="false" class="w-full" input-class="w-full"
-							  inputId="password"
-							  toggleMask/>
-					<label for="password">Mot de passe</label>
-				</FloatLabel>
+		<h1 class="text-4xl mb-3 lato-regular">Bienvenue</h1>
+		<form id="loginForm" class="flex flex-col gap-3"
+			  @submit.prevent="submitLogin">
+			<FloatLabel variant="on">
+				<InputText id="email" v-model.trim="email" class="w-full"/>
+				<label for="email">Courriel</label>
+			</FloatLabel>
 
-				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
+			<FloatLabel variant="on">
+				<Password v-model.trim="password" :feedback="false" class="w-full" input-class="w-full"
+						  inputId="password"
+						  toggleMask/>
+				<label for="password">Mot de passe</label>
+			</FloatLabel>
 
-				<Button :disabled="isLoginDisabled" label="Se connecter" type="submit"/>
-			</form>
+			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-			<p class="align-self-center">Vous n'avez pas de compte ? <a href="/register">Inscrivez-vous</a></p>
-		</div>
+			<Button :disabled="isLoginDisabled" label="Se connecter" type="submit"/>
+		</form>
+
+		<p class="mt-3 lato-light">Vous n'avez pas de compte ? <a class="text-blue-400"
+																  href="/register">Inscrivez-vous</a>
+		</p>
 	</div>
 </template>
 

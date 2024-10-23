@@ -2,14 +2,13 @@
 	<div v-if="loading">
 		<p>Loading...</p>
 	</div>
-	<div v-else class="flex gap-3">
+	<div v-else class="flex gap-3 w-full">
 		<SidebarNavigation v-if="user && family" class="container"/>
-		<router-view class="flex-grow-1 container"></router-view>
+		<router-view class="flex-grow justify-center items-center"></router-view>
 	</div>
 </template>
 
 <script>
-
 import {computed} from 'vue';
 import SidebarNavigation from './components/SidebarNavigation.vue';
 import {getUserFromToken} from "@/services/userServices.js";
@@ -70,6 +69,7 @@ export default {
 	},
 	provide() {
 		return {
+			token: computed(() => this.token),
 			user: computed(() => this.user),
 			family: computed(() => this.family),
 			logout: this.logout
@@ -79,9 +79,6 @@ export default {
 </script>
 
 <style>
-@import 'primeicons/primeicons.css';
-@import 'primeflex/primeflex.css';
-
 .container {
 	height: calc(100vh - 16px);
 }

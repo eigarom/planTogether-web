@@ -12,9 +12,7 @@ export async function getFamilyFromToken(token) {
 		}
 		return {
 			name: result.family.name,
-			color: result.family.color,
-			imageContent: result.family.imageContent,
-			imageContentType: result.family.imageContentType
+			color: result.family.color
 		};
 	} else {
 		throw new Error(result.message || `Erreur lors de l'obtention des informations de la famille`);
@@ -30,9 +28,7 @@ export async function createFamily(family, token) {
 		},
 		body: JSON.stringify({
 			name: family.name,
-			color: family.color,
-			imageContent: family.imageContent,
-			imageContentType: family.imageContentType
+			color: family.color
 		}),
 	});
 	const result = await response.json();
