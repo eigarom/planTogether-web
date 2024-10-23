@@ -1,7 +1,6 @@
 <template>
-	<div class="w-full max-w-md p-4">
-
-		<h1 class="text-4xl mb-3 lato-regular">Bienvenue</h1>
+	<div class="w-full max-w-sm">
+		<h1 class="text-4xl mb-3 text-center lato-regular">Bienvenue</h1>
 		<form id="loginForm" class="flex flex-col gap-3"
 			  @submit.prevent="submitLogin">
 			<FloatLabel variant="on">
@@ -21,8 +20,8 @@
 			<Button :disabled="isLoginDisabled" label="Se connecter" type="submit"/>
 		</form>
 
-		<p class="mt-3 lato-light">Vous n'avez pas de compte ? <a class="text-blue-400"
-																  href="/register">Inscrivez-vous</a>
+		<p class="mt-3 lato-light text-center">Vous n'avez pas de compte ? <a class="text-blue-400"
+																			  href="/register">Inscrivez-vous</a>
 		</p>
 	</div>
 </template>

@@ -1,51 +1,50 @@
 <template>
-	<div class="flex align-items-center justify-content-center min-h-screen">
-		<div class="flex flex-column ">
-			<h1 class="align-self-center">Créer un compte</h1>
-			<form id="registerForm" class="flex flex-column row-gap-3 align-content-center w-20rem"
-				  @submit.prevent="submitRegistration">
+	<div class="w-full max-w-sm">
+		<h1 class="text-4xl mb-3 text-center lato-regular">Créer un compte</h1>
+		<form id="registerForm" class="flex flex-col gap-3"
+			  @submit.prevent="submitRegistration">
 
-				<FloatLabel variant="on">
-					<InputText id="email" v-model.trim="email" class="w-full"/>
-					<label for="email">Courriel</label>
-				</FloatLabel>
+			<FloatLabel variant="on">
+				<InputText id="email" v-model.trim="email" class="w-full"/>
+				<label for="email">Courriel</label>
+			</FloatLabel>
 
-				<FloatLabel variant="on">
-					<Password v-model.trim="password" class="w-full" input-class="w-full"
-							  inputId="password"
-							  toggleMask>
-						<template #content>
-							<div class="font-semibold text-xm mb-2">Le mot de passe doit comporter au moins :</div>
-							<ul class="pl-2 ml-2 my-0 leading-normal">
-								<li>Une minuscule</li>
-								<li>Une majuscule</li>
-								<li>Un chiffre</li>
-								<li>Un caractère spécial</li>
-								<li>16 caractères</li>
-							</ul>
-						</template>
-					</Password>
-					<label for="password">Mot de passe</label>
-				</FloatLabel>
+			<FloatLabel variant="on">
+				<Password v-model.trim="password" class="w-full" input-class="w-full"
+						  inputId="password"
+						  toggleMask>
+					<template #content>
+						<div class="font-semibold text-xm mb-2">Le mot de passe doit comporter au moins :</div>
+						<ul class="pl-2 ml-2 my-0 leading-normal">
+							<li>Une minuscule</li>
+							<li>Une majuscule</li>
+							<li>Un chiffre</li>
+							<li>Un caractère spécial</li>
+							<li>16 caractères</li>
+						</ul>
+					</template>
+				</Password>
+				<label for="password">Mot de passe</label>
+			</FloatLabel>
 
-				<FloatLabel variant="on">
-					<Password v-model.trim="repeat_password" :feedback="false" class="w-full"
-							  input-class="w-full" inputId="repeat_password" toggleMask/>
-					<label for="repeat_password">Confirmation du mot de passe</label>
-				</FloatLabel>
+			<FloatLabel variant="on">
+				<Password v-model.trim="repeat_password" :feedback="false" class="w-full"
+						  input-class="w-full" inputId="repeat_password" toggleMask/>
+				<label for="repeat_password">Confirmation du mot de passe</label>
+			</FloatLabel>
 
-				<FloatLabel variant="on">
-					<InputText id="name" v-model.trim="name" class="w-full"/>
-					<label for="name">Prénom</label>
-				</FloatLabel>
+			<FloatLabel variant="on">
+				<InputText id="name" v-model.trim="name" class="w-full"/>
+				<label for="name">Prénom</label>
+			</FloatLabel>
 
-				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
+			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-				<Button :disabled="isRegistrationDisabled" label="S'inscrire" type="submit"/>
-			</form>
+			<Button :disabled="isRegistrationDisabled" label="S'inscrire" type="submit"/>
+		</form>
 
-			<p class="align-self-center">Vous avez déjà un compte ? <a href="/login">Connectez-vous</a></p>
-		</div>
+		<p class="mt-3 lato-light text-center">Vous avez déjà un compte ? <a class="text-blue-400" href="/login">Connectez-vous</a>
+		</p>
 	</div>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
-	<Menu :model="items">
+	<Menu :model="items" class="m-3 ">
 		<template #start>
-			<div class="flex-col">
+			<div class="flex flex-col items-center mt-2">
 				<span class="text-xl font-semibold">PLAN<span class="text-blue-200">TOGETHER</span></span>
 
 				<Image :src="`/api/families/my-family/image?token=${token}`" alt="Image famille" width="170"/>
@@ -21,9 +21,9 @@
 			</a>
 		</template>
 		<template #end>
-			<div class="inline-flex align-items-center pl-2">
-				<Avatar :image="`/api/users/me/image?token=${token}`" class="mr-2" shape="circle" size="large"/>
-				<span class="font-bold">{{ user.name }}</span>
+			<div class="inline-flex items-center gap-3 ml-3">
+				<Avatar :image="`/api/users/me/image?token=${token}`" class="border-2" shape="circle" size="large"/>
+				<span class="lato-bold">{{ user.name }}</span>
 			</div>
 		</template>
 	</Menu>
