@@ -4,18 +4,40 @@ export async function getFamilyFromToken(token) {
 			'Authorization': `Bearer ${token}`
 		}
 	});
+
+	if (response.status === 404) {
+		return undefined;
+	}
+
 	const result = await response.json();
 
 	if (response.ok) {
-		if (!result.family) {
-			return undefined;
-		}
 		return {
-			name: result.family.name,
-			color: result.family.color
+			name: result.name,
+			color: result.color
 		};
 	} else {
 		throw new Error(result.message || `Erreur lors de l'obtention des informations de la famille`);
+	}
+}
+
+export async function getFamilyImage(token) {
+	try {
+		const response = await fetch('/api/families/my-family/image', {
+			headers: {
+				'Authorization': `Bearer ${token}`,
+			},
+		});
+
+		if (response.status === 404) {
+			return undefined;
+		}
+
+		const blob = await response.blob();
+
+		return URL.createObjectURL(blob);
+	} catch (error) {
+		throw new Error(error || `Erreur lors du chargement de l'image de la famille`);
 	}
 }
 

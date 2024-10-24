@@ -8,8 +8,11 @@ const verifyJWT = require("../middlewares/auth/authMiddleware");
 router.get('/my-family', verifyJWT, async (req, res, next) => {
 	try {
 		const family = await FamilyServices.getFamilyById(req.user.userId);
-
-		res.json({family: family || null});
+		if (family) {
+			res.json(family);
+		} else {
+			res.status(404).send();
+		}
 	} catch (err) {
 		return next(err);
 	}
@@ -44,6 +47,8 @@ router.get('/my-family/image', verifyJWT, async (req, res, next) => {
 				res.header('Content-Type', imageInfo.imageContentType);
 			}
 			res.send(imageInfo.imageContent);
+		} else {
+			res.status(404).send();
 		}
 	} catch (err) {
 		return next(err);
