@@ -7,10 +7,6 @@ const verifyJWT = (req, res, next) => {
 
 	token = authHeader && authHeader.split(' ')[1];  // Extraction du token si "Bearer <token>"
 
-	if (!token) {
-		token = req.query.token;
-	}
-
 	if (!token || token === '') {
 		return next(new HttpError(401, "Erreur lors de la récupération du token"));
 	}
