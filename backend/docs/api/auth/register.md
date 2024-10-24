@@ -2,7 +2,7 @@
 
 Inscrit un nouvel utilisateur et récupère un token d'authentification.
 
-**URL** : `/api/register/`
+**URL** : `/auth/register/`
 
 **Méthode** : `POST`
 

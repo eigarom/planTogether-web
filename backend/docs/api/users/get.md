@@ -1,8 +1,8 @@
-# Affiche les informations
+# Récupérer les informations
 
-Fourni les information de l'utilisateur authentifié.
+Fourni les informations de l'utilisateur authentifié.
 
-**URL** : `/api/users/me`
+**URL** : `/users/me`
 
 **Méthode** : `GET`
 
@@ -21,8 +21,6 @@ Fourni les information de l'utilisateur authentifié.
     "email": "johndoe@exemple.com",
 	"name": "John Doe",
 	"color": "#FF0000",
-	"imageContent": "ffd8ffe000...",
-	"imageContentType": "image/jpeg",
 	"lang": "fr",
 	"theme": "dark"
 }
