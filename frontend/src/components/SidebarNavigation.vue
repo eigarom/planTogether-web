@@ -1,13 +1,14 @@
 <template>
-	<Menu :model="items" class="m-3 ">
+	<Menu :model="items" class="p-1 h-fit border-0">
 		<template #start>
-			<div class="flex flex-col items-center mt-2">
-				<span class="text-xl font-semibold">PLAN<span class="text-blue-200">TOGETHER</span></span>
-
-				<Image :src="`/api/families/my-family/image?token=${token}`" alt="Image famille" width="170"/>
+			<div class="flex flex-col items-center py-2">
+				<span class="text-xl font-semibold">PLAN<span class="text-blue-300">TOGETHER</span></span>
+				<Image v-if="familyImageUrl" :src="familyImageUrl" alt="Image famille"
+					   image-class="rounded-xl"
+					   width="170"/>
 			</div>
-
 		</template>
+
 		<template #item="{ item, props }">
 			<router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
 				<a :href="href" v-bind="props.action" @click="navigate">
@@ -15,15 +16,26 @@
 					<span class="ml-2">{{ item.label }}</span>
 				</a>
 			</router-link>
+
 			<a v-else v-bind="props.action" @click="item.action">
 				<span :class="item.icon"/>
 				<span class="ml-2">{{ item.label }}</span>
 			</a>
 		</template>
+
 		<template #end>
-			<div class="inline-flex items-center gap-3 ml-3">
-				<Avatar :image="`/api/users/me/image?token=${token}`" class="border-2" shape="circle" size="large"/>
-				<span class="lato-bold">{{ user.name }}</span>
+			<div class="inline-flex items-center px-3 py-2 justify-between w-full">
+				<div class="inline-flex items-center gap-3">
+					<Avatar v-if="userImageUrl" :image="`/api/users/me/image?token=${token}`"
+							shape="circle" size="small"/>
+					<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
+							class="font-semibold text-white" shape="circle" size="small"/>
+					<span class="font-black">{{ user.name }}</span>
+				</div>
+
+				<router-link class="flex items-center" to="/settings">
+					<span class="pi pi-cog"></span>
+				</router-link>
 			</div>
 		</template>
 	</Menu>
@@ -33,10 +45,13 @@
 import Menu from 'primevue/menu';
 import Image from "primevue/image";
 import Avatar from "primevue/avatar";
+import Button from "primevue/button";
+import {getFamilyImage} from "@/services/familyServices.js";
+import {getUserImage} from "@/services/userServices.js";
 
 export default {
 	components: {
-		Menu, Image, Avatar
+		Menu, Image, Avatar, Button
 	},
 	inject: ['token', 'user', 'logout'],
 	data() {
@@ -44,11 +59,21 @@ export default {
 			items: [
 				{separator: true},
 				{label: 'Calendrier', icon: 'pi pi-calendar', route: '/events'},
-				{label: 'Paramètres', icon: 'pi pi-cog', route: '/settings'},
 				{label: 'Se déconnecter', icon: 'pi pi-sign-out', action: this.logout},
 				{separator: true}
-			]
+			],
+			familyImageUrl: null,
+			userImageUrl: null
 		};
-	}
+	},
+	computed: {
+		userInitial() {
+			return this.user.name.charAt(0).toUpperCase();
+		}
+	},
+	async mounted() {
+		this.familyImageUrl = await getFamilyImage(this.token);
+		this.userImageUrl = await getUserImage(this.token);
+	},
 }
 </script>
