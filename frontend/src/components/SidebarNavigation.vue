@@ -1,5 +1,5 @@
 <template>
-	<Menu :model="items" class="p-1 h-fit border-0">
+	<Menu id="sidebar" :model="items" class="p-1 h-fit border-0">
 		<template #start>
 			<div class="flex flex-col items-center py-2">
 				<span class="text-xl font-semibold">PLAN<span class="text-blue-300">TOGETHER</span></span>
