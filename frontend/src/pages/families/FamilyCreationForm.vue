@@ -1,25 +1,26 @@
 <template>
-	<div class="flex align-items-center justify-content-center min-h-screen">
-		<div class="flex flex-column ">
-			<h1 class="align-self-center">Créer une famille</h1>
-			<form id="familycreationForm" class="flex flex-column row-gap-3 align-content-center w-20rem"
+	<FloatingTitle/>
+
+	<div class="flex h-full justify-center items-center">
+		<div class="w-80">
+			<h1 class="text-3xl mb-8 text-center font-medium">Créer une famille</h1>
+			<form id="familycreationForm" class="flex flex-col gap-5"
 				  @submit.prevent="submitCreateFamily">
 
-
 				<FloatLabel variant="on">
-					<InputText id="name" v-model.trim="name" class="w-20rem"/>
+					<InputText id="name" v-model.trim="name" class="w-full"/>
 					<label for="name">Nom</label>
 				</FloatLabel>
 
 
-				<div class="flex justify-content-between">
-					<label for="color">Couleur des événements communs </label>
+				<div class="flex justify-between px-3">
+					<label class="font-medium" for="color">Couleur des événements communs </label>
 					<ColorPicker v-model="color" format="hex" inputId="color"/>
 				</div>
 
 				<!-- <Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message> -->
 
-				<Button :disabled="isCreateFamilyDisabled" label="Confirmer" type="submit"/>
+				<Button :disabled="isCreateFamilyDisabled" label="Confirmer" raised type="submit"/>
 			</form>
 		</div>
 	</div>
@@ -33,10 +34,11 @@ import FloatLabel from "primevue/floatlabel";
 import ColorPicker from 'primevue/colorpicker';
 import {createFamily} from "@/services/familyServices.js";
 import {createFamilySchema} from "@/schemas/familySchemas.js";
+import FloatingTitle from "@/components/FloatingTitle.vue";
 
 export default {
 	components: {
-		InputText, Button, Message, FloatLabel, ColorPicker
+		FloatingTitle, InputText, Button, Message, FloatLabel, ColorPicker
 	},
 	data: () => {
 		return {

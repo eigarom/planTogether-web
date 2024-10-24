@@ -5,20 +5,41 @@ export async function getUserFromToken(token) {
 		}
 	});
 
+	if (response.status === 404) {
+		return undefined;
+	}
+
 	const result = await response.json();
 
 	if (response.ok) {
-		if (!result.user) {
-			return undefined;
-		}
 		return {
-			email: result.user.email,
-			name: result.user.name,
-			color: result.user.color,
-			lang: result.user.lang,
-			theme: result.user.theme
+			email: result.email,
+			name: result.name,
+			color: result.color,
+			lang: result.lang,
+			theme: result.theme
 		};
 	} else {
 		throw new Error(result.message || `Erreur lors de l'obtention des informations de l'utilisateur`);
+	}
+}
+
+export async function getUserImage(token) {
+	try {
+		const response = await fetch('/api/users/me/image', {
+			headers: {
+				'Authorization': `Bearer ${token}`,
+			},
+		});
+
+		if (response.status === 404) {
+			return undefined;
+		}
+
+		const blob = await response.blob();
+
+		return URL.createObjectURL(blob);
+	} catch (error) {
+		throw new Error(error || `Erreur lors du chargement de l'image de l,utilisateur`);
 	}
 }

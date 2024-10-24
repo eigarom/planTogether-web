@@ -4,7 +4,7 @@
 	</div>
 	<div v-else class="flex gap-3 w-full h-screen">
 		<SidebarNavigation v-if="user && family"/>
-		<div class="flex-grow flex justify-center items-center">
+		<div class="flex-grow bg-surface-50">
 			<router-view></router-view>
 		</div>
 	</div>
