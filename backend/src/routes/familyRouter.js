@@ -11,7 +11,7 @@ router.get('/my-family', verifyJWT, async (req, res, next) => {
 		if (family) {
 			res.json(family);
 		} else {
-			res.status(404).send();
+			next(new HttpError(404, `Famille introuvable`))
 		}
 	} catch (err) {
 		return next(err);
@@ -26,9 +26,7 @@ router.post("/", verifyJWT, async (req, res, next) => {
 
 	const newFamily = {
 		name: "" + req.body.name,
-		color: "" + req.body.color,
-		imageContent: "" + req.body.imageContent,
-		imageContentType: "" + req.body.imageContentType,
+		color: "" + req.body.color
 	};
 	const userId = req.user.userId;
 	try {
@@ -42,13 +40,11 @@ router.post("/", verifyJWT, async (req, res, next) => {
 router.get('/my-family/image', verifyJWT, async (req, res, next) => {
 	try {
 		const imageInfo = await FamilyServices.getFamilyImageContent(req.user.familyId);
-		if (imageInfo && imageInfo.imageContent) {
-			if (imageInfo.imageContentType) {
-				res.header('Content-Type', imageInfo.imageContentType);
-			}
+		if (imageInfo) {
+			res.header('Content-Type', imageInfo.imageContentType);
 			res.send(imageInfo.imageContent);
 		} else {
-			res.status(404).send();
+			next(new HttpError(404, `Image de la famille introuvable`))
 		}
 	} catch (err) {
 		return next(err);
