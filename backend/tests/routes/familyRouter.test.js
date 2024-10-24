@@ -12,7 +12,6 @@ jest.mock('../../src/middlewares/auth/authMiddleware', () => jest.fn((req, res, 
 
 jest.mock('../../src/services/FamilyServices');
 const mockFamilyServices = require('../../src/services/FamilyServices');
-const mockUserAccountServices = require("../../src/services/UserAccountServices");
 
 describe('Family Routes', () => {
 
