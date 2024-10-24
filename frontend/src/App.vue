@@ -2,9 +2,9 @@
 	<div v-if="loading">
 		<p>Loading...</p>
 	</div>
-	<div v-else class="flex gap-3 w-full h-screen">
+	<div v-else class="flex gap-3 w-full h-screen p-3 bg-surface-50">
 		<SidebarNavigation v-if="user && family"/>
-		<div class="flex-grow bg-surface-50">
+		<div class="flex-grow">
 			<router-view></router-view>
 		</div>
 	</div>
