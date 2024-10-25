@@ -18,7 +18,7 @@
 					<ColorPicker v-model="color" format="hex" inputId="color"/>
 				</div>
 
-				<!-- <Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message> -->
+				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
 				<Button :disabled="isCreateFamilyDisabled" label="Confirmer" raised type="submit"/>
 			</form>

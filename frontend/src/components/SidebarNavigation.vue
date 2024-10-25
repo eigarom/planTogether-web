@@ -45,13 +45,12 @@
 import Menu from 'primevue/menu';
 import Image from "primevue/image";
 import Avatar from "primevue/avatar";
-import Button from "primevue/button";
 import {getFamilyImage} from "@/services/familyServices.js";
 import {getUserImage} from "@/services/userServices.js";
 
 export default {
 	components: {
-		Menu, Image, Avatar, Button
+		Menu, Image, Avatar
 	},
 	inject: ['token', 'user', 'logout'],
 	data() {

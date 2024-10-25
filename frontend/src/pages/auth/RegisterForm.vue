@@ -62,7 +62,6 @@ import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
 import Password from 'primevue/password';
 import Message from 'primevue/message';
-import Divider from 'primevue/divider';
 import FloatLabel from "primevue/floatlabel";
 import {registrationSchema} from "@/schemas/authSchemas.js";
 import {register} from "@/services/authServices.js";
@@ -70,7 +69,7 @@ import FloatingTitle from "@/components/FloatingTitle.vue"
 
 export default {
 	components: {
-		InputText, Button, Password, Message, FloatLabel, Divider, FloatingTitle
+		InputText, Button, Password, Message, FloatLabel, FloatingTitle
 	},
 	data: () => {
 		return {
