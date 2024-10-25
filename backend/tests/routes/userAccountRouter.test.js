@@ -21,8 +21,6 @@ describe('Tests routes', () => {
 				email: 'email',
 				name: 'name',
 				color: 'color',
-				imageContent: 'imageContent',
-				imageContentType: 'imageContentType',
 				lang: 'lang',
 				theme: 'theme'
 			};
@@ -52,6 +50,43 @@ describe('Tests routes', () => {
 
 			await request(app)
 				.get('/users/me')
+				.expect(500);
+		});
+	});
+
+	describe('GET /users/me/image', () => {
+		it('should return user image with code 200', async () => {
+			const onePixelTransparentPngImage = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=", "base64");
+			const mockUserImageDetails = {
+				imageContent: onePixelTransparentPngImage,
+				imageContentType: 'image/jpeg'
+			};
+
+			mockUserAccountServices.getUserImageContent.mockResolvedValue(mockUserImageDetails);
+
+			const response = await request(app)
+				.get('/users/me/image')
+				.expect('Content-Type', 'image/jpeg')
+				.expect(200)
+
+			expect(response.body).toEqual(mockUserImageDetails.imageContent);
+		});
+
+		it('throws return code 404 if user image not found', async () => {
+			mockUserAccountServices.getUserImageContent.mockResolvedValue(undefined);
+
+			const response = await request(app)
+				.get('/users/me/image')
+				.expect(404)
+
+			expect(response.body.message).toEqual(`Image de l'utilisateur introuvable`);
+		});
+
+		it('should return 500 if service fails', async () => {
+			mockUserAccountServices.getUserImageContent.mockRejectedValue(new Error());
+
+			await request(app)
+				.get('/users/me/image')
 				.expect(500);
 		});
 	});

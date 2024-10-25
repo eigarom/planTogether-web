@@ -1,29 +1,78 @@
 <template>
-	<header>
-		<div id="sidebar">
-			<div class="title">
-				<h1>PlanTogether</h1>
-				<p>Planificateur familial</p>
+	<Menu id="sidebar" :model="items" class="p-1 h-fit border-0">
+		<template #start>
+			<div class="flex flex-col items-center py-2">
+				<span class="text-xl font-semibold">PLAN<span class="text-blue-300">TOGETHER</span></span>
+				<Image v-if="familyImageUrl" :src="familyImageUrl" alt="Image famille"
+					   image-class="rounded-xl"
+					   width="170"/>
 			</div>
+		</template>
 
-			<div>
-				<button @click="logout">Déconnexion</button>
+		<template #item="{ item, props }">
+			<router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+				<a :href="href" v-bind="props.action" @click="navigate">
+					<span :class="item.icon"/>
+					<span class="ml-2">{{ item.label }}</span>
+				</a>
+			</router-link>
+
+			<a v-else v-bind="props.action" @click="item.action">
+				<span :class="item.icon"/>
+				<span class="ml-2">{{ item.label }}</span>
+			</a>
+		</template>
+
+		<template #end>
+			<div class="inline-flex items-center px-3 py-2 justify-between w-full">
+				<div class="inline-flex items-center gap-3">
+					<Avatar v-if="userImageUrl" :image="`/api/users/me/image?token=${token}`"
+							shape="circle" size="small"/>
+					<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
+							class="font-semibold text-white" shape="circle" size="small"/>
+					<span class="font-black">{{ user.name }}</span>
+				</div>
+
+				<router-link class="flex items-center" to="/settings">
+					<span class="pi pi-cog"></span>
+				</router-link>
 			</div>
-		</div>
-	</header>
+		</template>
+	</Menu>
 </template>
 
 <script>
+import Menu from 'primevue/menu';
+import Image from "primevue/image";
+import Avatar from "primevue/avatar";
+import {getFamilyImage} from "@/services/familyServices.js";
+import {getUserImage} from "@/services/userServices.js";
+
 export default {
-	methods: {
-		logout() {
-			this.$cookies.remove("jwtToken");
-			window.location.href = "/";
+	components: {
+		Menu, Image, Avatar
+	},
+	inject: ['token', 'user', 'logout'],
+	data() {
+		return {
+			items: [
+				{separator: true},
+				{label: 'Calendrier', icon: 'pi pi-calendar', route: '/events'},
+				{label: 'Se déconnecter', icon: 'pi pi-sign-out', action: this.logout},
+				{separator: true}
+			],
+			familyImageUrl: null,
+			userImageUrl: null
+		};
+	},
+	computed: {
+		userInitial() {
+			return this.user.name.charAt(0).toUpperCase();
 		}
-	}
+	},
+	async mounted() {
+		this.familyImageUrl = await getFamilyImage(this.token);
+		this.userImageUrl = await getUserImage(this.token);
+	},
 }
 </script>
-
-<style>
-
-</style>

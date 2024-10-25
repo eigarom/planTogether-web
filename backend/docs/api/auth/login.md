@@ -2,7 +2,7 @@
 
 Récupère un token pour un utilisateur enregistré.
 
-**URL** : `/api/login/`
+**URL** : `/auth/login/`
 
 **Méthode** : `POST`
 
