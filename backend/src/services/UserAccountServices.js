@@ -1,5 +1,4 @@
 const UserAccountQueries = require("../queries/UserAccountQueries");
-const FamilyQueries = require("../queries/FamilyQueries");
 
 class UserAccountServices {
 
