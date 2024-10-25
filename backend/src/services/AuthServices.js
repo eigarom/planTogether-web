@@ -25,7 +25,7 @@ class AuthServices {
 
 		const hashedPassword = await hashPassword(password);
 
-		const newUserId = await UserAccountQueries.insertUserAccount(email, hashedPassword, name);
+		const newUserId = await UserAccountQueries.insertUser(email, hashedPassword, name);
 
 		const newUser = {
 			email: email,

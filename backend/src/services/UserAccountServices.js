@@ -41,6 +41,11 @@ class UserAccountServices {
 		}
 		return undefined;
 	}
+
+	static async updateUser(user) {
+		await UserAccountQueries.updateUser(user);
+		return this.getUserById(user.id);
+	}
 }
 
 module.exports = UserAccountServices;

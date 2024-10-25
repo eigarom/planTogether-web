@@ -33,7 +33,7 @@ class UserAccountQueries {
 		return result.rows[0];
 	}
 
-	static async insertUserAccount(email, hashedPassword, name) {
+	static async insertUser(email, hashedPassword, name) {
 		const client = await pool.connect();
 
 		try {
@@ -56,6 +56,37 @@ class UserAccountQueries {
 
 			await client.query('COMMIT');
 			return memberId;
+		} catch (err) {
+			await client.query('ROLLBACK');
+			throw err;
+		} finally {
+			client.release();
+		}
+	}
+
+	static async updateUser(user) {
+		const client = await pool.connect();
+
+		try {
+			await client.query('BEGIN');
+
+			await client.query(
+				`UPDATE member
+                 SET name  = $2,
+                     color = $3
+                 WHERE id_member = $1`,
+				[user.id, user.name, user.color]
+			);
+
+			await client.query(
+				`UPDATE account_member
+                 SET lang  = $2,
+                     theme = $3
+                 WHERE id_member = $1`,
+				[user.id, user.lang, user.theme]
+			);
+
+			await client.query('COMMIT');
 		} catch (err) {
 			await client.query('ROLLBACK');
 			throw err;

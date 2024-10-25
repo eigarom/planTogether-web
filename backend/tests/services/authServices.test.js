@@ -60,7 +60,7 @@ describe('Test authentification services', () => {
 		it('should return a token for successful registration', async () => {
 			UserAccountServices.getUserCredentialsByEmail.mockResolvedValue(null);
 			authUtils.hashPassword.mockResolvedValue('hashedPassword');
-			UserAccountQueries.insertUserAccount.mockResolvedValue('newUserId');
+			UserAccountQueries.insertUser.mockResolvedValue('newUserId');
 			authUtils.generateToken.mockReturnValue('mockToken');
 
 			const token = await AuthServices.register('test@example.com', 'StrongPassword1*', 'Test User');
@@ -70,7 +70,7 @@ describe('Test authentification services', () => {
 		it('should throw an error if inserting user account fails', async () => {
 			UserAccountServices.getUserCredentialsByEmail.mockResolvedValue(null);
 			authUtils.hashPassword.mockResolvedValue('hashedPassword');
-			UserAccountQueries.insertUserAccount.mockRejectedValue(new Error('Insert failed'));
+			UserAccountQueries.insertUser.mockRejectedValue(new Error('Insert failed'));
 
 			await expect(AuthServices.register('test@example.com', 'StrongPassword1*', 'Test User'))
 				.rejects
