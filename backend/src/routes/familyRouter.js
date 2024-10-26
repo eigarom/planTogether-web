@@ -7,7 +7,7 @@ const verifyJWT = require("../middlewares/auth/authMiddleware");
 
 router.get('/my-family', verifyJWT, async (req, res, next) => {
 	try {
-		const family = await FamilyServices.getFamilyById(req.user.userId);
+		const family = await FamilyServices.getFamilyById(req.user.familyId);
 		if (family) {
 			res.json(family);
 		} else {
