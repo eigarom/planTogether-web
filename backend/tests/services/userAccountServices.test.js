@@ -10,8 +10,6 @@ describe('Test user account services', () => {
 				email: 'email',
 				name: 'name',
 				color: 'color',
-				image_content: 'imageContent',
-				image_content_type: 'imageContentType',
 				lang: 'lang',
 				theme: 'theme'
 			};
@@ -19,8 +17,6 @@ describe('Test user account services', () => {
 				email: 'email',
 				name: 'name',
 				color: 'color',
-				imageContent: 'imageContent',
-				imageContentType: 'imageContentType',
 				lang: 'lang',
 				theme: 'theme'
 			};

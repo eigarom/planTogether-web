@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const errorMiddleware = require('./middlewares/error/errorMiddleware');
 
 const authRouter = require('./routes/authRouter');
+const familyRouter = require('./routes/familyRouter');
 const userAccountRouter = require('./routes/userAccountRouter');
 const eventRouter = require('./routes/eventRouter')
 
@@ -14,6 +15,7 @@ app.use(helmet());
 app.use(morgan("dev"));
 
 app.use('/auth', authRouter);
+app.use('/families', familyRouter);
 app.use('/users', userAccountRouter);
 
 app.use('/families/my-family/events', eventRouter);

@@ -7,6 +7,7 @@ import Aura from '@primevue/themes/aura';
 import App from './App.vue';
 import EventsList from './pages/events/EventsList.vue';
 import LoginForm from "@/pages/auth/LoginForm.vue";
+import FamilyCreationForm from "@/pages/families/FamilyCreationForm.vue";
 import RegisterForm from "@/pages/auth/RegisterForm.vue";
 
 const app = createApp(App);
@@ -31,20 +32,21 @@ app.use(VueCookies, {expires: '100d'});
 const router = createRouter({
 	history: createWebHistory(),
 	routes: [
-		{path: '/events', component: EventsList},
 		{path: '/login', component: LoginForm},
 		{path: '/register', component: RegisterForm},
+		{path: '/events', component: EventsList},
+		{path: '/families/add', component: FamilyCreationForm},
 		{path: '/', redirect: '/events'}
 	]
 });
 router.beforeEach((to, from, next) => {
 		const token = app.config.globalProperties.$cookies.get('jwtToken');
-		if (to.path === '/register') {
+		if (to.path === '/register' && !token) {
 			next();
-		} else if (to.path === '/login' && token) {
-			next('/');
 		} else if (to.path !== '/login' && !token) {
 			next('/login');
+		} else if (to.path === '/login' && token) {
+			next('/');
 		} else {
 			next();
 		}
