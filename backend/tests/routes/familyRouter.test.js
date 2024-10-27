@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../../src/app');
-const authUtils = require('../../src/utils/authUtils');
+//const authUtils = require('../../src/utils/authUtils');
 
 jest.mock('../../src/middlewares/auth/authMiddleware', () => jest.fn((req, res, next) => {
 	req.user = {
