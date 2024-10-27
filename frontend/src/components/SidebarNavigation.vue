@@ -26,7 +26,7 @@
 		<template #end>
 			<div class="inline-flex items-center px-3 py-2 justify-between w-full">
 				<div class="inline-flex items-center gap-3">
-					<Avatar v-if="userImageUrl" :image="`/api/users/me/image?token=${token}`"
+					<Avatar v-if="userImageUrl" :image="userImageUrl"
 							shape="circle" size="small"/>
 					<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
 							class="font-semibold text-white" shape="circle" size="small"/>
@@ -46,7 +46,7 @@ import Menu from 'primevue/menu';
 import Image from "primevue/image";
 import Avatar from "primevue/avatar";
 import {getFamilyImage} from "@/services/familyServices.js";
-import {getUserImage} from "@/services/userServices.js";
+import {getMemberImage} from "@/services/memberServices.js";
 
 export default {
 	components: {
@@ -58,7 +58,7 @@ export default {
 			items: [
 				{separator: true},
 				{label: 'Calendrier', icon: 'pi pi-calendar', route: '/events'},
-				{label: 'Se déconnecter', icon: 'pi pi-sign-out', action: this.logout},
+				{label: 'Se déconnecter', icon: 'pi pi-sign-out', action: this.logout, position: 'last'},
 				{separator: true}
 			],
 			familyImageUrl: null,
@@ -72,7 +72,7 @@ export default {
 	},
 	async mounted() {
 		this.familyImageUrl = await getFamilyImage(this.token);
-		this.userImageUrl = await getUserImage(this.token);
+		this.userImageUrl = await getMemberImage(this.token, this.user.id);
 	},
 }
 </script>

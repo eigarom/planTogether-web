@@ -13,6 +13,7 @@ export async function getUserFromToken(token) {
 
 	if (response.ok) {
 		return {
+			id: result.id,
 			email: result.email,
 			name: result.name,
 			color: result.color,
@@ -21,25 +22,5 @@ export async function getUserFromToken(token) {
 		};
 	} else {
 		throw new Error(result.message || `Erreur lors de l'obtention des informations de l'utilisateur`);
-	}
-}
-
-export async function getUserImage(token) {
-	try {
-		const response = await fetch('/api/users/me/image', {
-			headers: {
-				'Authorization': `Bearer ${token}`,
-			},
-		});
-
-		if (response.status === 404) {
-			return undefined;
-		}
-
-		const blob = await response.blob();
-
-		return URL.createObjectURL(blob);
-	} catch (error) {
-		throw new Error(error || `Erreur lors du chargement de l'image de l,utilisateur`);
 	}
 }
