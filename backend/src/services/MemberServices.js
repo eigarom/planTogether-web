@@ -1,5 +1,4 @@
 const MemberQueries = require("../queries/MemberQueries");
-const UserAccountQueries = require("../queries/UserAccountQueries");
 
 class MemberServices {
 	static async getMemberById(memberId) {
