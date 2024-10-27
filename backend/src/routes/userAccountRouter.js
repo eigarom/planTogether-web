@@ -3,7 +3,6 @@ const router = express.Router();
 const HttpError = require("../middlewares/error/HttpError");
 const UserAccountServices = require("../services/UserAccountServices");
 const verifyJWT = require("../middlewares/auth/authMiddleware");
-const {loginSchema} = require("../schemas/authSchemas");
 const {userAccountSchema} = require("../schemas/userAccountSchemas");
 
 router.get('/me', verifyJWT, async (req, res, next) => {
@@ -13,20 +12,6 @@ router.get('/me', verifyJWT, async (req, res, next) => {
 			res.json(user);
 		} else {
 			next(new HttpError(404, 'Utilisateur introuvable'))
-		}
-	} catch (err) {
-		return next(err);
-	}
-});
-
-router.get('/me/image', verifyJWT, async (req, res, next) => {
-	try {
-		const imageInfo = await UserAccountServices.getUserImageContent(req.user.userId);
-		if (imageInfo) {
-			res.header('Content-Type', imageInfo.imageContentType);
-			res.send(imageInfo.imageContent);
-		} else {
-			next(new HttpError(404, `Image de l'utilisateur introuvable`))
 		}
 	} catch (err) {
 		return next(err);
@@ -47,6 +32,7 @@ router.put('/me', verifyJWT, async (req, res, next) => {
 
 		const userInformations = {
 			id: "" + req.user.userId,
+			email: "" + req.body.email,
 			name: "" + req.body.name,
 			color: "" + req.body.color,
 			lang: "" + req.body.lang,
@@ -60,6 +46,4 @@ router.put('/me', verifyJWT, async (req, res, next) => {
 		next(err);
 	}
 });
-
-
 module.exports = router;

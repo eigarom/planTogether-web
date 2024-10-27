@@ -65,10 +65,11 @@ class UserAccountQueries {
 
 			await client.query(
 				`UPDATE account_member
-                 SET lang  = $2,
-                     theme = $3
+                 SET email = $2,
+                     lang  = $3,
+                     theme = $4
                  WHERE id_member = $1`,
-				[user.id, user.lang, user.theme]
+				[user.id, user.email, user.lang, user.theme]
 			);
 
 			await client.query('COMMIT');
