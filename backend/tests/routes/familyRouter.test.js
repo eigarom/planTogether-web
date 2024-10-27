@@ -4,7 +4,7 @@ const app = require('../../src/app');
 jest.mock('../../src/middlewares/auth/authMiddleware', () => jest.fn((req, res, next) => {
 	req.user = {
 		email: 'email',
-		userId: 'mockUserId',
+		userId: 'userId',
 		familyId: 'familyId'
 	};
 	next();
