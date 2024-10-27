@@ -39,3 +39,19 @@ export async function createFamily(family, token) {
 		throw new Error(result.message || "La famille n'a pas pu être créée:");
 	}
 }
+
+export async function updateFamilyImage(familytId, formData, token) {
+    const response = await fetch(`/api/families/my-family/image`, {
+        method: "POST",
+        headers: {
+           'Authorization': `Bearer ${token}`
+        },
+        body: formData
+    });
+
+    if (response.ok) {
+        return;
+    } else {
+        throw new Error(`Impossible de modifier l'image du produit ${familytId}: ${response.status}`);
+    }
+}

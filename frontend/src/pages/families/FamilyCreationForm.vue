@@ -17,8 +17,7 @@
                     <ColorPicker v-model="color" format="hex" inputId="color" />
                 </div>
 
-                <!-- <Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message> -->
-
+                <Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
                 <Button :disabled="isCreateFamilyDisabled" label="Confirmer" type="submit" />
             </form>
         </div>
@@ -64,8 +63,6 @@ export default {
             const newFamily = {
                 name: this.name,
                 color: "#" + this.color,
-                imageContent: "",
-                imageContentType: ""
             }
             try {
                 const token = this.$cookies.get('jwtToken');
