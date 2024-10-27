@@ -30,6 +30,16 @@ class FamilyServices {
 		}
 		return undefined;
 	}
+
+    static async updateFamilyImage(familyId, imageBuffer, imageContentType) {
+        const result = await FamilyQueries.updateFamilyImage(familyId, imageBuffer, imageContentType);
+
+        if (!result) {
+            throw new Error("Erreur lors de la mise-à-jour de l'image");
+         }
+     
+         return await this.getFamilyImageContent(familyId);
+    }
 }
 
 module.exports = FamilyServices;

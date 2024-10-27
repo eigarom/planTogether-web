@@ -1,5 +1,6 @@
 const request = require('supertest');
 const app = require('../../src/app');
+//const authUtils = require('../../src/utils/authUtils');
 
 jest.mock('../../src/middlewares/auth/authMiddleware', () => jest.fn((req, res, next) => {
 	req.user = {
@@ -9,9 +10,11 @@ jest.mock('../../src/middlewares/auth/authMiddleware', () => jest.fn((req, res, 
 	};
 	next();
 }));
-
+jest.mock('../../src/utils/authUtils');
 jest.mock('../../src/services/FamilyServices');
+jest.mock('../../src/utils/authUtils');
 const mockFamilyServices = require('../../src/services/FamilyServices');
+
 
 describe('Family Routes', () => {
 
@@ -88,4 +91,15 @@ describe('Family Routes', () => {
 				.expect(500);
 		});
 	});
+
+    describe('POST /families', () => {
+        it('should return 400 for invalid family name', async () => {
+            const response = await request(app)
+                .post('/families')
+                .send({ name: 'Bob!', color: 'color' })
+                .expect(400);
+
+            expect(response.body.message).toContain('"name"');
+        });
+    });
 });

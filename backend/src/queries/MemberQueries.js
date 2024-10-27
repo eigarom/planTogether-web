@@ -1,8 +1,8 @@
 const pool = require("./dbPool");
 
 class MemberQueries {
-	static async updateMemberFamilyId(memberId, familyId, client) {
-		await (pool || client).query(
+	static async updateMemberFamilyId(memberId, familyId, client = pool) {
+		await client.query(
 			`UPDATE member
              SET id_family = $2
              WHERE id_member = $1`,

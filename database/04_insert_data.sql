@@ -20,7 +20,7 @@ WITH first_insert AS (
          INSERT INTO account_member (id_member, email, password_hash)
              SELECT id_member,
                     'diddy_kong@banana.com',
-                    '$2a$10$Za93ufIPulDyq.XpPvZ2PuYFVGHe7vd/T10t6D/fh9rY9OxNBJEWi'
+                    '$2a$10$42/27sPyWj/38c2cnJ1iyu7U14Yh5gTA/lylT1r5Hr9LMddXQGFZO'
              FROM second_insert
              RETURNING id_member),
 -- Insertion dans la table 'event' avec l'ID de la famille
