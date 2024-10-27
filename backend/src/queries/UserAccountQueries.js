@@ -1,4 +1,5 @@
 const pool = require("../queries/dbPool");
+const MemberQueries = require("../queries/MemberQueries");
 
 class UserAccountQueries {
 	static async getUserByID(userId) {
@@ -19,16 +20,6 @@ class UserAccountQueries {
                       INNER JOIN member ON account_member.id_member = member.id_member
              WHERE email = $1`,
 			[email]
-		);
-		return result.rows[0];
-	}
-
-	static async getUserImageContent(userId) {
-		const result = await pool.query(
-			`SELECT image_content, image_content_type
-             FROM member
-             WHERE id_member = $1`,
-			[userId]
 		);
 		return result.rows[0];
 	}
@@ -70,13 +61,7 @@ class UserAccountQueries {
 		try {
 			await client.query('BEGIN');
 
-			await client.query(
-				`UPDATE member
-                 SET name  = $2,
-                     color = $3
-                 WHERE id_member = $1`,
-				[user.id, user.name, user.color]
-			);
+			await MemberQueries.updateMemberInformations(user.id, user.name, user.color, client);
 
 			await client.query(
 				`UPDATE account_member
