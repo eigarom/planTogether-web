@@ -1,4 +1,4 @@
-//const pool = require("./dbPool");
+const pool = require("./dbPool");
 
 class MemberQueries {
 	static async updateMemberFamilyId(memberId, familyId, client = pool) {
