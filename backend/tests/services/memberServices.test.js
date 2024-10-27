@@ -1,59 +1,89 @@
-const UserAccountServices = require('../../src/services/UserAccountServices');
+const MemberServices = require('../../src/services/MemberServices');
 
-jest.mock('../../src/queries/UserAccountQueries');
-const mockUserAccountQueries = require('../../src/queries/UserAccountQueries');
+jest.mock('../../src/queries/MemberQueries');
+const mockMemberQueries = require('../../src/queries/MemberQueries');
 
-describe('Test user account services', () => {
-	describe('getUserById', () => {
-		it('should return user informations with valid user Id', async () => {
-			const mockUserDetails = {
-				id: 'userId',
-				email: 'email',
-				name: 'name',
-				color: 'color',
-				lang: 'lang',
-				theme: 'theme'
+describe('Test member services', () => {
+	describe('getMemberById', () => {
+		it('should return member information with valid member ID', async () => {
+			const mockMemberDetails = {
+				name: 'Test User',
+				color: '#ff0000'
 			};
-			const expectUserDetails = mockUserDetails;
+			const expectedMemberDetails = mockMemberDetails;
 
-			mockUserAccountQueries.getUserByID.mockResolvedValue(mockUserDetails);
+			mockMemberQueries.getMemberById.mockResolvedValue(mockMemberDetails);
 
-			const userDetails = await UserAccountServices.getUserById('userId');
-			expect(userDetails).toEqual(expectUserDetails);
+			const memberDetails = await MemberServices.getMemberById('memberId');
+			expect(memberDetails).toEqual(expectedMemberDetails);
 		});
 
-		it('should return "undefined" if user id not found ', async () => {
-			mockUserAccountQueries.getUserByID.mockResolvedValue(undefined);
-			const userDetails = await UserAccountServices.getUserById('userId');
-			expect(userDetails).toBeUndefined();
+		it('should return "undefined" if member ID not found', async () => {
+			mockMemberQueries.getMemberById.mockResolvedValue(undefined);
+			const memberDetails = await MemberServices.getMemberById('memberId');
+			expect(memberDetails).toBeUndefined();
 		});
 	});
 
-	describe('getUserCredentialsByEmail', () => {
-		it('should return user credentials with valid email', async () => {
-			const mockUserCredentials = {
-				email: 'email',
-				password_hash: 'hashedPassword',
-				id_member: 'userId',
-				id_family: 'familyId'
+	describe('getMemberImageContent', () => {
+		it('should return member image content with valid member ID', async () => {
+			const mockImage = {
+				image_content: 'image',
+				image_content_type: 'image/jpeg'
 			};
-			const expectUserCredentials = {
-				email: 'email',
-				password: 'hashedPassword',
-				userId: 'userId',
-				familyId: 'familyId'
+			const expectedImage = {
+				imageContent: 'image',
+				imageContentType: 'image/jpeg'
 			};
 
-			mockUserAccountQueries.getUserCredentialsByEmail.mockResolvedValue(mockUserCredentials);
+			mockMemberQueries.getMemberImageContent.mockResolvedValue(mockImage);
 
-			const userCredentials = await UserAccountServices.getUserCredentialsByEmail('email');
-			expect(userCredentials).toEqual(expectUserCredentials);
+			const image = await MemberServices.getMemberImageContent('memberId');
+			expect(image).toEqual(expectedImage);
 		});
 
-		it('should return "undefined" if user email not found ', async () => {
-			mockUserAccountQueries.getUserCredentialsByEmail.mockResolvedValue(undefined);
-			const userDetails = await UserAccountServices.getUserCredentialsByEmail('email');
-			expect(userDetails).toBeUndefined();
+		it('should return "undefined" if member image content not found', async () => {
+			mockMemberQueries.getMemberImageContent.mockResolvedValue(undefined);
+			const image = await MemberServices.getMemberImageContent('memberId');
+			expect(image).toBeUndefined();
+		});
+	});
+
+	describe('isMemberInFamily', () => {
+		it('should return true if member is in family', async () => {
+			mockMemberQueries.isMemberInFamily.mockResolvedValue(true);
+			const isInFamily = await MemberServices.isMemberInFamily('memberId', 'familyId');
+			expect(isInFamily).toBe(true);
+		});
+
+		it('should return false if member is not in family', async () => {
+			mockMemberQueries.isMemberInFamily.mockResolvedValue(false);
+			const isInFamily = await MemberServices.isMemberInFamily('memberId', 'familyId');
+			expect(isInFamily).toBe(false);
+		});
+	});
+
+	describe('updateMemberImage', () => {
+		it('should update member image and return updated image content', async () => {
+			const mockImage = {
+				imageContent: 'image',
+				imageContentType: 'image/jpeg'
+			};
+			const expectedImage = mockImage;
+
+			mockMemberQueries.updateMemberImage.mockResolvedValue(true);
+			jest.spyOn(MemberServices, 'getMemberImageContent').mockResolvedValue(mockImage);
+
+			const updatedImage = await MemberServices.updateMemberImage('memberId', 'image', 'image/jpeg');
+			expect(updatedImage).toEqual(expectedImage);
+		});
+
+		it('should throw an error if image update fails', async () => {
+			mockMemberQueries.updateMemberImage.mockResolvedValue(false);
+
+			await expect(MemberServices.updateMemberImage('memberId', 'image', 'image/jpeg'))
+				.rejects
+				.toThrow(`Erreur lors de la mise-à-jour de l'image`);
 		});
 	});
 });

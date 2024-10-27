@@ -56,4 +56,25 @@ describe('Test user account services', () => {
 			expect(userDetails).toBeUndefined();
 		});
 	});
+
+	describe('updateUser', () => {
+		it('should update user information and return the updated user', async () => {
+			const mockUserDetails = {
+				id: 'userId',
+				email: 'newemail@example.com',
+				name: 'newname',
+				color: 'newcolor',
+				lang: 'newlang',
+				theme: 'newtheme'
+			};
+
+			const expectedUserDetails = mockUserDetails;
+
+			mockUserAccountQueries.updateUser.mockResolvedValue();
+			mockUserAccountQueries.getUserByID.mockResolvedValue(mockUserDetails);
+
+			const updatedUser = await UserAccountServices.updateUser(mockUserDetails);
+			expect(updatedUser).toEqual(expectedUserDetails);
+		});
+	});
 });
