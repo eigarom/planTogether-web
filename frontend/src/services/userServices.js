@@ -13,6 +13,7 @@ export async function getUserFromToken(token) {
 
 	if (response.ok) {
 		return {
+			id: result.id,
 			email: result.email,
 			name: result.name,
 			color: result.color,

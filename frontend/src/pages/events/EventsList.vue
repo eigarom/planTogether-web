@@ -1,31 +1,22 @@
 <template>
 	<div>
-		<p>Hello {{ this.user.name }} !!!! </p>
 		<div>
-			<h2>Événements du jour</h2>
-			<div v-for="event in filteredEvents" :key="event.id">
+			<h2>Aujourd'hui</h2>
+			<div v-for="event in sortedEventsByTime" :key="event.id"
+				:style="{ backgroundColor: event.color, padding: '10px', borderRadius: '5px', marginBottom: '10px' }">
 				<h3>{{ event.name }}</h3>
 				<div v-for="period in event.periods" :key="period.id">
 					Début : {{ formatTime(period.startDateTime) }} - Fin : {{ formatTime(period.endDateTime) }}
 				</div>
 			</div>
 		</div>
-		<h2>Liste des événements</h2>
-		{{ currentDate }}
-		<EventItem v-for="event in eventsList" :key="event.id" :id="event.id" :name="event.name"
-			:description="event.description" :color="event.color" :isVisible="event.isVisible" :periods="event.periods"
-			:alerts="event.alerts" />
 	</div>
 </template>
 
 <script>
-import EventItem from './EventItem.vue';
 import { fetchEventsList } from '../../services/eventServices';
 
 export default {
-	components: {
-		EventItem
-	},
 	inject: ['user'],
 	data() {
 		return {
@@ -61,16 +52,30 @@ export default {
 		}
 	},
 	computed: {
+		visibleEvents() {
+			
+			return this.eventsList.filter(event => {
+				console.log(this.user);
+				const isParticipant = event.members && event.members.some(member => member.id === this.user.id);
+				return event.isVisible || isParticipant;
+				
+			});
+		},
 		filteredEvents() {
 			const today = new Date().setHours(0, 0, 0, 0);
 
-			return this.eventsList.filter(event =>
+			return this.visibleEvents.filter(event =>
 				event.periods.some(period => {
 					const startTime = new Date(period.startDateTime).setHours(0, 0, 0, 0);
 					const endTime = new Date(period.endDateTime).setHours(0, 0, 0, 0);
 					return (startTime <= today && endTime >= today);
 				})
 			);
+		},
+		sortedEventsByTime() {
+			return this.filteredEvents.slice().sort((a, b) => {
+				return new Date(a.periods[0].startDateTime) - new Date(b.periods[0].startDateTime);
+			});
 		}
 	},
 	mounted() {

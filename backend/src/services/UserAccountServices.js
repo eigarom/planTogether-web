@@ -6,6 +6,7 @@ class UserAccountServices {
 		const result = await UserAccountQueries.getUserByID(userId);
 		if (result) {
 			return {
+				id: userId,
 				email: result.email,
 				name: result.name,
 				color: result.color,

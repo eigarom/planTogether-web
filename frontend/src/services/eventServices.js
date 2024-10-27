@@ -21,6 +21,10 @@ export async function fetchEventsList(token) {
             alerts: event.alerts.map(alert => ({
                 id: alert.id,
                 dateTime: alert.dateTime
+            })),
+            members: event.members.map(member => ({
+                id: member.id,
+                name: member.name
             }))
         }));
 
@@ -29,9 +33,4 @@ export async function fetchEventsList(token) {
     } else {
         throw new Error(result.message || 'Erreur lors de l\'obtention de la liste des événements');
     }
-}
-
-export async function formatDate(dateString) {
-    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false };
-    return new Date(dateString).toLocaleDateString(undefined, options).replace(' at ', ' ');
 }
