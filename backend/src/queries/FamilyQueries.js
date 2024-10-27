@@ -44,7 +44,7 @@ class FamilyQueries {
 	}
 
 	static async insertFamily(family, client) {
-		const result = await client.query(
+		const result = await (pool || client).query(
 			`INSERT INTO family(name, color)
              VALUES ($1, $2)
              RETURNING id_family`,

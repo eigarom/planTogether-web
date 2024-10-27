@@ -17,7 +17,7 @@ describe('tests registration', function () {
 			.setValue('#registerForm #name', 'Test User')
 			.click('#registerForm button[type=submit]')
 			.waitForElementNotPresent('#registerForm', 5000)
-			.assert.urlEquals('http://localhost:5173/events');
+			.assert.urlEquals('http://localhost:5173/families/add');
 	});
 
 	it('should fail to register with invalid email', function (browser) {

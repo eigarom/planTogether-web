@@ -11,8 +11,11 @@ const upload = multer({ storage: storage });
 router.get('/my-family', verifyJWT, async (req, res, next) => {
 	try {
 		const family = await FamilyServices.getFamilyById(req.user.userId);
-
-		res.json({family: family || null});
+		if (family) {
+			res.json(family);
+		} else {
+			next(new HttpError(404, `Famille introuvable`))
+		}
 	} catch (err) {
 		return next(err);
 	}
@@ -40,11 +43,11 @@ router.post("/", verifyJWT, async (req, res, next) => {
 router.get('/my-family/image', verifyJWT, async (req, res, next) => {
 	try {
 		const imageInfo = await FamilyServices.getFamilyImageContent(req.user.familyId);
-		if (imageInfo && imageInfo.imageContent) {
-			if (imageInfo.imageContentType) {
-				res.header('Content-Type', imageInfo.imageContentType);
-			}
+		if (imageInfo) {
+			res.header('Content-Type', imageInfo.imageContentType);
 			res.send(imageInfo.imageContent);
+		} else {
+			next(new HttpError(404, `Image de la famille introuvable`))
 		}
 	} catch (err) {
 		return next(err);

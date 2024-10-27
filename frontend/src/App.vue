@@ -2,9 +2,11 @@
 	<div v-if="loading">
 		<p>Loading...</p>
 	</div>
-	<div v-else class="flex gap-3 w-full">
-		<SidebarNavigation v-if="user && family" class="container"/>
-		<router-view class="flex-grow justify-center items-center"></router-view>
+	<div v-else class="flex gap-3 w-full h-screen p-3 bg-surface-50">
+		<SidebarNavigation v-if="user && family"/>
+		<div class="flex-grow">
+			<router-view></router-view>
+		</div>
 	</div>
 </template>
 
@@ -79,7 +81,4 @@ export default {
 </script>
 
 <style>
-.container {
-	height: calc(100vh - 16px);
-}
 </style>

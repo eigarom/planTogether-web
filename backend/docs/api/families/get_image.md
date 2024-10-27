@@ -1,8 +1,8 @@
-# Récupérer les informations
+# Récupérer l'image de la famille
 
-Fourni les informations de l'utilisateur authentifié.
+Fourni l'image de la famille de l'utilisateur authentifié.
 
-**URL** : `/users/me`
+**URL** : `/families/my_family/image`
 
 **Méthode** : `GET`
 
@@ -14,20 +14,12 @@ Fourni les informations de l'utilisateur authentifié.
 
 **Code** : `200 OK`
 
-**Exemple de contenu**
+**Contenu**
 
-```json
-{
-    "email": "johndoe@exemple.com",
-	"name": "John Doe",
-	"color": "#FF0000",
-	"lang": "fr",
-	"theme": "dark"
-}
-```
+Image de profil de la famille de l'utilisateur.
 
 ## Opération échouée
-### Si le token utilisé contient l'id d'un utilisateur inexistant.
+### Si le token utilisé contient l'id d'une famille inexistante.
 
 **Code** : `404 Not found`
 
@@ -36,7 +28,7 @@ Fourni les informations de l'utilisateur authentifié.
 ```json
 {
     "status":404,
-    "message":"Utilisateur introuvable"
+    "message":"Image de la famille introuvable"
 }
 ```
 

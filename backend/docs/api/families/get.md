@@ -1,8 +1,8 @@
 # Récupérer les informations
 
-Fourni les informations de l'utilisateur authentifié.
+Fourni les informations de la famille de l'utilisateur authentifié.
 
-**URL** : `/users/me`
+**URL** : `/families/my-family`
 
 **Méthode** : `GET`
 
@@ -18,16 +18,13 @@ Fourni les informations de l'utilisateur authentifié.
 
 ```json
 {
-    "email": "johndoe@exemple.com",
-	"name": "John Doe",
-	"color": "#FF0000",
-	"lang": "fr",
-	"theme": "dark"
+    "name": "Famille Bleau",
+	"color": "#FF0000"
 }
 ```
 
 ## Opération échouée
-### Si le token utilisé contient l'id d'un utilisateur inexistant.
+### Si le token utilisé contient l'id d'une famille inexistante.
 
 **Code** : `404 Not found`
 
@@ -36,7 +33,7 @@ Fourni les informations de l'utilisateur authentifié.
 ```json
 {
     "status":404,
-    "message":"Utilisateur introuvable"
+    "message":"Famille introuvable"
 }
 ```
 
