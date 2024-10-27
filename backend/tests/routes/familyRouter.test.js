@@ -93,26 +93,6 @@ describe('Family Routes', () => {
 	});
 
     describe('POST /families', () => {
-        // it('should return family informations in json with code 201', async () => {
-        //     const mockFamilyDetails = {
-        //         name: 'name',
-        //         color: 'color'
-        //     };
-
-        //     const mockToken = 'mockToken';
-
-        //     mockFamilyServices.createFamily.mockResolvedValue(mockFamilyDetails);
-        //     authUtils.generateToken.mockReturnValue(mockToken);
-
-        //     const response = await request(app)
-        //         .post('/families')
-        //         .send({ name: 'name', color: 'color' })
-        //         .expect('Content-Type', /json/)
-        //         .expect(201)
-
-        //         expect(response.body.family).toEqual(mockFamilyDetails);
-        //         expect(response.body.token).toEqual(mockToken);
-        // });
         it('should return 400 for invalid family name', async () => {
             const response = await request(app)
                 .post('/families')
@@ -122,23 +102,4 @@ describe('Family Routes', () => {
             expect(response.body.message).toContain('"name"');
         });
     });
-    // describe('PUT /families/my-family/image', () => {
-    //     it('should update family image and return it', async () => {
-    //         const mockImageContent = Buffer.from('image content');
-    //         const mockImageContentType = 'image/jpeg';
-
-    //         mockFamilyServices.updateFamilyImage.mockResolvedValue({
-    //             imageContent: mockImageContent,
-    //             imageContentType: mockImageContentType
-    //         });
-
-    //         const response = await request(app)
-    //             .put('/families/my-family/image')
-    //             .attach('family-image', mockImageContent)
-    //             .expect('Content-Type', mockImageContentType)
-    //             .expect(200);
-
-    //         expect(response.body).toEqual(mockImageContent);
-    //     });
-    // });
 });
