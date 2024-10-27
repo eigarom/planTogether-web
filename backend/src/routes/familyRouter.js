@@ -40,7 +40,7 @@ router.post("/", verifyJWT, async (req, res, next) => {
 router.get('/my-family/image', verifyJWT, async (req, res, next) => {
 	try {
 		const imageInfo = await FamilyServices.getFamilyImageContent(req.user.familyId);
-		if (imageInfo) {
+		if (imageInfo && imageInfo.imageContent && imageInfo.imageContentType) {
 			res.header('Content-Type', imageInfo.imageContentType);
 			res.send(imageInfo.imageContent);
 		} else {

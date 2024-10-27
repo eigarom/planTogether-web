@@ -5,6 +5,11 @@ const HttpError = require("../middlewares/error/HttpError");
 const MemberServices = require("../services/MemberServices");
 const {imageSchema} = require("../schemas/imageSchemas");
 
+// Le module multer sert à gérer les téléversements (upload) de fichiers
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({storage: storage});
+
 const verifyMemberId = async (req, res, next) => {
 	const memberId = req.params.id;
 
@@ -17,7 +22,7 @@ const verifyMemberId = async (req, res, next) => {
 router.get('/:id/image', verifyJWT, verifyMemberId, async (req, res, next) => {
 	try {
 		const imageInfo = await MemberServices.getMemberImageContent(req.params.id);
-		if (imageInfo) {
+		if (imageInfo && imageInfo.imageContent && imageInfo.imageContentType) {
 			res.header('Content-Type', imageInfo.imageContentType);
 			res.send(imageInfo.imageContent);
 		} else {
@@ -28,30 +33,34 @@ router.get('/:id/image', verifyJWT, verifyMemberId, async (req, res, next) => {
 	}
 });
 
-router.put('/:id/image', verifyJWT, verifyMemberId, async (req, res, next) => {
-	const {error} = imageSchema.validate(req.body);
-	if (error) {
-		return next(new HttpError(400, error.message));
-	}
-
-	try {
-		const member = await MemberServices.getMemberById(req.params.id);
-		if (!member) {
-			return next(new HttpError(404, `Membre introuvable`));
+router.put('/:id/image', verifyJWT, verifyMemberId,
+	// Fonction middleware de multer pour gérer l'upload d'un fichier dans ce endpoint.
+	// Cet appel de middleware doit venir après celui de l'authentification.
+	upload.single('user-image'),// Doit correspondre à l'id du champ dans le formulaire html
+	async (req, res, next) => {
+		const {error} = imageSchema.validate({file: req.file});
+		if (error) {
+			return next(new HttpError(400, error.message));
 		}
 
-		const imageInfo = await MemberServices.updateMemberImage(req.params.id, req.file.buffer, req.file.mimetype);
+		try {
+			const member = await MemberServices.getMemberById(req.params.id);
+			if (!member) {
+				return next(new HttpError(404, `Membre introuvable`));
+			}
 
-		if (imageInfo) {
-			res.header('Content-Type', imageInfo.imageContentType);
-			res.send(imageInfo.imageContent);
-		} else {
-			next(new HttpError(500, `Erreur lors de la modification de l'image`))
+			const imageInfo = await MemberServices.updateMemberImage(req.params.id, req.file.buffer, req.file.mimetype);
+
+			if (imageInfo) {
+				res.header('Content-Type', imageInfo.imageContentType);
+				res.send(imageInfo.imageContent);
+			} else {
+				next(new HttpError(500, `Erreur lors de la modification de l'image`))
+			}
+		} catch (err) {
+			next(err);
 		}
-	} catch (err) {
-		next(err);
-	}
-});
+	});
 
 router.delete('/:id/image', verifyJWT, verifyMemberId, async (req, res, next) => {
 	try {

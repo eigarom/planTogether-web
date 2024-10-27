@@ -7,9 +7,11 @@ const imageSchema = Joi.object({
 			.valid('image/jpeg', 'image/png')
 			.required(),
 		size: Joi.number()
-			.max(5 * 1024 * 1024) // Taille maximale de 5 Mo
+			.max(5 * 1024 * 1024)
 			.required(),
-	}).required(),
+	})
+		.unknown(true)
+		.required(),
 });
 
 module.exports = {
