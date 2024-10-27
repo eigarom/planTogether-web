@@ -7,10 +7,12 @@ const verifyJWT = require("../middlewares/auth/authMiddleware");
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+const { generateToken } = require('../utils/authUtils');
+const UserAccountServices = require('../services/UserAccountServices');
 
 router.get('/my-family', verifyJWT, async (req, res, next) => {
 	try {
-		const family = await FamilyServices.getFamilyById(req.user.userId);
+		const family = await FamilyServices.getFamilyById(req.user.familyId);
 		if (family) {
 			res.json(family);
 		} else {
@@ -34,7 +36,10 @@ router.post("/", verifyJWT, async (req, res, next) => {
 	const userId = req.user.userId;
 	try {
 		const family = await FamilyServices.createFamily(newFamily, userId);
-		res.status(201).json(family);
+		const updatedUser = await UserAccountServices.getUserCredentialsByEmail(req.user.email);
+ 
+		const token = generateToken(updatedUser);
+		res.status(201).json({family, token});
 	} catch (err) {
 		return next(err);
 	}

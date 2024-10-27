@@ -70,7 +70,8 @@ export default {
 			}
 			try {
 				const token = this.$cookies.get('jwtToken');
-				await createFamily(newFamily, token);
+				const result = await createFamily(newFamily, token);
+				this.$cookies.set("jwtToken", result.token);
 				window.location.href = '/';
 			} catch (err) {
 				this.errorMessage = "Échec de la création de la famille.";
