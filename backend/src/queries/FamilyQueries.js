@@ -44,7 +44,7 @@ class FamilyQueries {
 	}
 
 	static async insertFamily(family, client) {
-		const result = await pool.query(
+		const result = await client.query(
 			`INSERT INTO family(name, color)
              VALUES ($1, $2)
              RETURNING id_family`,
@@ -52,6 +52,15 @@ class FamilyQueries {
 		);
 		return result.rows[0].id_family;
 	}
+
+    static async updateFamilyImage(familyId, imageBuffer, imageContentType) {
+        const result = await pool.query(
+            `UPDATE family SET image_content = $2, image_content_type = $3
+            WHERE id_family = $1`,
+            [familyId, imageBuffer, imageContentType]
+        );
+        return result.rowCount > 0;
+    };
 }
 
 module.exports = FamilyQueries;
