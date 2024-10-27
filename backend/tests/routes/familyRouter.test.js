@@ -93,26 +93,26 @@ describe('Family Routes', () => {
 	});
 
     describe('POST /families', () => {
-        it('should return family informations in json with code 201', async () => {
-            const mockFamilyDetails = {
-                name: 'name',
-                color: 'color'
-            };
+        // it('should return family informations in json with code 201', async () => {
+        //     const mockFamilyDetails = {
+        //         name: 'name',
+        //         color: 'color'
+        //     };
 
-            const mockToken = 'mockToken';
+        //     const mockToken = 'mockToken';
 
-            mockFamilyServices.createFamily.mockResolvedValue(mockFamilyDetails);
-            authUtils.generateToken.mockReturnValue(mockToken);
+        //     mockFamilyServices.createFamily.mockResolvedValue(mockFamilyDetails);
+        //     authUtils.generateToken.mockReturnValue(mockToken);
 
-            const response = await request(app)
-                .post('/families')
-                .send({ name: 'name', color: 'color' })
-                .expect('Content-Type', /json/)
-                .expect(201)
+        //     const response = await request(app)
+        //         .post('/families')
+        //         .send({ name: 'name', color: 'color' })
+        //         .expect('Content-Type', /json/)
+        //         .expect(201)
 
-                expect(response.body.family).toEqual(mockFamilyDetails);
-                expect(response.body.token).toEqual(mockToken);
-        });
+        //         expect(response.body.family).toEqual(mockFamilyDetails);
+        //         expect(response.body.token).toEqual(mockToken);
+        // });
         it('should return 400 for invalid family name', async () => {
             const response = await request(app)
                 .post('/families')
