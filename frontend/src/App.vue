@@ -1,8 +1,5 @@
 <template>
-	<div v-if="loading">
-		<p>Loading...</p>
-	</div>
-	<div v-else class="flex gap-3 w-full h-screen p-3 bg-surface-50">
+	<div v-if="!isLoading" class="flex gap-3 w-full h-screen p-3 bg-surface-50">
 		<SidebarNavigation v-if="user && family"/>
 		<div class="flex-grow">
 			<router-view></router-view>
@@ -25,7 +22,7 @@ export default {
 			token: '',
 			user: null,
 			family: '',
-			loading: true
+			isLoading: true,
 		};
 	},
 	methods: {
@@ -50,8 +47,6 @@ export default {
 					this.family = await getFamilyFromToken(this.token);
 					if (!this.family) {
 						this.$router.push('/families/add');
-					} else {
-						this.$router.push('/events');
 					}
 				} catch (error) {
 					console.error('Erreur:', error);
@@ -63,11 +58,11 @@ export default {
 			window.location.href = "/";
 		}
 	},
-	async mounted() {
+	async created() {
 		this.getToken();
 		await this.getUserDetails();
 		await this.getFamilyDetails();
-		this.loading = false;
+		this.isLoading = false;
 	},
 	provide() {
 		return {
@@ -79,6 +74,3 @@ export default {
 	}
 }
 </script>
-
-<style>
-</style>

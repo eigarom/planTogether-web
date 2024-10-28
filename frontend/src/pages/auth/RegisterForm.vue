@@ -41,10 +41,7 @@
 					<label for="name">Prénom</label>
 				</FloatLabel>
 
-				<Message v-if="errorMessage" class="error-message" severity="error">{{
-						errorMessage
-					}}
-				</Message>
+				<Message v-if="errorMessage" severity="error">{{ errorMessage }}</Message>
 
 				<Button :disabled="isRegistrationDisabled" label="S'inscrire" raised type="submit"/>
 			</form>

@@ -1,5 +1,5 @@
 <template>
-	<Menu id="sidebar" :model="items" class="p-1 h-fit border-0">
+	<Menu v-if="!isLoading" id="sidebar" :model="items" class="p-1 border-0 h-fit">
 		<template #start>
 			<div class="flex flex-col items-center py-2">
 				<span class="text-xl font-semibold">PLAN<span class="text-blue-300">TOGETHER</span></span>
@@ -10,21 +10,16 @@
 		</template>
 
 		<template #item="{ item, props }">
-			<router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+			<router-link v-slot="{ href, navigate }" :to="item.route" custom>
 				<a :href="href" v-bind="props.action" @click="navigate">
 					<span :class="item.icon"/>
 					<span class="ml-2">{{ item.label }}</span>
 				</a>
 			</router-link>
-
-			<a v-else v-bind="props.action" @click="item.action">
-				<span :class="item.icon"/>
-				<span class="ml-2">{{ item.label }}</span>
-			</a>
 		</template>
 
 		<template #end>
-			<div class="inline-flex items-center px-3 py-2 justify-between w-full">
+			<router-link class="inline-flex items-center px-3 py-2 justify-between w-full" to="/user">
 				<div class="inline-flex items-center gap-3">
 					<Avatar v-if="userImageUrl" :image="userImageUrl"
 							shape="circle" size="small"/>
@@ -32,11 +27,8 @@
 							class="font-semibold text-white" shape="circle" size="small"/>
 					<span class="font-black">{{ user.name }}</span>
 				</div>
-
-				<router-link class="flex items-center" to="/settings">
-					<span class="pi pi-cog"></span>
-				</router-link>
-			</div>
+				<span class="pi pi-sign-out" @click="logout"></span>
+			</router-link>
 		</template>
 	</Menu>
 </template>
@@ -58,11 +50,11 @@ export default {
 			items: [
 				{separator: true},
 				{label: 'Calendrier', icon: 'pi pi-calendar', route: '/events'},
-				{label: 'Se déconnecter', icon: 'pi pi-sign-out', action: this.logout, position: 'last'},
 				{separator: true}
 			],
-			familyImageUrl: null,
-			userImageUrl: null
+			familyImageUrl: '',
+			userImageUrl: '',
+			isLoading: true
 		};
 	},
 	computed: {
@@ -70,9 +62,10 @@ export default {
 			return this.user.name.charAt(0).toUpperCase();
 		}
 	},
-	async mounted() {
+	async created() {
 		this.familyImageUrl = await getFamilyImage(this.token);
 		this.userImageUrl = await getMemberImage(this.token, this.user.id);
-	},
+		this.isLoading = false;
+	}
 }
 </script>
