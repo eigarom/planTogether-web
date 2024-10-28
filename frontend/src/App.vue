@@ -1,8 +1,5 @@
 <template>
-	<div v-if="loading">
-		<p>Loading...</p>
-	</div>
-	<div v-else class="flex gap-3 w-full h-screen p-3 bg-surface-50">
+	<div v-if="!isLoading" class="flex gap-3 w-full h-screen p-3 bg-surface-50">
 		<SidebarNavigation v-if="user && family"/>
 		<div class="flex-grow">
 			<router-view></router-view>
@@ -15,6 +12,7 @@ import {computed} from 'vue';
 import SidebarNavigation from './components/SidebarNavigation.vue';
 import {getUserFromToken} from "@/services/userServices.js";
 import {getFamilyFromToken} from "@/services/familyServices.js";
+import {getMemberImage} from "@/services/memberServices.js";
 
 export default {
 	components: {
@@ -25,7 +23,7 @@ export default {
 			token: '',
 			user: null,
 			family: '',
-			loading: true
+			isLoading: true,
 		};
 	},
 	methods: {
@@ -39,6 +37,7 @@ export default {
 					if (!this.user) {
 						this.logout();
 					}
+					this.user.imageUrl = await getMemberImage(this.token, this.user.id);
 				} catch (error) {
 					console.error('Erreur:', error);
 				}
@@ -50,8 +49,6 @@ export default {
 					this.family = await getFamilyFromToken(this.token);
 					if (!this.family) {
 						this.$router.push('/families/add');
-					} else {
-						this.$router.push('/events');
 					}
 				} catch (error) {
 					console.error('Erreur:', error);
@@ -63,11 +60,11 @@ export default {
 			window.location.href = "/";
 		}
 	},
-	async mounted() {
+	async created() {
 		this.getToken();
 		await this.getUserDetails();
 		await this.getFamilyDetails();
-		this.loading = false;
+		this.isLoading = false;
 	},
 	provide() {
 		return {
@@ -79,6 +76,3 @@ export default {
 	}
 }
 </script>
-
-<style>
-</style>

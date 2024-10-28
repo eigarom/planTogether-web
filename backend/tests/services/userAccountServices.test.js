@@ -7,19 +7,14 @@ describe('Test user account services', () => {
 	describe('getUserById', () => {
 		it('should return user informations with valid user Id', async () => {
 			const mockUserDetails = {
+				id: 'userId',
 				email: 'email',
 				name: 'name',
 				color: 'color',
 				lang: 'lang',
 				theme: 'theme'
 			};
-			const expectUserDetails = {
-				email: 'email',
-				name: 'name',
-				color: 'color',
-				lang: 'lang',
-				theme: 'theme'
-			};
+			const expectUserDetails = mockUserDetails;
 
 			mockUserAccountQueries.getUserByID.mockResolvedValue(mockUserDetails);
 
@@ -59,6 +54,27 @@ describe('Test user account services', () => {
 			mockUserAccountQueries.getUserCredentialsByEmail.mockResolvedValue(undefined);
 			const userDetails = await UserAccountServices.getUserCredentialsByEmail('email');
 			expect(userDetails).toBeUndefined();
+		});
+	});
+
+	describe('updateUser', () => {
+		it('should update user information and return the updated user', async () => {
+			const mockUserDetails = {
+				id: 'userId',
+				email: 'newemail@example.com',
+				name: 'newname',
+				color: 'newcolor',
+				lang: 'newlang',
+				theme: 'newtheme'
+			};
+
+			const expectedUserDetails = mockUserDetails;
+
+			mockUserAccountQueries.updateUser.mockResolvedValue();
+			mockUserAccountQueries.getUserByID.mockResolvedValue(mockUserDetails);
+
+			const updatedUser = await UserAccountServices.updateUser(mockUserDetails);
+			expect(updatedUser).toEqual(expectedUserDetails);
 		});
 	});
 });

@@ -1,8 +1,8 @@
 # Récupérer l'image de profil
 
-Fourni l'image de profil de l'utilisateur authentifié.
+Fourni l'image de profil du membre correspondant à l'id.
 
-**URL** : `/users/me/image`
+**URL** : `/members/:id/image`
 
 **Méthode** : `GET`
 
@@ -16,9 +16,22 @@ Fourni l'image de profil de l'utilisateur authentifié.
 
 **Contenu**
 
-Image de profil de l'utilisateur.
+Image de profil du membre.
 
 ## Opération échouée
+### Si l'id ne correspond pas à un membre de la famille de l'utilisateur authentifié.
+
+**Code** : `403 Forbidden`
+
+**Contenu** :
+
+```json
+{
+	"status":403,
+	"message":"Accès non autorisé aux données de ce membre"
+}
+```
+
 ### Si le token utilisé contient l'id d'un utilisateur inexistant.
 
 **Code** : `404 Not found`
@@ -28,7 +41,7 @@ Image de profil de l'utilisateur.
 ```json
 {
     "status":404,
-    "message":"Image de l'utilisateur introuvable"
+    "message":"Image du membre introuvable"
 }
 ```
 

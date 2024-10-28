@@ -57,7 +57,7 @@ export default {
 			const familyInformations = {
 				name: this.name
 			}
-			const { error } = createFamilySchema.validate(familyInformations);
+			const {error} = createFamilySchema.validate(familyInformations);
 			if (error) {
 				this.errorMessage = error.message;
 				return

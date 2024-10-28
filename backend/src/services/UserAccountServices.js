@@ -6,6 +6,7 @@ class UserAccountServices {
 		const result = await UserAccountQueries.getUserByID(userId);
 		if (result) {
 			return {
+				id: userId,
 				email: result.email,
 				name: result.name,
 				color: result.color,
@@ -30,16 +31,9 @@ class UserAccountServices {
 		return undefined;
 	}
 
-	static async getUserImageContent(userId) {
-		const result = await UserAccountQueries.getUserImageContent(userId);
-
-		if (result) {
-			return {
-				imageContent: result.image_content,
-				imageContentType: result.image_content_type
-			};
-		}
-		return undefined;
+	static async updateUser(user) {
+		await UserAccountQueries.updateUser(user);
+		return this.getUserById(user.id);
 	}
 }
 
