@@ -1,10 +1,12 @@
 <template>
     <div>
         <div :style="{ backgroundColor: color, padding: '10px', borderRadius: '5px', marginBottom: '10px' }">
-            <div>{{ name }}</div>
-            <div v-for="period in sortedPeriods" :key="period.id">
-                Début : {{ formatTime(period.startDateTime) }} - Fin : {{ formatTime(period.endDateTime) }}
-            </div>
+            <router-link :to="eventDetailsUrl(id)">
+                <div>{{ name }}</div>
+                <div v-for="period in sortedPeriods" :key="period.id">
+                    Début : {{ formatTime(period.startDateTime) }} - Fin : {{ formatTime(period.endDateTime) }}
+                </div>
+            </router-link>
         </div>
     </div>
 </template>
@@ -12,7 +14,7 @@
 <script>
 export default {
     props: {
-        id: Number,
+        id: String,
         name: String,
         color: String,
         periods: Array
@@ -28,12 +30,6 @@ export default {
     },
     computed: {
         sortedPeriods() {
-            console.log("Periods avant tri:", this.periods);
-
-            if (!Array.isArray(this.periods) || this.periods.length === 0) {
-            console.warn("Periods is not a valid array:", this.periods);
-            return [];
-        }
             const sorted = [...this.periods].sort((a, b) => {
                 const aDate = new Date(a.startDateTime);
                 const bDate = new Date(b.startDateTime);
