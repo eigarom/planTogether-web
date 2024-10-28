@@ -1,25 +1,41 @@
 <template>
     <div v-if="event">
-        <div>Nom de l'événement: {{ event.name }}</div>
-        <div>Description de l'événement: {{ event.description }}</div>
-        <div>Couleur de l'événement: {{ event.color }}</div>
-        <div>Visibilité de l'événement: {{ event.isVisible }}</div>
+        <div :style="{ fontSize: '24px' }"> {{ event.name }}</div>
+        <div>Description : {{ event.description }}</div>
+        <div>Couleur de l'événement:
+            <span :style="{
+                backgroundColor: event.color,
+                display: 'inline-block',
+                width: '20px',
+                height: '20px',
+                borderRadius: '3px'
+            }">
+            </span>
+        </div>
+        <div>Visibilité : {{ formatIsVisible(event.isVisible) }}</div>
+        <br />
+        <hr />
         <div>
             <h3>Périodes de l'événement:</h3>
             <ul>
                 <li v-for="(period, index) in event.periods" :key="index">
-                    Début: {{ period.startDateTime }} - Fin: {{ period.endDateTime }}
+                    Début: {{ formatDate(period.startDateTime) }} - Fin: {{ formatDate(period.endDateTime) }}
                 </li>
             </ul>
         </div>
+        <br />
+        <hr />
         <div>
             <h3>Alertes:</h3>
-            <ul>
+            <ul v-if="event.alerts && event.alerts.length > 0">
                 <li v-for="(alert, index) in event.alerts" :key="index">
                     Temps: {{ alert.dateTime }}
                 </li>
             </ul>
+            <p v-else>Aucune</p>
         </div>
+        <br />
+        <hr />
         <div>
             <h3>Participants à l'événement:</h3>
             <ul>
@@ -59,6 +75,19 @@ export default {
             }
             this.loading = false;
         },
+        formatDate(dateString) {
+            const [datePart, timePart] = dateString.split('T');
+            const time = timePart.substring(0, 5);
+            return `${datePart} ${time}`;
+        },
+        formatIsVisible(isVisible) {
+            if (isVisible) {
+                return "Public"
+            }
+            else {
+                return "Privé"
+            }
+        }
     },
     watch: {
         id(newId) {
