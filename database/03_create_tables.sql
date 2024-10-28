@@ -31,7 +31,7 @@ CREATE TABLE family
     image_content          bytea,
     image_content_type     text,
     invite_code            varchar UNIQUE,
-    invite_expiration_date timestamp
+    invite_expiration_date timestamp with time zone
 );
 
 CREATE TABLE member
@@ -79,15 +79,15 @@ CREATE TABLE participation
 CREATE TABLE period
 (
     id_period       serial PRIMARY KEY,
-    start_date_time timestamp NOT NULL,
-    end_date_time   timestamp NOT NULL,
+    start_date_time timestamp with time zone NOT NULL,
+    end_date_time   timestamp with time zone NOT NULL,
     id_event        int       NOT NULL REFERENCES event (id_event) ON DELETE CASCADE
 );
 
 CREATE TABLE alert
 (
     id_alert  serial PRIMARY KEY,
-    date_time timestamp NOT NULL,
+    date_time timestamp with time zone NOT NULL,
     id_event  int       NOT NULL REFERENCES event (id_event) ON DELETE CASCADE
 );
 
