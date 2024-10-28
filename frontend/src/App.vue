@@ -37,6 +37,7 @@ export default {
 					if (!this.user) {
 						this.logout();
 					}
+					this.user.imageUrl = await getMemberImage(this.token, this.user.id);
 				} catch (error) {
 					console.error('Erreur:', error);
 				}
@@ -63,7 +64,6 @@ export default {
 		this.getToken();
 		await this.getUserDetails();
 		await this.getFamilyDetails();
-		this.user.imageUrl = await getMemberImage(this.token, this.user.id);
 		this.isLoading = false;
 	},
 	provide() {
