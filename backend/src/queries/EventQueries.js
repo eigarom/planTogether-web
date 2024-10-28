@@ -41,6 +41,16 @@ class EventQueries {
         );
         return result.rows;
     }
+
+    static async getEventByIdAndFamilyId(eventId, familyId) {
+		const result = await pool.query(
+			`SELECT *
+             FROM event
+             WHERE id_event = $1 AND id_family = $2`,
+			[eventId, familyId]
+		);
+		return result.rows[0];
+	}
 }
 
 module.exports = EventQueries;
