@@ -40,6 +40,7 @@ class FamilyServices {
      
          return await this.getFamilyImageContent(familyId);
     }
+
 }
 
 module.exports = FamilyServices;
