@@ -26,6 +26,28 @@ describe('Test member services', () => {
 		});
 	});
 
+	describe('createMember', () => {
+		it('should create member and return the created member', async () => {
+			const memberDetails = {
+				name: 'newname',
+				color: 'newcolor',
+			};
+
+			const mockMemberDetails = {
+				name: 'newname',
+				color: 'newcolor',
+			};
+
+			const expectedMemberDetails = mockMemberDetails;
+
+			mockMemberQueries.createMember.mockResolvedValue();
+			mockMemberQueries.getMemberById.mockResolvedValue(mockMemberDetails);
+
+			const createdMember = await MemberServices.createMember(memberDetails);
+			expect(createdMember).toEqual(expectedMemberDetails);
+		});
+	});
+
 	describe('getMemberImageContent', () => {
 		it('should return member image content with valid member ID', async () => {
 			const mockImage = {

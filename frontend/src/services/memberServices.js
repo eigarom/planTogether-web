@@ -1,3 +1,21 @@
+export async function createMember(memberInformations, token) {
+	const response = await fetch("/api/families/my-family/members", {
+		method: "POST",
+		headers: {
+			'Authorization': `Bearer ${token}`,
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(memberInformations),
+	});
+	const result = await response.json();
+
+	if (response.ok) {
+		return result;
+	} else {
+		throw new Error(result.message || "Le membre n'a pas pu être créé:");
+	}
+}
+
 export async function getMemberImage(token, memberId) {
 	try {
 		const response = await fetch(`/api/families/my-family/members/${memberId}/image`, {
@@ -36,7 +54,7 @@ export async function uploadMemberImage(token, memberId, formData) {
 	}
 }
 
-export async function deleteUserImage(token, memberId) {
+export async function deleteMemberImage(token, memberId) {
 	try {
 		await fetch(`/api/families/my-family/members/${memberId}/image`, {
 			method: 'DELETE',

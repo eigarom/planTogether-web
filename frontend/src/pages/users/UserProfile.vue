@@ -46,7 +46,7 @@ import ColorPicker from 'primevue/colorpicker';
 import FileUpload from 'primevue/fileupload';
 import Toast from 'primevue/toast';
 import { userSchema } from "@/schemas/userSchemas.js";
-import { deleteUserImage, uploadMemberImage } from "@/services/memberServices.js";
+import { deleteMemberImage, uploadMemberImage } from "@/services/memberServices.js";
 
 export default {
 	inject: ['user', 'token'],
@@ -62,7 +62,6 @@ export default {
 			theme: '',
 			userImageUrl: '',
 			errorMessage: "",
-			success: false,
 		};
 	},
 	computed: {
@@ -85,15 +84,20 @@ export default {
 
 			try {
 				this.user.imageUrl = await uploadMemberImage(this.token, this.user.id, formData);
+				this.$refs.toast.add({
+					severity: 'success',
+					summary: 'Succès',
+					detail: 'Image supprimée avec succès',
+					life: 3000
+				});
 			} catch {
 				this.errorMessage = "Échec lors de la modification."
 			}
 		},
 		async deleteUserImage() {
 			try {
-				await deleteUserImage(this.token, this.user.id);
+				await deleteMemberImage(this.token, this.user.id);
 				this.user.imageUrl = '';
-				this.success = true;
 				this.$refs.toast.add({
 					severity: 'success',
 					summary: 'Succès',
@@ -106,7 +110,6 @@ export default {
 		},
 		async submitUpdateUser() {
 			this.errorMessage = "";
-			this.success = false;
 
 			if (!this.color.startsWith('#')) {
 				this.color = '#' + this.color;
@@ -130,7 +133,6 @@ export default {
 				this.user.name = this.name;
 				this.user.email = this.email;
 				this.user.color = this.color;
-				this.success = true;
 				this.$refs.toast.add({
 					severity: 'success',
 					summary: 'Succès',

@@ -42,7 +42,7 @@ export default {
 	data: () => {
 		return {
 			name: "",
-			color: "#358be6",
+			color: "#358BE6",
 			errorMessage: ""
 		};
 	},
