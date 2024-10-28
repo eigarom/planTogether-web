@@ -1,8 +1,27 @@
 const pool = require("./dbPool");
 
 class MemberQueries {
-	static async insertMember(member) {
-		const result = await pool.query(
+	static async createMember(member) {
+		const client = await pool.connect();
+
+		try {
+			await client.query("BEGIN");
+			const memberId = await this.insertMember(member, client);
+			await MemberQueries.insertGuestMember(
+				memberId,
+				client
+			);
+			await client.query("COMMIT");
+			return memberId;
+		} catch (err) {
+			await client.query("ROLLBACK");
+			throw err;
+		} finally {
+			client.release();
+		}
+	}
+	static async insertMember(member, client) {
+		const result = await (client|| pool).query (
 			`INSERT INTO member(name, color, id_family)
 			 VALUES ($1, $2, $3)
 			 RETURNING id_member`,
@@ -10,6 +29,14 @@ class MemberQueries {
 		);
 
 		return result.rows[0].id_member;
+	}
+
+	static async insertGuestMember(memberId, client) {
+		await (client || pool).query(
+			`INSERT INTO guest_member(id_member)
+			 VALUES ($1)`,
+			[memberId]
+		);
 	}
 
 	static async getMemberById(memberId) {
