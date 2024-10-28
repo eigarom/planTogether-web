@@ -1,30 +1,31 @@
 <template>
-	<div>
-		<div>
-			<h2>Aujourd'hui</h2>
-			<div v-for="event in sortedEventsByTime" :key="event.id"
-				:style="{ backgroundColor: event.color, padding: '10px', borderRadius: '5px', marginBottom: '10px' }">
-				<h3>{{ event.name }}</h3>
-				<div v-for="period in event.periods" :key="period.id">
-					Début : {{ formatTime(period.startDateTime) }} - Fin : {{ formatTime(period.endDateTime) }}
-				</div>
+	<h1>Événements</h1>
+	<div v-if="!loading">
+		<div v-for="(events, date) in sortedEventsByTime" :key="date">
+			<h2> {{ formatPrettyDate(date) }} </h2>
+			<div>
+				<DailyEvents v-for="event in events" :key="event.id" :name="event.name" :color="event.color"
+					:periods="event.periods" />
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import DailyEvents from './DailyEvents.vue'
 import { fetchEventsList } from '../../services/eventServices';
 
 export default {
+	components: {
+		DailyEvents
+	},
 	inject: ['user'],
 	data() {
 		return {
 			eventsList: [],
-			dailyEvents: [],
 			currentDate: "",
 			loading: true
-		}
+		};
 	},
 	methods: {
 		async getEventsWithToken() {
@@ -38,51 +39,90 @@ export default {
 			}
 			this.loading = false;
 		},
-		async getCurrentDate() {
-			const today = new Date();
-			const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-			//const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-			//const dateTime = date + ' ' + time;
-			this.currentDate = date;
+		isToday(date) {
+			const today = new Date().setHours(0, 0, 0, 0);
+			return date === today;
+		},
+		formatPrettyDate(dateString) {
+			const parts = dateString.split('/');
+			if (parts.length !== 3) {
+				console.warn(`Date invalide: ${dateString}`);
+				return 'Date invalide';
+			}
+
+			const formattedDateString = `${parts[2]}-${parts[1]}-${parts[0]}T00:00:00`;
+			const date = new Date(formattedDateString);
+
+			if (isNaN(date)) {
+				console.warn(`Date invalide: ${formattedDateString}`);
+				return 'Date invalide';
+			}
+
+			const options = { year: 'numeric', month: 'long', day: 'numeric' };
+			return date.toLocaleDateString('fr-FR', options);
 		},
 		formatTime(dateTime) {
 			const date = new Date(dateTime);
-			const time = date.toISOString().split('T')[1].substring(0, 5);
-			return time;
+			return date.toISOString().split('T')[1].substring(0, 5);
+		},
+		eventDetailsUrl(eventId) {
+			return { name: 'EventDetails', params: { id: eventId } };
 		}
 	},
 	computed: {
 		visibleEvents() {
-			
 			return this.eventsList.filter(event => {
-				console.log(this.user);
 				const isParticipant = event.members && event.members.some(member => member.id === this.user.id);
 				return event.isVisible || isParticipant;
-				
 			});
 		},
-		filteredEvents() {
-			const today = new Date().setHours(0, 0, 0, 0);
+		groupedEventsByDate() {
+			const eventsByDate = {};
 
-			return this.visibleEvents.filter(event =>
-				event.periods.some(period => {
-					const startTime = new Date(period.startDateTime).setHours(0, 0, 0, 0);
-					const endTime = new Date(period.endDateTime).setHours(0, 0, 0, 0);
-					return (startTime <= today && endTime >= today);
-				})
-			);
+			this.visibleEvents.forEach(event => {
+				event.periods.forEach(period => {
+					const date = new Date(period.startDateTime).toLocaleDateString();
+
+					if (!eventsByDate[date]) {
+						eventsByDate[date] = [];
+					}
+
+					eventsByDate[date].push(event);
+				});
+			});
+
+			return eventsByDate;
 		},
 		sortedEventsByTime() {
-			return this.filteredEvents.slice().sort((a, b) => {
-				return new Date(a.periods[0].startDateTime) - new Date(b.periods[0].startDateTime);
+			const uniqueEvents = new Map();
+
+			this.visibleEvents.forEach(event => {
+				event.periods.forEach(period => {
+					const periodKey = `${event.id}-${period.startDateTime}-${period.endDateTime}`;
+					if (!uniqueEvents.has(periodKey)) {
+						uniqueEvents.set(periodKey, { ...event, periods: [period] });
+					}
+				});
 			});
+
+			const sortedEvents = {};
+
+			uniqueEvents.forEach((event) => {
+				const date = new Date(event.periods[0].startDateTime).toLocaleDateString("fr-FR");
+
+				if (!sortedEvents[date]) {
+					sortedEvents[date] = [];
+				}
+				sortedEvents[date].push(event);
+			});
+
+			return sortedEvents;
 		}
 	},
 	mounted() {
 		this.getEventsWithToken();
-		this.getCurrentDate();
 	}
-}
+};
 </script>
 
 <style scoped></style>
