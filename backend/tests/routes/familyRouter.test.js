@@ -14,8 +14,10 @@ jest.mock("../../src/middlewares/auth/authMiddleware", () =>
 );
 jest.mock("../../src/utils/authUtils");
 jest.mock("../../src/services/FamilyServices");
+jest.mock("../../src/services/UserAccountServices");
 jest.mock("../../src/utils/authUtils");
 const mockFamilyServices = require("../../src/services/FamilyServices");
+const mockUserAccountServices = require("../../src/services/UserAccountServices");
 
 describe("Family Routes", () => {
     describe("GET /families/my-family", () => {
@@ -118,7 +120,12 @@ describe("Family Routes", () => {
 
             const mockToken = "mockToken";
 
-            mockFamilyServices.createFamily.mockResolvedValue(mockFamilyDetails);
+            mockFamilyServices.createFamily.mockResolvedValue(
+                mockFamilyDetails
+            );
+            mockUserAccountServices.getUserCredentialsByEmail.mockResolvedValue(
+                "user"
+            );
             authUtils.generateToken.mockReturnValue(mockToken);
 
             const response = await request(app)
