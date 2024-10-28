@@ -62,7 +62,7 @@ export async function createFamily(family, token) {
 	}
 }
 
-export async function updateFamilyImage(familytId, formData, token) {
+export async function updateFamilyImage(familyId, formData, token) {
     const response = await fetch(`/api/families/my-family/image`, {
         method: "POST",
         headers: {
@@ -74,6 +74,6 @@ export async function updateFamilyImage(familytId, formData, token) {
     if (response.ok) {
         return;
     } else {
-        throw new Error(`Impossible de modifier l'image du produit ${familytId}: ${response.status}`);
+        throw new Error(`Impossible de modifier l'image du produit ${familyId}: ${response.status}`);
     }
 }

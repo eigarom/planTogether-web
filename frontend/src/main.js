@@ -10,6 +10,7 @@ import EventDetails from './pages/events/EventDetails.vue';
 import LoginForm from "@/pages/auth/LoginForm.vue";
 import FamilyCreationForm from "@/pages/families/FamilyCreationForm.vue";
 import RegisterForm from "@/pages/auth/RegisterForm.vue";
+import MemberCreationForm from "@/pages/members/MemberCreationForm.vue";
 import UserProfile from "@/pages/users/UserProfile.vue";
 
 const app = createApp(App);
@@ -39,6 +40,7 @@ const router = createRouter({
 		{path: '/events', component: EventsList},
 		{path: '/events/:id', name: 'EventDetails', component: EventDetails, props: true},
 		{path: '/families/add', component: FamilyCreationForm},
+		{path: '/members/add', component: MemberCreationForm},
 		{path: '/profile', component: UserProfile},
 		{path: '/', redirect: '/events'}
 	]

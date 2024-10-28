@@ -1,12 +1,19 @@
 const MemberQueries = require("../queries/MemberQueries");
 
 class MemberServices {
+	static async createMember(member) {
+		const newMemberId = await MemberQueries.createMember(member);
+
+		return this.getMemberById(newMemberId);
+	}
+	
 	static async getMemberById(memberId) {
 		const result = await MemberQueries.getMemberById(memberId);
 		if (result) {
 			return {
 				name: result.name,
 				color: result.color,
+				memberId: memberId
 			}
 		}
 		return undefined;

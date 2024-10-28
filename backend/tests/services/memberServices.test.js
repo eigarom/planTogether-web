@@ -7,6 +7,7 @@ describe('Test member services', () => {
 	describe('getMemberById', () => {
 		it('should return member information with valid member ID', async () => {
 			const mockMemberDetails = {
+				memberId: 'memberId',
 				name: 'Test User',
 				color: '#ff0000'
 			};
@@ -22,6 +23,28 @@ describe('Test member services', () => {
 			mockMemberQueries.getMemberById.mockResolvedValue(undefined);
 			const memberDetails = await MemberServices.getMemberById('memberId');
 			expect(memberDetails).toBeUndefined();
+		});
+	});
+
+	describe('createMember', () => {
+		it('should create member and return the created member', async () => {
+			const memberDetails = {
+				name: 'newname',
+				color: 'newcolor',
+			};
+
+			const mockMemberDetails = {
+				name: 'newname',
+				color: 'newcolor',
+			};
+
+			const expectedMemberDetails = mockMemberDetails;
+
+			mockMemberQueries.createMember.mockResolvedValue();
+			mockMemberQueries.getMemberById.mockResolvedValue(mockMemberDetails);
+
+			const createdMember = await MemberServices.createMember(memberDetails);
+			expect(createdMember).toEqual(expectedMemberDetails);
 		});
 	});
 

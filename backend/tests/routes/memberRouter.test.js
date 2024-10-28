@@ -13,6 +13,56 @@ jest.mock('../../src/middlewares/auth/authMiddleware', () => jest.fn((req, res, 
 jest.mock('../../src/services/MemberServices');
 const mockMemberServices = require('../../src/services/MemberServices');
 
+describe('POST /members', () => {
+	it('should create a new member and return the member details', async () => {
+		const mockMemberDetails = {
+			name: 'John Doe',
+			color: '#FF0000'
+		};
+
+		mockMemberServices.isMemberInFamily.mockResolvedValue(true);
+		mockMemberServices.createMember.mockResolvedValue(mockMemberDetails);
+
+		const response = await request(app)
+			.post('/families/my-family/members')
+			.send({ name: 'John Doe', color: '#FF0000' })
+			.expect('Content-Type', /json/)
+			.expect(201);
+
+		expect(response.body).toEqual(mockMemberDetails);
+	});
+
+	it('should return 400 if validation fails', async () => {
+		const response = await request(app)
+			.post('/families/my-family/members')
+			.send({ name: '', color: '#FF0000' }) // Invalid name
+			.expect(400);
+
+		expect(response.body.message).toBeDefined();
+	});
+
+	it('should return 404 if user or family not found', async () => {
+		mockMemberServices.isMemberInFamily.mockResolvedValue(false);
+
+		const response = await request(app)
+			.post('/families/my-family/members')
+			.send({ name: 'John Doe', color: '#FF0000' })
+			.expect(404);
+
+		expect(response.body.message).toEqual('Utilisateur ou famille introuvable');
+	});
+
+	it('should return 500 if service fails', async () => {
+		mockMemberServices.isMemberInFamily.mockResolvedValue(true);
+		mockMemberServices.createMember.mockRejectedValue(new Error());
+
+		await request(app)
+			.post('/families/my-family/members')
+			.send({ name: 'John Doe', color: '#FF0000' })
+			.expect(500);
+	});
+});
+
 describe('Member Image Routes', () => {
 	describe('GET /members/:id/image', () => {
 		it('should return the member image if found', async () => {

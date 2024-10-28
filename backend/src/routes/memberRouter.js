@@ -4,6 +4,7 @@ const verifyJWT = require("../middlewares/auth/authMiddleware");
 const HttpError = require("../middlewares/error/HttpError");
 const MemberServices = require("../services/MemberServices");
 const {imageSchema} = require("../schemas/imageSchemas");
+const {memberSchema} = require("../schemas/memberSchemas");
 
 // Le module multer sert à gérer les téléversements (upload) de fichiers
 const multer = require('multer');
@@ -28,6 +29,28 @@ router.get('/:id/image', verifyJWT, verifyMemberId, async (req, res, next) => {
 		} else {
 			next(new HttpError(404, `Image du membre introuvable`))
 		}
+	} catch (err) {
+		return next(err);
+	}
+});
+
+router.post('/', verifyJWT, async (req, res, next) => {
+	const {error} = memberSchema.validate(req.body);
+	if (error) {
+		return next(new HttpError(400, error.message));
+	}
+	try {
+		if (!await MemberServices.isMemberInFamily(req.user.userId, req.user.familyId)) {
+			return next(new HttpError(404, "Utilisateur ou famille introuvable"));
+		}
+		const memberInformations = {
+			name: "" + req.body.name,
+			color: "" + req.body.color,
+			familyId: req.user.familyId
+		};
+		const newMember = await MemberServices.createMember(memberInformations);
+
+		res.status(201).json(newMember);
 	} catch (err) {
 		return next(err);
 	}
