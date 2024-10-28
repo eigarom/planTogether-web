@@ -1,4 +1,5 @@
 const pool = require("../queries/dbPool");
+const MemberQueries = require("../queries/MemberQueries");
 
 class UserAccountQueries {
 	static async getUserByID(userId) {
@@ -23,17 +24,7 @@ class UserAccountQueries {
 		return result.rows[0];
 	}
 
-	static async getUserImageContent(userId) {
-		const result = await pool.query(
-			`SELECT image_content, image_content_type
-             FROM member
-             WHERE id_member = $1`,
-			[userId]
-		);
-		return result.rows[0];
-	}
-
-	static async insertUserAccount(email, hashedPassword, name) {
+	static async insertUser(email, hashedPassword, name) {
 		const client = await pool.connect();
 
 		try {
@@ -56,6 +47,32 @@ class UserAccountQueries {
 
 			await client.query('COMMIT');
 			return memberId;
+		} catch (err) {
+			await client.query('ROLLBACK');
+			throw err;
+		} finally {
+			client.release();
+		}
+	}
+
+	static async updateUser(user) {
+		const client = await pool.connect();
+
+		try {
+			await client.query('BEGIN');
+
+			await MemberQueries.updateMemberInformations(user.id, user.name, user.color, client);
+
+			await client.query(
+				`UPDATE account_member
+                 SET email = $2,
+                     lang  = $3,
+                     theme = $4
+                 WHERE id_member = $1`,
+				[user.id, user.email, user.lang, user.theme]
+			);
+
+			await client.query('COMMIT');
 		} catch (err) {
 			await client.query('ROLLBACK');
 			throw err;

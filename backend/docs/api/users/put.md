@@ -1,10 +1,10 @@
-# Récupérer les informations
+# Modifier les informations
 
-Fourni les informations de l'utilisateur authentifié.
+Modifie les informations de l'utilisateur authentifié.
 
 **URL** : `/users/me`
 
-**Méthode** : `GET`
+**Méthode** : `PUT`
 
 **Authentification requise** : Oui
 
@@ -28,19 +28,6 @@ Fourni les informations de l'utilisateur authentifié.
 ```
 
 ## Opération échouée
-### Si le membre ne fait pas parti de la famille de l'utilisateur authentifié.
-
-**Code** : `403 Forbidden`
-
-**Contenu** :
-
-```json
-{
-    "status":404,
-    "message":"Utilisateur introuvable"
-}
-```
-
 ### Si le token utilisé contient l'id d'un utilisateur inexistant.
 
 **Code** : `404 Not found`

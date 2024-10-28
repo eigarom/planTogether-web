@@ -25,22 +25,20 @@ export async function getUserFromToken(token) {
 	}
 }
 
-export async function getUserImage(token) {
-	try {
-		const response = await fetch('/api/users/me/image', {
-			headers: {
-				'Authorization': `Bearer ${token}`,
-			},
-		});
+export async function updateUser(token, userInformations) {
+	const response = await fetch("/api/users/me", {
+		method: "PUT",
+		headers: {
+			'Authorization': `Bearer ${token}`,
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(userInformations),
+	});
+	const result = await response.json();
 
-		if (response.status === 404) {
-			return undefined;
-		}
-
-		const blob = await response.blob();
-
-		return URL.createObjectURL(blob);
-	} catch (error) {
-		throw new Error(error || `Erreur lors du chargement de l'image de l,utilisateur`);
+	if (response.ok) {
+		return result;
+	} else {
+		throw new Error(result.message || "L'utilisateur n'a pas pu être mis à jour:");
 	}
 }

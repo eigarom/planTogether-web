@@ -19,7 +19,7 @@ Chaque route manipule ou fournit de l'information associée à l'utilisateur cor
 requête.
 
 * [Récupération des informations](users/get.md) : `GET /users/me`
-* [Récupération de l'image de profil](users/get_image.md) : `GET /users/me/image`
+* [Modification des informations](users/put.md) : `PUT /users/me`
 
 ### Famille
 
@@ -29,3 +29,12 @@ requête.
 
 * [Récupération des informations](families/get.md) : `GET /families/my-family`
 * [Récupération de l'image de profil](families/get_image.md) : `GET /families/my-family/image`
+
+### Membre
+
+Chaque route manipule ou fournit de l'information associée à un membre de la famille de l'utilisateur correspondant au 
+token fournit dans la requête.
+
+* [Récupération de l'image de profil](members/get_image.md) : `GET /families/my-family/members/:id/image`
+* [Modification de l'image de profil](members/put_image.md) : `PUT /families/my-family/members/:id/image`
+* [Suppression de l'image de profil](members/delete_image.md) : `DELETE /families/my-family/members/:id/image`

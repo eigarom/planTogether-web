@@ -1,10 +1,10 @@
-# Récupérer les informations
+# Supprimer l'image de profil
 
-Fourni les informations de l'utilisateur authentifié.
+Supprime l'image de profil du membre correspondant à l'id.
 
-**URL** : `/users/me`
+**URL** : `/members/:id/image`
 
-**Méthode** : `GET`
+**Méthode** : `DELETE`
 
 **Authentification requise** : Oui
 
@@ -14,21 +14,14 @@ Fourni les informations de l'utilisateur authentifié.
 
 **Code** : `200 OK`
 
-**Exemple de contenu**
+**Contenu**
 
 ```json
-{
-    "id": 1,
-    "email": "johndoe@exemple.com",
-	"name": "John Doe",
-	"color": "#FF0000",
-	"lang": "fr",
-	"theme": "dark"
-}
+{}
 ```
 
 ## Opération échouée
-### Si le membre ne fait pas parti de la famille de l'utilisateur authentifié.
+### Si l'id ne correspond pas à un membre de la famille de l'utilisateur authentifié.
 
 **Code** : `403 Forbidden`
 
@@ -36,8 +29,8 @@ Fourni les informations de l'utilisateur authentifié.
 
 ```json
 {
-    "status":404,
-    "message":"Utilisateur introuvable"
+    "status":403,
+    "message":"Accès non autorisé aux données de ce membre"
 }
 ```
 
@@ -50,7 +43,7 @@ Fourni les informations de l'utilisateur authentifié.
 ```json
 {
     "status":404,
-    "message":"Utilisateur introuvable"
+    "message":"Membre introuvable"
 }
 ```
 
