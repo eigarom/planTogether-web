@@ -1,6 +1,17 @@
 const pool = require("./dbPool");
 
 class MemberQueries {
+	static async insertMember(member) {
+		const result = await pool.query(
+			`INSERT INTO member(name, color, id_family)
+			 VALUES ($1, $2, $3)
+			 RETURNING id_member`,
+			[member.name, member.color, member.familyId]
+		);
+
+		return result.rows[0].id_member;
+	}
+
 	static async getMemberById(memberId) {
 		const result = await pool.query(
 			`SELECT name, color
