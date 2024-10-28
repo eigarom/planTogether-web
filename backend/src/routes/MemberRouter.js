@@ -36,7 +36,7 @@ router.get('/:id/image', verifyJWT, verifyMemberId, async (req, res, next) => {
 router.put('/:id/image', verifyJWT, verifyMemberId,
 	// Fonction middleware de multer pour gérer l'upload d'un fichier dans ce endpoint.
 	// Cet appel de middleware doit venir après celui de l'authentification.
-	upload.single('user-image'),// Doit correspondre à l'id du champ dans le formulaire html
+	upload.single('member-image'),// Doit correspondre à l'id du champ dans le formulaire html
 	async (req, res, next) => {
 		const {error} = imageSchema.validate({file: req.file});
 		if (error) {
