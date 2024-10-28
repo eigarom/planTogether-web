@@ -40,6 +40,28 @@ class MemberQueries {
 			[memberId, familyId]
 		);
 	}
+
+	static async updateMemberImage(memberId, imageBuffer, imageContentType) {
+		const result = await pool.query(
+			`UPDATE member
+             SET image_content      = $2,
+                 image_content_type = $3
+             WHERE id_member = $1`,
+			[memberId, imageBuffer, imageContentType]
+		);
+
+		return result.rowCount > 0;
+	}
+
+	static async updateMemberInformations(memberId, name, color, client) {
+		await (pool || client).query(
+			`UPDATE member
+             SET name  = $2,
+                 color = $3
+             WHERE id_member = $1`,
+			[memberId, name, color]
+		);
+	}
 }
 
 module.exports = MemberQueries;
