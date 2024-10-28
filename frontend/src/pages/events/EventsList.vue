@@ -1,15 +1,9 @@
 <template>
 	<div>
-		<p>Hello {{ this.user.name }} !!!! </p>
+		<p>Événements</p>
 	</div>
 </template>
 
 <script>
-export default {
-	inject: ['user'],
-}
+export default {}
 </script>
-
-<style scoped>
-
-</style>

@@ -37,7 +37,7 @@ router.post("/", verifyJWT, async (req, res, next) => {
 	try {
 		const family = await FamilyServices.createFamily(newFamily, userId);
 		const updatedUser = await UserAccountServices.getUserCredentialsByEmail(req.user.email);
- 
+
 		const token = generateToken(updatedUser);
 		res.status(201).json({family, token});
 	} catch (err) {
@@ -48,7 +48,7 @@ router.post("/", verifyJWT, async (req, res, next) => {
 router.get('/my-family/image', verifyJWT, async (req, res, next) => {
 	try {
 		const imageInfo = await FamilyServices.getFamilyImageContent(req.user.familyId);
-		if (imageInfo) {
+		if (imageInfo && imageInfo.imageContent && imageInfo.imageContentType) {
 			res.header('Content-Type', imageInfo.imageContentType);
 			res.send(imageInfo.imageContent);
 		} else {
