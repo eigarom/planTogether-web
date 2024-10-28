@@ -89,11 +89,6 @@ export default {
             }
         }
     },
-    watch: {
-        id(newId) {
-            this.getEventWithToken(newId);
-        }
-    },
     mounted() {
         this.getEventWithToken(this.id);
     }
