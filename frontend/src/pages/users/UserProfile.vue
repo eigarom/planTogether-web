@@ -2,7 +2,7 @@
 	<div v-if="user" class="flex h-full justify-center items-center">
 		<div class="w-80">
 			<h1 class="text-3xl mb-8 text-center">Mon profil</h1>
-			<form id="loginForm" class="flex flex-col gap-5" @submit.prevent="submitUpdateUser">
+			<form id="profileForm" class="flex flex-col gap-5" @submit.prevent="submitUpdateUser">
 				<div class="flex flex-inline items-center justify-between">
 					<FloatLabel variant="on">
 						<InputText id="name" v-model.trim="name" class="w-60"/>
