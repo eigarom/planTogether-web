@@ -129,6 +129,7 @@ export default {
 				await updateUser(this.token, userInformations);
 				this.user.name = this.name;
 				this.user.email = this.email;
+				this.user.color = this.color;
 				this.success = true;
 				this.$refs.toast.add({
 					severity: 'success',
