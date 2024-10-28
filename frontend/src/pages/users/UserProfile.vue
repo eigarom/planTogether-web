@@ -28,7 +28,7 @@
 					<img v-if="user.imageUrl" :src="user.imageUrl" alt="Image" class="shadow-md rounded-xl h-24"/>
 				</div>
 
-				<Message v-if="errorMessage" severity="error">{{ errorMessage }}</Message>
+				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
 				<Button :disabled="isSubmitButtonDisabled" label="Enregistrer les modifications" raised type="submit"/>
 			</form>
