@@ -19,7 +19,7 @@
 		</template>
 
 		<template #end>
-			<router-link class="inline-flex items-center px-3 py-2 justify-between w-full" to="/user">
+			<router-link class="inline-flex items-center px-3 py-2 justify-between w-full" to="/profile">
 				<div class="inline-flex items-center gap-3">
 					<Avatar v-if="user.imageUrl" :image="user.imageUrl"
 							shape="circle" size="small"/>
