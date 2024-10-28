@@ -4,7 +4,7 @@
 		<div v-for="(events, date) in sortedEventsByTime" :key="date">
 			<h2> {{ formatPrettyDate(date) }} </h2>
 			<div>
-				<DailyEvents v-for="event in events" :key="event.id" :name="event.name" :color="event.color"
+				<DailyEvents v-for="event in events" :key="event.id" :id="event.id" :name="event.name" :color="event.color"
 					:periods="event.periods" />
 			</div>
 		</div>
@@ -13,7 +13,7 @@
 
 <script>
 import DailyEvents from './DailyEvents.vue'
-import { fetchEventsList } from '../../services/eventServices';
+import { getEventsList } from '../../services/eventServices';
 
 export default {
 	components: {
@@ -32,7 +32,7 @@ export default {
 			const token = this.$cookies.get('jwtToken');
 			if (token) {
 				try {
-					this.eventsList = await fetchEventsList(token);
+					this.eventsList = await getEventsList(token);
 				} catch (error) {
 					console.error('Erreur:', error);
 				}
