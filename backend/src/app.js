@@ -7,6 +7,7 @@ const authRouter = require('./routes/authRouter');
 const familyRouter = require('./routes/familyRouter');
 const memberRouter = require('./routes/memberRouter');
 const userAccountRouter = require('./routes/userAccountRouter');
+const eventRouter = require('./routes/eventRouter')
 
 const app = express();
 
@@ -18,6 +19,8 @@ app.use('/auth', authRouter);
 app.use('/families', familyRouter);
 app.use('/families/my-family/members', memberRouter);
 app.use('/users', userAccountRouter);
+
+app.use('/families/my-family/events', eventRouter);
 
 app.get('/health', (req, res) => {
 	res.status(200).send('OK');
