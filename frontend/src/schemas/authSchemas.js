@@ -22,7 +22,7 @@ export const registrationSchema = Joi.object({
 			'any.only': 'Les mots de passe doivent être identiques'
 		}),
 	name: Joi.string()
-		.pattern(new RegExp('^[a-zA-Z0-9- ]+$'))
+		.pattern(new RegExp('^[a-zA-Z0-9- \\u00C0-\\u00FF]+$'))
 		.required()
 		.max(50)
 		.messages({
