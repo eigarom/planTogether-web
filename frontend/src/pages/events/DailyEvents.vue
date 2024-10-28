@@ -18,10 +18,6 @@ export default {
         periods: Array
     },
     methods: {
-        isToday(date) {
-            const today = new Date().setHours(0, 0, 0, 0);
-            return date === today;
-        },
         formatTime(dateTime) {
             const date = new Date(dateTime);
             return date.toISOString().split('T')[1].substring(0, 5);
@@ -52,6 +48,5 @@ export default {
 <style scoped>
 .highlighted-date {
     font-weight: bold;
-    color: #2c7a7b;
 }
 </style>

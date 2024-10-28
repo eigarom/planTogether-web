@@ -39,10 +39,6 @@ export default {
 			}
 			this.loading = false;
 		},
-		isToday(date) {
-			const today = new Date().setHours(0, 0, 0, 0);
-			return date === today;
-		},
 		formatPrettyDate(dateString) {
 			const parts = dateString.split('/');
 			if (parts.length !== 3) {
@@ -60,13 +56,6 @@ export default {
 
 			const options = { year: 'numeric', month: 'long', day: 'numeric' };
 			return date.toLocaleDateString('fr-FR', options);
-		},
-		formatTime(dateTime) {
-			const date = new Date(dateTime);
-			return date.toISOString().split('T')[1].substring(0, 5);
-		},
-		eventDetailsUrl(eventId) {
-			return { name: 'EventDetails', params: { id: eventId } };
 		}
 	},
 	computed: {
@@ -124,5 +113,3 @@ export default {
 	}
 };
 </script>
-
-<style scoped></style>
