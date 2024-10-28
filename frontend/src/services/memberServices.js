@@ -38,7 +38,7 @@ export async function uploadMemberImage(token, memberId, formData) {
 
 export async function deleteUserImage(token, memberId) {
 	try {
-		const response = await fetch(`/api/families/my-family/members/${memberId}/image`, {
+		await fetch(`/api/families/my-family/members/${memberId}/image`, {
 			method: 'DELETE',
 			headers: {
 				'Authorization': `Bearer ${token}`

@@ -12,6 +12,7 @@ import {computed} from 'vue';
 import SidebarNavigation from './components/SidebarNavigation.vue';
 import {getUserFromToken} from "@/services/userServices.js";
 import {getFamilyFromToken} from "@/services/familyServices.js";
+import {getMemberImage} from "@/services/memberServices.js";
 
 export default {
 	components: {
@@ -62,6 +63,7 @@ export default {
 		this.getToken();
 		await this.getUserDetails();
 		await this.getFamilyDetails();
+		this.user.imageUrl = await getMemberImage(this.token, this.user.id);
 		this.isLoading = false;
 	},
 	provide() {

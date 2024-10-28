@@ -70,7 +70,7 @@ describe('Member Image Routes', () => {
 
 			const response = await request(app)
 				.put('/families/my-family/members/1/image')
-				.attach('user-image', onePixelTransparentPngImage, 'image.jpeg')
+				.attach('member-image', onePixelTransparentPngImage, 'image.jpeg')
 				.expect('Content-Type', /image\/jpeg/)
 				.expect(200);
 
@@ -82,7 +82,7 @@ describe('Member Image Routes', () => {
 
 			const response = await request(app)
 				.put('/families/my-family/members/1/image')
-				.attach('user-image', onePixelTransparentPngImage, 'image.jpeg')
+				.attach('member-image', onePixelTransparentPngImage, 'image.jpeg')
 				.expect(403);
 
 			expect(response.body.message).toEqual('Accès non autorisé aux données de ce membre');
@@ -93,7 +93,7 @@ describe('Member Image Routes', () => {
 
 			const response = await request(app)
 				.put('/families/my-family/members/1/image')
-				.attach('user-image', onePixelTransparentPngImage, 'invalid.txt')
+				.attach('member-image', onePixelTransparentPngImage, 'invalid.txt')
 				.expect(400);
 
 			expect(response.body.message).toBeDefined();
@@ -105,7 +105,7 @@ describe('Member Image Routes', () => {
 
 			const response = await request(app)
 				.put('/families/my-family/members/1/image')
-				.attach('user-image', Buffer.from('new image data'), 'image.png')
+				.attach('member-image', Buffer.from('new image data'), 'image.png')
 				.expect(404);
 
 			expect(response.body.message).toEqual('Membre introuvable');
@@ -118,7 +118,7 @@ describe('Member Image Routes', () => {
 
 			const response = await request(app)
 				.put('/families/my-family/members/1/image')
-				.attach('user-image', onePixelTransparentPngImage, 'image.jpeg')
+				.attach('member-image', onePixelTransparentPngImage, 'image.jpeg')
 				.expect(500);
 
 			expect(response.body.message).toEqual('Erreur lors de la modification de l\'image');
@@ -130,7 +130,7 @@ describe('Member Image Routes', () => {
 
 			await request(app)
 				.put('/families/my-family/members/1/image')
-				.attach('user-image', Buffer.from('new image data'), 'image.png')
+				.attach('member-image', Buffer.from('new image data'), 'image.png')
 				.expect(500);
 		});
 	});

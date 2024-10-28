@@ -21,7 +21,7 @@
 		<template #end>
 			<router-link class="inline-flex items-center px-3 py-2 justify-between w-full" to="/user">
 				<div class="inline-flex items-center gap-3">
-					<Avatar v-if="userImageUrl" :image="userImageUrl"
+					<Avatar v-if="user.imageUrl" :image="user.imageUrl"
 							shape="circle" size="small"/>
 					<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
 							class="font-semibold text-white" shape="circle" size="small"/>
@@ -38,7 +38,6 @@ import Menu from 'primevue/menu';
 import Image from "primevue/image";
 import Avatar from "primevue/avatar";
 import {getFamilyImage} from "@/services/familyServices.js";
-import {getMemberImage} from "@/services/memberServices.js";
 
 export default {
 	components: {
@@ -53,7 +52,6 @@ export default {
 				{separator: true}
 			],
 			familyImageUrl: '',
-			userImageUrl: '',
 			isLoading: true
 		};
 	},
@@ -64,7 +62,6 @@ export default {
 	},
 	async created() {
 		this.familyImageUrl = await getFamilyImage(this.token);
-		this.userImageUrl = await getMemberImage(this.token, this.user.id);
 		this.isLoading = false;
 	}
 }

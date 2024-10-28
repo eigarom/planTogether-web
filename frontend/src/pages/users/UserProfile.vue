@@ -21,11 +21,11 @@
 						<FileUpload auto chooseLabel="Choisir une image"
 									class="p-button-outlined"
 									customUpload mode="basic" severity="secondary" @select="onImageSelect"/>
-						<Button v-if="userImageUrl" icon="pi pi-minus" label="Supprimer l'image" outlined
+						<Button v-if="user.imageUrl" icon="pi pi-minus" label="Supprimer l'image" outlined
 								severity="warn"
 								@click="deleteUserImage"/>
 					</div>
-					<img v-if="userImageUrl" :src="userImageUrl" alt="Image" class="shadow-md rounded-xl h-24"/>
+					<img v-if="user.imageUrl" :src="user.imageUrl" alt="Image" class="shadow-md rounded-xl h-24"/>
 				</div>
 
 				<Message v-if="errorMessage" severity="error">{{ errorMessage }}</Message>
@@ -44,17 +44,16 @@ import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
 import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
-import FloatingTitle from "@/components/FloatingTitle.vue";
 import ColorPicker from 'primevue/colorpicker';
 import FileUpload from 'primevue/fileupload';
 import Toast from 'primevue/toast';
 import {userSchema} from "@/schemas/userSchemas.js";
-import {deleteUserImage, getMemberImage, uploadMemberImage} from "@/services/memberServices.js";
+import {deleteUserImage, uploadMemberImage} from "@/services/memberServices.js";
 
 export default {
 	inject: ['user', 'token'],
 	components: {
-		FloatingTitle, InputText, Button, Message, FloatLabel, ColorPicker, FileUpload, Toast
+		InputText, Button, Message, FloatLabel, ColorPicker, FileUpload, Toast
 	},
 	data: () => {
 		return {
@@ -87,16 +86,15 @@ export default {
 			formData.append('member-image', file);
 
 			try {
-				this.userImageUrl = await uploadMemberImage(this.token, this.user.id, formData);
-				window.location.href = '/user';
-			} catch (error) {
+				this.user.imageUrl = await uploadMemberImage(this.token, this.user.id, formData);
+			} catch {
 				this.errorMessage = "Échec lors de la modification."
 			}
 		},
 		async deleteUserImage() {
-			this.errorMessage = "";
 			try {
 				await deleteUserImage(this.token, this.user.id);
+				this.user.imageUrl = '';
 				this.success = true;
 				this.$refs.toast.add({
 					severity: 'success',
@@ -143,9 +141,8 @@ export default {
 			}
 		}
 	},
-	async created() {
+	created() {
 		this.initializeUserData();
-		this.userImageUrl = await getMemberImage(this.token, this.user.id);
 	}
 };
 </script>
