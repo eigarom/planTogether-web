@@ -54,20 +54,23 @@ export default {
 	methods: {
 		async submitCreateFamily() {
 			this.errorMessage = "";
-			const familyInformations = {
-				name: this.name
+
+			if (!this.color.startsWith('#')) {
+				this.color = '#' + this.color;
 			}
-			const {error} = createFamilySchema.validate(familyInformations);
+
+			const newFamily = {
+				name: this.name,
+				color: this.color
+			}
+
+			const { error } = createFamilySchema.validate(newFamily);
+
 			if (error) {
 				this.errorMessage = error.message;
 				return
 			}
-			const newFamily = {
-				name: this.name,
-				color: "#" + this.color,
-				imageContent: "",
-				imageContentType: ""
-			}
+
 			try {
 				const token = this.$cookies.get('jwtToken');
 				const result = await createFamily(newFamily, token);
