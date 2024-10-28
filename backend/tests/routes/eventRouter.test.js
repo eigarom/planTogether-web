@@ -101,7 +101,7 @@ describe("Event Routes", () => {
 
     describe("GET /families/my-family/events/:id", () => {
         it("should return event in json with code 200", async () => {
-            const mockEventsDetails =
+            const mockEventDetails =
             {
                 "id": 3,
                 "name": "Concert",
@@ -134,7 +134,7 @@ describe("Event Routes", () => {
             }
 
             mockEventServices.getEventByIds.mockResolvedValue(
-                mockEventsDetails
+                mockEventDetails
             );
 
             const response = await request(app)
@@ -142,7 +142,7 @@ describe("Event Routes", () => {
                 .expect("Content-Type", /json/)
                 .expect(200);
 
-            expect(response.body).toEqual(mockEventsDetails);
+            expect(response.body).toEqual(mockEventDetails);
         });
 
         it("should return null if event not found", async () => {
