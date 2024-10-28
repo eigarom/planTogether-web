@@ -9,6 +9,7 @@ import EventsList from './pages/events/EventsList.vue';
 import LoginForm from "@/pages/auth/LoginForm.vue";
 import FamilyCreationForm from "@/pages/families/FamilyCreationForm.vue";
 import RegisterForm from "@/pages/auth/RegisterForm.vue";
+import FamilyMemberCreationForm from "@/pages/families/FamilyMemberCreationForm.vue";
 
 const app = createApp(App);
 
@@ -36,6 +37,7 @@ const router = createRouter({
 		{path: '/register', component: RegisterForm},
 		{path: '/events', component: EventsList},
 		{path: '/families/add', component: FamilyCreationForm},
+		{path: '/families/my-family/members', component: FamilyMemberCreationForm},
 		{path: '/', redirect: '/events'}
 	]
 });
@@ -47,6 +49,8 @@ router.beforeEach((to, from, next) => {
 			next('/login');
 		} else if (to.path === '/login' && token) {
 			next('/');
+		} else if (to.path === '/families/my-family/members' && token) {
+			next();
 		} else {
 			next();
 		}
