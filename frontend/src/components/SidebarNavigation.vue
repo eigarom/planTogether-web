@@ -19,16 +19,27 @@
 		</template>
 
 		<template #end>
-			<router-link class="inline-flex items-center px-3 py-2 justify-between w-full" to="/profile">
-				<div class="inline-flex items-center gap-3">
-					<Avatar v-if="user.imageUrl" :image="user.imageUrl"
-							shape="circle" size="small"/>
-					<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
-							class="font-semibold text-white" shape="circle" size="small"/>
-					<span class="font-black">{{ user.name }}</span>
+			<div class="flex flex-col gap-3">
+				<div class="inline-flex items-center justify-between">
+					<router-link class="inline-flex items-center px-3 py-2 gap-3 " to="/profile">
+						<Avatar v-if="user.imageUrl" :image="user.imageUrl"
+								shape="circle" size="small"/>
+						<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
+								class="font-semibold text-white" shape="circle" size="small"/>
+						<span class="font-black">{{ user.name }}</span>
+					</router-link>
+					<span class="pi pi-sign-out pr-3" @click="logout"></span>
 				</div>
-				<span class="pi pi-sign-out" @click="logout"></span>
-			</router-link>
+
+				<Button icon="pi pi-user-plus" label="Créer une invitation" @click="createInvitation"/>
+				
+				<Dialog v-model:visible="dialogVisible" header="Code d'invitation">
+					<div class="flex flex-col items-center gap-3">
+						<p>{{ inviteCode }}</p>
+						<Button icon="pi pi-copy" label="Copier le code" @click="copyInviteCode"/>
+					</div>
+				</Dialog>
+			</div>
 		</template>
 	</Menu>
 </template>
@@ -37,11 +48,13 @@
 import Menu from 'primevue/menu';
 import Image from "primevue/image";
 import Avatar from "primevue/avatar";
-import {getFamilyImage} from "@/services/familyServices.js";
+import Button from "primevue/button";
+import Dialog from "primevue/dialog";
+import {createInvitationCode, getFamilyImage} from "@/services/familyServices.js";
 
 export default {
 	components: {
-		Menu, Image, Avatar
+		Menu, Image, Avatar, Button, Dialog
 	},
 	inject: ['token', 'user', 'logout'],
 	data() {
@@ -52,12 +65,32 @@ export default {
 				{separator: true}
 			],
 			familyImageUrl: '',
-			isLoading: true
+			isLoading: true,
+			dialogVisible: false,
+			inviteCode: ''
 		};
 	},
 	computed: {
 		userInitial() {
 			return this.user.name.charAt(0).toUpperCase();
+		}
+	},
+	methods: {
+		async createInvitation() {
+			try {
+				const response = await createInvitationCode(this.token);
+				this.inviteCode = response.inviteCode;
+				this.dialogVisible = true;
+			} catch (error) {
+				console.error('Erreur:', error);
+			}
+		},
+		copyInviteCode() {
+			navigator.clipboard.writeText(this.inviteCode).then(() => {
+				console.log('Code d\'invitation copié dans le presse-papiers');
+			}).catch(err => {
+				console.error('Erreur lors de la copie du code:', err);
+			});
 		}
 	},
 	async created() {
