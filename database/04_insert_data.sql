@@ -28,8 +28,8 @@ third_insert AS (
 
 -- Insertion de l'événement pour 'Diddy'
 fourth_insert AS (
-    INSERT INTO event (name, description, color, isVisible, id_family)
-    SELECT 'Cadeau pour Dixie', 'Acheter le cadeau pour Dixie.', '#E60514', false, id_family FROM first_insert
+    INSERT INTO event (name, description, isVisible, id_family)
+    SELECT 'Cadeau pour Dixie', 'Acheter le cadeau pour Dixie.', false, id_family FROM first_insert
     RETURNING id_event
 ),
 
@@ -46,6 +46,56 @@ participation_diddy AS (
     INSERT INTO Participation (id_member, id_event)
     SELECT id_member, id_event
     FROM second_insert, fourth_insert
+),
+
+-- Insertion de l'événement "Biblio" pour 'Diddy'
+biblio_event AS (
+    INSERT INTO event (name, description, isVisible, id_family)
+    SELECT 'Biblio', 'Aller porter mes 2 livres', true, id_family FROM first_insert
+    RETURNING id_event
+),
+
+-- Insertion de la période pour l'événement "Biblio"
+biblio_period AS (
+    INSERT INTO period (start_date_time, end_date_time, id_event)
+    SELECT '2024-11-05 17:00:00', '2024-11-05 17:15:00', id_event
+    FROM biblio_event
+    RETURNING id_event
+),
+
+-- Insertion dans 'Participation' pour 'Diddy' pour l'événement "Biblio"
+participation_biblio AS (
+    INSERT INTO Participation (id_member, id_event)
+    SELECT id_member, id_event
+    FROM second_insert, biblio_event
+),
+
+-- Insertion de l'événement "Garage" pour 'Diddy'
+garage_event AS (
+    INSERT INTO event (name, description, isVisible, id_family)
+    SELECT 'Garage', 'Changement de pneus', true, id_family FROM first_insert
+    RETURNING id_event
+),
+
+-- Insertion de la période pour l'événement "Garage"
+garage_period AS (
+    INSERT INTO period (start_date_time, end_date_time, id_event)
+    SELECT '2024-11-05 08:30:00', '2024-11-05 10:00:00', id_event
+    FROM garage_event
+    RETURNING id_event
+),
+
+-- Insertion dans 'Participation' pour 'Diddy' pour l'événement "Garage"
+participation_garage AS (
+    INSERT INTO Participation (id_member, id_event)
+    SELECT id_member, id_event
+    FROM second_insert, garage_event
+),
+
+alert_garage AS (
+    INSERT INTO alert (date_time, id_event)
+    SELECT '2024-11-05 07:30:00', id_event
+    FROM garage_event
 ),
 
 -- Insertion de 'Dixie' dans la table 'member'
@@ -66,15 +116,15 @@ dixie_account AS (
 
 -- Insertion de l'événement pour 'Dixie'
 dixie_event AS (
-    INSERT INTO event (name, description, color, isVisible, id_family)
-    SELECT 'Concert', 'Aller au concert du soir.', '#F7EF05', true, id_family FROM first_insert
+    INSERT INTO event (name, description, isVisible, id_family)
+    SELECT 'Concert', 'Aller au concert du soir.', true, id_family FROM first_insert
     RETURNING id_event
 ),
 
 -- Insertion de la période pour l'événement de 'Dixie'
 dixie_period AS (
     INSERT INTO period (start_date_time, end_date_time, id_event)
-    SELECT '2024-10-23 20:00:00', '2024-10-23 22:00:00', id_event
+    SELECT '2024-11-16 20:00:00', '2024-11-16 22:00:00', id_event
     FROM dixie_event
     RETURNING id_event
 )

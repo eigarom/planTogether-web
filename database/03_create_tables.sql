@@ -64,7 +64,6 @@ CREATE TABLE event
     id_event    serial PRIMARY KEY,
     name        varchar NOT NULL,
     description varchar,
-    color       varchar NOT NULL,
     isVisible   bool    NOT NULL,
     id_family   int     NOT NULL REFERENCES family (id_family) ON DELETE CASCADE
 );

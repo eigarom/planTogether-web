@@ -33,7 +33,7 @@ class EventQueries {
 
     static async getMembersByEventId(eventId) {
         const result = await pool.query(
-            `SELECT m.id_member, name
+            `SELECT m.id_member, name, color
             FROM participation p
             INNER JOIN member m ON m.id_member = p.id_member
             WHERE id_event = $1`,

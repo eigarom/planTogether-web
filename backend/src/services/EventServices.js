@@ -23,14 +23,14 @@ class EventServices {
                 const members = await EventQueries.getMembersByEventId(row.id_event);
                 const formattedMembers = members.map(member => ({
                     id: member.id_member,
-                    name: member.name
+                    name: member.name,
+                    color: member.color
                 }));
 
                 return {
                     id: row.id_event,
                     name: row.name,
                     description: row.description,
-                    color: row.color,
                     isVisible: row.isvisible,
                     periods: formattedPeriods || [],
                     alerts: formattedAlerts || [],
@@ -62,14 +62,14 @@ class EventServices {
             const members = await EventQueries.getMembersByEventId(eventId);
             const formattedMembers = members.map(member => ({
                 id: member.id_member,
-                name: member.name
+                name: member.name,
+                color: member.color
             }));
 
             const event = {
                 id: result.id_event,
                 name: result.name,
                 description: result.description,
-                color: result.color,
                 isVisible: result.isvisible,
                 periods: formattedPeriods || [],
                 alerts: formattedAlerts || [],
