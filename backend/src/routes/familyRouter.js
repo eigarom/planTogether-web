@@ -92,7 +92,7 @@ router.put("/my-family/invite", verifyJWT, async (req, res, next) => {
 	try {
 		const inviteCode = await FamilyServices.createInvitationCode(req.user.familyId);
 
-		res.status(201).json({inviteCode});
+		res.status(200).json({inviteCode});
 	} catch (err) {
 		return next(err);
 	}
@@ -117,7 +117,7 @@ router.put('/join', verifyJWT, async (req, res, next) => {
 
 		const token = generateToken(updatedUser);
 
-		res.status(201).json({token});
+		res.status(200).json({token});
 	} catch (err) {
 		return next(err);
 	}
