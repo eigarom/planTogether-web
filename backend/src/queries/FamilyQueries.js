@@ -71,7 +71,7 @@ class FamilyQueries {
              WHERE invite_code = $1`,
 			[code]
 		);
-		return result.rows[0].count == 0;
+		return result.rows[0].count === 0;
 	}
 
 	static async updateFamilyImage(familyId, imageBuffer, imageContentType) {

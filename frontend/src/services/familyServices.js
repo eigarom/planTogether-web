@@ -98,19 +98,3 @@ export async function createInvitationCode(token) {
 		throw new Error(result.message || "Le code d'invitation n,a pas été créé:");
 	}
 }
-
-export async function updateFamilyImage(familyId, formData, token) {
-	const response = await fetch(`/api/families/my-family/image`, {
-		method: "POST",
-		headers: {
-			'Authorization': `Bearer ${token}`
-		},
-		body: formData
-	});
-
-	if (response.ok) {
-
-	} else {
-		throw new Error(`Impossible de modifier l'image du produit ${familyId}: ${response.status}`);
-	}
-}

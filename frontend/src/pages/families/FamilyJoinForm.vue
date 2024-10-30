@@ -24,13 +24,12 @@ import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
 import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
-import ColorPicker from 'primevue/colorpicker';
 import FloatingTitle from "@/components/FloatingTitle.vue";
 import {joinFamily} from "@/services/familyServices.js";
 
 export default {
 	components: {
-		FloatingTitle, InputText, Button, Message, FloatLabel, ColorPicker
+		FloatingTitle, InputText, Button, Message, FloatLabel
 	},
 	data: () => {
 		return {
