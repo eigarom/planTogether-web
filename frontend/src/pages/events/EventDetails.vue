@@ -2,16 +2,6 @@
     <div v-if="event">
         <div :style="{ fontSize: '24px' }"> {{ event.name }}</div>
         <div>Description : {{ event.description }}</div>
-        <div>Couleur de l'événement:
-            <span :style="{
-                backgroundColor: event.color,
-                display: 'inline-block',
-                width: '20px',
-                height: '20px',
-                borderRadius: '3px'
-            }">
-            </span>
-        </div>
         <div>Visibilité : {{ formatIsVisible(event.isVisible) }}</div>
         <br />
         <hr />

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div :style="{ backgroundColor: color, padding: '10px', borderRadius: '5px', marginBottom: '10px' }">
+        <div>
             <router-link :to="eventDetailsUrl(id)">
                 <div>{{ name }}</div>
                 <div v-for="period in sortedPeriods" :key="period.id">
@@ -16,7 +16,6 @@ export default {
     props: {
         id: String,
         name: String,
-        color: String,
         periods: Array
     },
     methods: {
@@ -40,9 +39,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-.highlighted-date {
-    font-weight: bold;
-}
-</style>

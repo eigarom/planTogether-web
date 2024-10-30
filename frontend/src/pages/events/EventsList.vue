@@ -4,8 +4,7 @@
 		<div v-for="(events, date) in sortedEventsByTime" :key="date">
 			<h2> {{ formatPrettyDate(date) }} </h2>
 			<div>
-				<DailyEvents v-for="event in events" :key="event.id" :id="event.id" :name="event.name" :color="event.color"
-					:periods="event.periods" />
+				<DailyEvents v-for="event in events" :key="event.id" :id="event.id" :name="event.name" :periods="event.periods" />
 			</div>
 		</div>
 	</div>

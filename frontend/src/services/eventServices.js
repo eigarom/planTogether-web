@@ -11,7 +11,6 @@ export async function getEventsList(token) {
             id: event.id,
             name: event.name,
             description: event.description,
-            color: event.color,
             isVisible: event.isVisible,
             periods: event.periods.map(period => ({
                 id: period.id,
@@ -24,7 +23,8 @@ export async function getEventsList(token) {
             })),
             members: event.members.map(member => ({
                 id: member.id,
-                name: member.name
+                name: member.name,
+                color: member.color
             }))
         }));
 
@@ -48,7 +48,6 @@ export async function getEvent(token, idEvent) {
             id: result.id,
             name: result.name,
             description: result.description,
-            color: result.color,
             isVisible: result.isVisible,
             periods: result.periods.map(period => ({
                 id: period.id,
@@ -61,7 +60,8 @@ export async function getEvent(token, idEvent) {
             })),
             members: result.members.map(member => ({
                 id: member.id,
-                name: member.name
+                name: member.name,
+                color: member.color
             }))
         };
 
