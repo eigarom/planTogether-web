@@ -63,7 +63,7 @@ export async function createFamily(family, token) {
 }
 
 export async function joinFamily(inviteCode, token) {
-	const response = await fetch("/api/families/invite-code", {
+	const response = await fetch("/api/families/join", {
 		method: "PUT",
 		headers: {
 			'Authorization': `Bearer ${token}`,

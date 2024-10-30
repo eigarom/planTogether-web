@@ -98,7 +98,7 @@ router.put("/my-family/invite", verifyJWT, async (req, res, next) => {
 	}
 });
 
-router.put('/invite-code', verifyJWT, async (req, res, next) => {
+router.put('/join', verifyJWT, async (req, res, next) => {
 	const {error} = inviteCodeSchema.validate(req.body);
 	if (error) {
 		return next(new HttpError(400, error.message));
