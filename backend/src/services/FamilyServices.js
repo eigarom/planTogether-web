@@ -12,7 +12,7 @@ class FamilyServices {
 		let code;
 		do {
 			code = crypto.randomBytes(16).toString('hex');
-		} while (!(await FamilyQueries.isCodeUnique(code)));
+		} while (await FamilyQueries.doesCodeExist(code));
 
 		const expirationDate = new Date();
 		expirationDate.setDate(expirationDate.getDate() + 7); // Durée de vie de 7 jours

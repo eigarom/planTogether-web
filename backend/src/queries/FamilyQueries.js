@@ -23,6 +23,16 @@ class FamilyQueries {
 		}
 	}
 
+	static async doesCodeExist(code) {
+		const result = await pool.query(
+			`SELECT COUNT(*)
+             FROM family
+             WHERE invite_code = $1`,
+			[code]
+		);
+		return result.rows[0].count > 0;
+	}
+
 	static async getFamilyById(familyId) {
 		const result = await pool.query(
 			`SELECT name, color
@@ -62,16 +72,6 @@ class FamilyQueries {
 			[family.name, family.color]
 		);
 		return result.rows[0].id_family;
-	}
-
-	static async isCodeUnique(code) {
-		const result = await pool.query(
-			`SELECT COUNT(*)
-             FROM family
-             WHERE invite_code = $1`,
-			[code]
-		);
-		return result.rows[0].count === 0;
 	}
 
 	static async updateFamilyImage(familyId, imageBuffer, imageContentType) {
