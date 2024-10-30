@@ -1,3 +1,4 @@
+const MemberQueries = require("../queries/MemberQueries");
 const UserAccountQueries = require("../queries/UserAccountQueries");
 
 class UserAccountServices {
@@ -34,6 +35,10 @@ class UserAccountServices {
 	static async updateUser(user) {
 		await UserAccountQueries.updateUser(user);
 		return this.getUserById(user.id);
+	}
+
+	static async updateUserFamilyId(userId, familyId) {
+		await MemberQueries.updateMemberFamilyId(userId, familyId, null);
 	}
 }
 
