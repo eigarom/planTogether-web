@@ -11,6 +11,7 @@ import LoginForm from "@/pages/auth/LoginForm.vue";
 import FamilyOptions from "@/pages/families/FamilyOptions.vue";
 import FamilyCreationForm from "@/pages/families/FamilyCreationForm.vue";
 import FamilyJoinForm from "@/pages/families/FamilyJoinForm.vue";
+import FamilyProfile from "@/pages/families/FamilyProfile.vue";
 import RegisterForm from "@/pages/auth/RegisterForm.vue";
 import MemberCreationForm from "@/pages/members/MemberCreationForm.vue";
 import UserProfile from "@/pages/users/UserProfile.vue";
@@ -44,6 +45,7 @@ const router = createRouter({
 		{path: '/families/add-or-join', component: FamilyOptions},
 		{path: '/families/add', component: FamilyCreationForm},
 		{path: '/families/join', component: FamilyJoinForm},
+		{path: '/families', component: FamilyProfile},
 		{path: '/members/add', component: MemberCreationForm},
 		{path: '/profile', component: UserProfile},
 		{path: '/', redirect: '/events'}
