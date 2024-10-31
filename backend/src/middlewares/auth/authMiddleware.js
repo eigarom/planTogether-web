@@ -11,7 +11,7 @@ const verifyJWT = (req, res, next) => {
 
 	jwt.verify(token, process.env.JWT_SECRET, (err, data) => {
 		if (err) {
-			return next(new HttpError(401, "Échec de l'authentification du token"));
+			return next(new HttpError(401, "Erreur lors de la récupération du token"));
 		}
 		req.user = data;
 		next();

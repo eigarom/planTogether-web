@@ -62,18 +62,39 @@ export async function createFamily(family, token) {
 	}
 }
 
-export async function updateFamilyImage(familyId, formData, token) {
-    const response = await fetch(`/api/families/my-family/image`, {
-        method: "POST",
-        headers: {
-           'Authorization': `Bearer ${token}`
-        },
-        body: formData
-    });
+export async function joinFamily(inviteCode, token) {
+	const response = await fetch("/api/families/join", {
+		method: "PUT",
+		headers: {
+			'Authorization': `Bearer ${token}`,
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify({
+			inviteCode: inviteCode
+		}),
+	});
+	const result = await response.json();
 
-    if (response.ok) {
-        return;
-    } else {
-        throw new Error(`Impossible de modifier l'image du produit ${familyId}: ${response.status}`);
-    }
+	if (response.ok) {
+		return result;
+	} else {
+		throw new Error(result.message || "La famille n'a pas pu être rejointe:");
+	}
+}
+
+export async function createInvitationCode(token) {
+	const response = await fetch("/api/families/my-family/invite", {
+		method: "PUT",
+		headers: {
+			'Authorization': `Bearer ${token}`,
+			"Content-Type": "application/json"
+		}
+	});
+	const result = await response.json();
+
+	if (response.ok) {
+		return result;
+	} else {
+		throw new Error(result.message || "Le code d'invitation n,a pas été créé:");
+	}
 }

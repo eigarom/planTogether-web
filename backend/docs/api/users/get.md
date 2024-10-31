@@ -28,6 +28,19 @@ Fourni les informations de l'utilisateur authentifié.
 ```
 
 ## Opération échouée
+### Si le token fourni est incorrect.
+
+**Code** : `401 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status":401,
+    "message":"Erreur lors de la récupération du token"
+}
+```
+
 ### Si le membre ne fait pas parti de la famille de l'utilisateur authentifié.
 
 **Code** : `403 Forbidden`

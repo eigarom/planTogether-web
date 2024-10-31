@@ -19,6 +19,19 @@ Fourni l'image de la famille de l'utilisateur authentifié.
 Image de profil de la famille de l'utilisateur.
 
 ## Opération échouée
+### Si le token fourni est incorrect.
+
+**Code** : `401 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status":401,
+    "message":"Erreur lors de la récupération du token"
+}
+```
+
 ### Si le token utilisé contient l'id d'une famille inexistante.
 
 **Code** : `404 Not found`

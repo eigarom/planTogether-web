@@ -19,6 +19,19 @@ Fourni l'image de profil du membre correspondant à l'id.
 Image de profil du membre.
 
 ## Opération échouée
+### Si le token fourni est incorrect.
+
+**Code** : `401 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status":401,
+    "message":"Erreur lors de la récupération du token"
+}
+```
+
 ### Si l'id ne correspond pas à un membre de la famille de l'utilisateur authentifié.
 
 **Code** : `403 Forbidden`
