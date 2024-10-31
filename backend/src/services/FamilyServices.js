@@ -56,6 +56,11 @@ class FamilyServices {
 		return undefined;
 	}
 
+	static async updateFamily(family) {
+		await FamilyQueries.updateFamily(family);
+		return this.getUserById(family.id);
+	}
+
 	static async updateFamilyImage(familyId, imageBuffer, imageContentType) {
 		const result = await FamilyQueries.updateFamilyImage(familyId, imageBuffer, imageContentType);
 
