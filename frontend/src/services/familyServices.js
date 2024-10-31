@@ -62,6 +62,24 @@ export async function createFamily(family, token) {
 	}
 }
 
+export async function updateFamily(familyInformations, token) {
+	const response = await fetch("/api/families/my-family", {
+		method: "PUT",
+		headers: {
+			'Authorization': `Bearer ${token}`,
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(familyInformations),
+	});
+	const result = await response.json();
+
+	if (response.ok) {
+		return result;
+	} else {
+		throw new Error(result.message || "La famille n'a pas pu être mis à jour:");
+	}
+}
+
 export async function joinFamily(inviteCode, token) {
 	const response = await fetch("/api/families/join", {
 		method: "PUT",
@@ -96,5 +114,36 @@ export async function createInvitationCode(token) {
 		return result;
 	} else {
 		throw new Error(result.message || "Le code d'invitation n,a pas été créé:");
+	}
+}
+
+export async function uploadFamilyImage(familyId, token, formData) {
+	try {
+		const response = await fetch(`/api/families/my-family/image`, {
+			method: 'PUT',
+			headers: {
+				'Authorization': `Bearer ${token}`
+			},
+			body: formData
+		});
+
+		const blob = await response.blob();
+
+		return URL.createObjectURL(blob);
+	} catch (error) {
+		throw new Error(error || `Erreur lors du chargement de l'image de la famille`);
+	}
+}
+
+export async function deleteFamilyImage(familyId, token) {
+	try {
+		await fetch(`/api/families/my-family/image`, {
+			method: 'DELETE',
+			headers: {
+				'Authorization': `Bearer ${token}`
+			}
+		});
+	} catch (error) {
+		throw new Error(error || `Erreur lors du chargement de l'image de la famille`);
 	}
 }
