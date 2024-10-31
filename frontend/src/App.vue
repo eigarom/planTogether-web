@@ -1,6 +1,6 @@
 <template>
 	<div v-if="!isLoading" class="flex gap-3 w-full h-screen p-3 bg-surface-50">
-		<SidebarNavigation v-if="user && family"/>
+		<SidebarNavigation v-if="user && family" />
 		<div class="flex-grow">
 			<router-view></router-view>
 		</div>
@@ -8,11 +8,12 @@
 </template>
 
 <script>
-import {computed} from 'vue';
+import { computed } from 'vue';
 import SidebarNavigation from './components/SidebarNavigation.vue';
-import {getUserFromToken} from "@/services/userServices.js";
-import {getFamilyFromToken} from "@/services/familyServices.js";
-import {getMemberImage} from "@/services/memberServices.js";
+import { getUserFromToken } from "@/services/userServices.js";
+import { getFamilyFromToken } from "@/services/familyServices.js";
+import { getMemberImage } from "@/services/memberServices.js";
+import { getFamilyImage } from "@/services/familyServices.js";
 
 export default {
 	components: {
@@ -50,6 +51,7 @@ export default {
 					if (!this.family) {
 						this.$router.push('/families/add-or-join');
 					}
+					this.family.imageUrl = await getFamilyImage(this.token, this.family.id);
 				} catch (error) {
 					console.error('Erreur:', error);
 				}
