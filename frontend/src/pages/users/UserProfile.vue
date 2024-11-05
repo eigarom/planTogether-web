@@ -1,34 +1,35 @@
 <template>
 	<div v-if="user" class="flex h-full justify-center items-center">
 		<div class="w-80">
-			<h1 class="text-3xl mb-8 text-center">Mon profil</h1>
+			<h1 class="text-3xl mb-8 text-center">{{ $t('userTitle') }}</h1>
 			<form id="profileForm" class="flex flex-col gap-5" @submit.prevent="submitUpdateUser">
 				<div class="flex items-center justify-between">
 					<FloatLabel variant="on">
 						<InputText id="name" v-model.trim="name" class="w-60"/>
-						<label for="name">Nom</label>
+						<label for="name">{{ $t('memberName') }}</label>
 					</FloatLabel>
 					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
 				</div>
 
 				<FloatLabel variant="on">
 					<InputText id="email" v-model.trim="email" class="w-full"/>
-					<label for="email">Courriel</label>
+					<label for="email">{{ $t('mail') }}</label>
 				</FloatLabel>
 
 				<div class="card flex items-center justify-between">
 					<div class="flex flex-col gap-3">
-						<FileUpload auto chooseLabel="Choisir une image" class="p-button-outlined" customUpload
+						<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
 									mode="basic" severity="secondary" @select="onImageSelect"/>
-						<Button v-if="user.imageUrl" icon="pi pi-minus" label="Supprimer l'image" outlined
-								severity="warn" @click="deleteUserImage"/>
+						<Button v-if="user.imageUrl" :label="$t('deleteImageButton')"
+								icon="pi pi-minus"
+								outlined severity="warn" @click="deleteUserImage"/>
 					</div>
 					<img v-if="user.imageUrl" :src="user.imageUrl" alt="Image" class="shadow-md rounded-xl h-24"/>
 				</div>
 
 				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-				<Button :disabled="isSubmitButtonDisabled" label="Enregistrer les modifications" raised type="submit"/>
+				<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" raised type="submit"/>
 			</form>
 
 			<Toast ref="toast" position="bottom-right"/>

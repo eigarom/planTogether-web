@@ -1,0 +1,15 @@
+{
+	"eventsTitle": "Events",
+	"description": "Description",
+	"eventColor": "Event color",
+	"visibility": "Visibility",
+	"public": "Public",
+	"private": "Private",
+	"periods": "Event periods",
+	"startDate": "Start",
+	"endDate": "End",
+	"alerts": "Alerts",
+	"alertDate": "Time",
+	"noAlerts": "No alerts",
+	"participants": "Participants"
+}
