@@ -38,13 +38,11 @@
 import Menu from 'primevue/menu';
 import Image from "primevue/image";
 import Avatar from "primevue/avatar";
-import Button from "primevue/button";
-import Dialog from "primevue/dialog";
 import {getFamilyImage} from "@/services/familyServices.js";
 
 export default {
 	components: {
-		Menu, Image, Avatar, Button, Dialog
+		Menu, Image, Avatar
 	},
 	inject: ['token', 'user', 'logout'],
 	data() {
