@@ -10,9 +10,7 @@ class UserAccountServices {
 				id: userId,
 				email: result.email,
 				name: result.name,
-				color: result.color,
-				lang: result.lang,
-				theme: result.theme
+				color: result.color
 			}
 		}
 		return undefined;

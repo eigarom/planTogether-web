@@ -3,17 +3,17 @@
 
 	<div class="flex h-full justify-center items-center">
 		<div class="w-80">
-			<h1 class="text-3xl mb-8 text-center font-medium">Rejoindre une famille</h1>
+			<h1 class="text-3xl mb-8 text-center font-medium">{{ $t('joinFamily') }}</h1>
 			<form id="familyJoinForm" class="flex flex-col gap-5" @submit.prevent="submitJoinFamily">
 
 				<FloatLabel variant="on">
 					<InputText id="inviteCode" v-model.trim="inviteCode" class="w-full"/>
-					<label for="inviteCode">Code d'invitation</label>
+					<label for="inviteCode">{{ $t('inviteCode') }}</label>
 				</FloatLabel>
 
 				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-				<Button :disabled="isButtonDisabled" label="Confirmer" raised type="submit"/>
+				<Button :disabled="isButtonDisabled" :label=" $t('confirmButton')" raised type="submit"/>
 			</form>
 		</div>
 	</div>
@@ -24,7 +24,7 @@ import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
 import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
-import FloatingTitle from "@/components/FloatingTitle.vue";
+import FloatingTitle from "@/components/AppHeader.vue";
 import {joinFamily} from "@/services/familyServices.js";
 
 export default {

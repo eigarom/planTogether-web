@@ -21,9 +21,7 @@ describe('Tests routes', () => {
 				id: 'userId',
 				email: 'email',
 				name: 'name',
-				color: 'color',
-				lang: 'lang',
-				theme: 'theme'
+				color: 'color'
 			};
 
 			const expectedUserDetails = mockUserDetails;
@@ -63,9 +61,7 @@ describe('Tests routes', () => {
 				id: 'userId',
 				email: 'newemail@example.com',
 				name: 'newname',
-				color: '#ab1234',
-				lang: 'en',
-				theme: 'dark'
+				color: '#ab1234'
 			};
 			const expectedUserDetails = mockUserDetails;
 
@@ -77,9 +73,7 @@ describe('Tests routes', () => {
 				.send({
 					email: 'email@example.com',
 					name: 'name',
-					color: '#ff0000',
-					lang: 'fr',
-					theme: 'light'
+					color: '#ff0000'
 				})
 				.expect('Content-Type', /json/)
 				.expect(200);
@@ -93,9 +87,7 @@ describe('Tests routes', () => {
 				.send({
 					email: 'invalidemail',
 					name: 'newname',
-					color: 'newcolor',
-					lang: 'newlang',
-					theme: 'newtheme'
+					color: 'newcolor'
 				})
 				.expect(400);
 
@@ -110,9 +102,7 @@ describe('Tests routes', () => {
 				.send({
 					email: 'newemail@example.com',
 					name: 'newname',
-					color: '#ff0000',
-					lang: 'en',
-					theme: 'dark'
+					color: '#ff0000'
 				})
 				.expect(404);
 
@@ -127,9 +117,7 @@ describe('Tests routes', () => {
 				.send({
 					email: 'newemail@example.com',
 					name: 'newname',
-					color: '#ff0000',
-					lang: 'en',
-					theme: 'dark'
+					color: '#ff0000'
 				})
 				.expect(500);
 		});
