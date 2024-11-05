@@ -34,9 +34,7 @@ router.put('/me', verifyJWT, async (req, res, next) => {
 			id: "" + req.user.userId,
 			email: "" + req.body.email,
 			name: "" + req.body.name,
-			color: "" + req.body.color,
-			lang: "" + req.body.lang,
-			theme: "" + req.body.theme
+			color: "" + req.body.color
 		};
 
 		const updatedUser = await UserAccountServices.updateUser(userInformations);
