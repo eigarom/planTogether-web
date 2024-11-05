@@ -14,7 +14,7 @@
 <script>
 export default {
     props: {
-        id: String,
+        id: Number,
         name: String,
         periods: Array
     },

@@ -7,6 +7,7 @@ import Aura from '@primevue/themes/aura';
 import App from './App.vue';
 import EventsList from './pages/events/EventsList.vue';
 import EventDetails from './pages/events/EventDetails.vue';
+import EventCreationForm from './pages/events/EventCreationForm.vue';
 import LoginForm from "@/pages/auth/LoginForm.vue";
 import FamilyCreationForm from "@/pages/families/FamilyCreationForm.vue";
 import RegisterForm from "@/pages/auth/RegisterForm.vue";
@@ -39,6 +40,7 @@ const router = createRouter({
 		{path: '/register', component: RegisterForm},
 		{path: '/events', component: EventsList},
 		{path: '/events/:id', name: 'EventDetails', component: EventDetails, props: true},
+		{path: '/events/add', component: EventCreationForm},
 		{path: '/families/add', component: FamilyCreationForm},
 		{path: '/members/add', component: MemberCreationForm},
 		{path: '/profile', component: UserProfile},

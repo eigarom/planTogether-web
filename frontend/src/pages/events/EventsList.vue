@@ -1,5 +1,6 @@
 <template>
 	<h1>Événements</h1>
+	<Button as="router-link" label="Ajouter un événement" to="/events/add" />
 	<div v-if="!loading">
 		<div v-for="(events, date) in sortedEventsByTime" :key="date">
 			<h2> {{ formatPrettyDate(date) }} </h2>
@@ -11,12 +12,13 @@
 </template>
 
 <script>
-import DailyEvents from './DailyEvents.vue'
+import Button from 'primevue/button';
+import DailyEvents from './DailyEvents.vue';
 import { getEventsList } from '../../services/eventServices';
 
 export default {
 	components: {
-		DailyEvents
+		DailyEvents, Button
 	},
 	inject: ['user'],
 	data() {
