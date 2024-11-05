@@ -24,7 +24,7 @@ import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
 import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
-import FloatingTitle from "@/components/FloatingTitle.vue";
+import FloatingTitle from "@/components/AppHeader.vue";
 import {joinFamily} from "@/services/familyServices.js";
 
 export default {

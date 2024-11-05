@@ -1,5 +1,5 @@
 <template>
-	<FloatingTitle />
+	<FloatingTitle/>
 
 	<div class="flex h-full justify-center items-center">
 		<div class="w-80">
@@ -7,19 +7,19 @@
 			<form id="familycreationForm" class="flex flex-col gap-5" @submit.prevent="submitCreateFamily">
 
 				<FloatLabel variant="on">
-					<InputText id="name" v-model.trim="name" class="w-full" />
+					<InputText id="name" v-model.trim="name" class="w-full"/>
 					<label for="name">Nom</label>
 				</FloatLabel>
 
 
 				<div class="flex justify-between px-3">
 					<label class="font-medium" for="color">Couleur des événements communs </label>
-					<ColorPicker v-model="color" format="hex" inputId="color" />
+					<ColorPicker v-model="color" format="hex" inputId="color"/>
 				</div>
 
 				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-				<Button :disabled="isCreateFamilyDisabled" label="Confirmer" raised type="submit" />
+				<Button :disabled="isCreateFamilyDisabled" label="Confirmer" raised type="submit"/>
 			</form>
 		</div>
 	</div>
@@ -31,9 +31,9 @@ import Button from "primevue/button";
 import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import ColorPicker from 'primevue/colorpicker';
-import { createFamily } from "@/services/familyServices.js";
-import { createFamilySchema } from "@/schemas/familySchemas.js";
-import FloatingTitle from "@/components/FloatingTitle.vue";
+import {createFamily} from "@/services/familyServices.js";
+import {createFamilySchema} from "@/schemas/familySchemas.js";
+import FloatingTitle from "@/components/AppHeader.vue";
 
 export default {
 	components: {
@@ -64,7 +64,7 @@ export default {
 				color: this.color
 			}
 
-			const { error } = createFamilySchema.validate(newFamily);
+			const {error} = createFamilySchema.validate(newFamily);
 
 			if (error) {
 				this.errorMessage = error.message;

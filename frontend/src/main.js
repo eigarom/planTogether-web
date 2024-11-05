@@ -3,6 +3,7 @@ import {createRouter, createWebHistory} from 'vue-router';
 import VueCookies from 'vue-cookies';
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
+import i18n from './locales/i18n.js';
 
 import App from './App.vue';
 import EventsList from './pages/events/EventsList.vue';
@@ -63,5 +64,8 @@ router.beforeEach((to, from, next) => {
 	}
 )
 app.use(router);
+
+// Multi-lingue
+app.use(i18n)
 
 app.mount("#app");

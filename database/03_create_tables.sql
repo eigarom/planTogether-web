@@ -13,16 +13,6 @@ DROP TABLE IF EXISTS task;
 DROP TYPE IF EXISTS account_member_theme CASCADE;
 DROP TYPE IF EXISTS account_member_lang CASCADE;
 
-CREATE TYPE account_member_theme AS ENUM (
-    'dark',
-    'light'
-    );
-
-CREATE TYPE account_member_lang AS ENUM (
-    'en',
-    'fr'
-    );
-
 CREATE TABLE family
 (
     id_family              serial PRIMARY KEY,
@@ -47,10 +37,8 @@ CREATE TABLE member
 CREATE TABLE account_member
 (
     id_member     int PRIMARY KEY REFERENCES member (id_member) ON DELETE CASCADE,
-    email         varchar              NOT NULL UNIQUE,
-    password_hash varchar              NOT NULL,
-    lang          account_member_lang  NOT NULL DEFAULT 'fr',
-    theme         account_member_theme NOT NULL DEFAULT 'light',
+    email         varchar NOT NULL UNIQUE,
+    password_hash varchar NOT NULL,
     location      varchar
 );
 
@@ -81,14 +69,14 @@ CREATE TABLE period
     id_period       serial PRIMARY KEY,
     start_date_time timestamp with time zone NOT NULL,
     end_date_time   timestamp with time zone NOT NULL,
-    id_event        int       NOT NULL REFERENCES event (id_event) ON DELETE CASCADE
+    id_event        int                      NOT NULL REFERENCES event (id_event) ON DELETE CASCADE
 );
 
 CREATE TABLE alert
 (
     id_alert  serial PRIMARY KEY,
     date_time timestamp with time zone NOT NULL,
-    id_event  int       NOT NULL REFERENCES event (id_event) ON DELETE CASCADE
+    id_event  int                      NOT NULL REFERENCES event (id_event) ON DELETE CASCADE
 );
 
 CREATE TABLE shopping_list

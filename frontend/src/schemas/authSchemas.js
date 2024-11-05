@@ -1,31 +1,23 @@
-import Joi from 'joi';
+import * as Yup from 'yup';
+import i18n from "../locales/i18n";
 
-export const registrationSchema = Joi.object({
-	email: Joi.string()
-		.email({tlds: {allow: false}})
-		.required()
-		.messages({
-			'string.email': `Le courriel n'est pas valide`
-		}),
-	password: Joi.string()
-		.pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*]).{16,}$'))
-		.required()
-		.max(50)
-		.messages({
-			'string.pattern.base': 'Le mot de passe doit contenir au moins 16 caractères, une majuscule, une' +
-				' minuscule, un chiffre et un caractère spécial'
-		}),
-	repeat_password: Joi.any()
-		.valid(Joi.ref('password'))
-		.required()
-		.messages({
-			'any.only': 'Les mots de passe doivent être identiques'
-		}),
-	name: Joi.string()
-		.pattern(new RegExp('^[a-zA-Z0-9- \\u00C0-\\u00FF]+$'))
-		.required()
-		.max(50)
-		.messages({
-			'string.pattern.base': `Le nom n'est pas valide`
+export const registrationSchema = Yup.object({
+	email: Yup.string()
+		.email(() => i18n.global.t('invalidMail'))
+		.required(() => i18n.global.t('emailRequired')),
+	password: Yup.string()
+		.max(50, () => i18n.global.t('passwordMax'))
+		.matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{16,}$/, {
+			message: () => i18n.global.t('passwordInvalid'),
 		})
+		.required(() => i18n.global.t('passwordRequired')),
+	repeat_password: Yup.string()
+		.oneOf([Yup.ref('password'), null], () => i18n.global.t('passwordsDoNotMatch'))
+		.required(() => i18n.global.t('passwordConfirmationRequired')),
+	name: Yup.string()
+		.max(50, () => i18n.global.t('nameMax'))
+		.matches(/^[a-zA-Z0-9- \u00C0-\u00FF]+$/, {
+			message: () => i18n.global.t('nameInvalid'),
+		})
+		.required(() => i18n.global.t('nameRequired')),
 });

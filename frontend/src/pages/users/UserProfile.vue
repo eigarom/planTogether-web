@@ -3,41 +3,41 @@
 		<div class="w-80">
 			<h1 class="text-3xl mb-8 text-center">Mon profil</h1>
 			<form id="profileForm" class="flex flex-col gap-5" @submit.prevent="submitUpdateUser">
-				<div class="flex flex-inline items-center justify-between">
+				<div class="flex items-center justify-between">
 					<FloatLabel variant="on">
-						<InputText id="name" v-model.trim="name" class="w-60" />
+						<InputText id="name" v-model.trim="name" class="w-60"/>
 						<label for="name">Nom</label>
 					</FloatLabel>
-					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color" />
+					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
 				</div>
 
 				<FloatLabel variant="on">
-					<InputText id="email" v-model.trim="email" class="w-full" />
+					<InputText id="email" v-model.trim="email" class="w-full"/>
 					<label for="email">Courriel</label>
 				</FloatLabel>
 
-				<div class="card flex flex-inline items-center justify-between">
+				<div class="card flex items-center justify-between">
 					<div class="flex flex-col gap-3">
 						<FileUpload auto chooseLabel="Choisir une image" class="p-button-outlined" customUpload
-							mode="basic" severity="secondary" @select="onImageSelect" />
+									mode="basic" severity="secondary" @select="onImageSelect"/>
 						<Button v-if="user.imageUrl" icon="pi pi-minus" label="Supprimer l'image" outlined
-							severity="warn" @click="deleteUserImage" />
+								severity="warn" @click="deleteUserImage"/>
 					</div>
-					<img v-if="user.imageUrl" :src="user.imageUrl" alt="Image" class="shadow-md rounded-xl h-24" />
+					<img v-if="user.imageUrl" :src="user.imageUrl" alt="Image" class="shadow-md rounded-xl h-24"/>
 				</div>
 
 				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-				<Button :disabled="isSubmitButtonDisabled" label="Enregistrer les modifications" raised type="submit" />
+				<Button :disabled="isSubmitButtonDisabled" label="Enregistrer les modifications" raised type="submit"/>
 			</form>
 
-			<Toast ref="toast" position="bottom-right" />
+			<Toast ref="toast" position="bottom-right"/>
 		</div>
 	</div>
 </template>
 
 <script>
-import { updateUser } from "@/services/userServices.js";
+import {updateUser} from "@/services/userServices.js";
 import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
 import Message from 'primevue/message';
@@ -45,8 +45,8 @@ import FloatLabel from "primevue/floatlabel";
 import ColorPicker from 'primevue/colorpicker';
 import FileUpload from 'primevue/fileupload';
 import Toast from 'primevue/toast';
-import { userSchema } from "@/schemas/userSchemas.js";
-import { deleteMemberImage, uploadMemberImage } from "@/services/memberServices.js";
+import {userSchema} from "@/schemas/userSchemas.js";
+import {deleteMemberImage, uploadMemberImage} from "@/services/memberServices.js";
 
 export default {
 	inject: ['user', 'token'],
@@ -115,7 +115,7 @@ export default {
 				this.color = '#' + this.color;
 			}
 
-			const { error } = userSchema.validate({ name: this.name, email: this.email, color: this.color });
+			const {error} = userSchema.validate({name: this.name, email: this.email, color: this.color});
 			if (error) {
 				this.errorMessage = error.message;
 				return
