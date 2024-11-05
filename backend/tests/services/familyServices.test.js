@@ -47,4 +47,45 @@ describe('Test family services', () => {
 			expect(imageContent).toBeUndefined();
 		});
 	});
+
+	describe('createInvitationCode', () => {
+		it('should create a unique invitation code', async () => {
+			const familyId = 'familyId';
+
+			mockFamilyQueries.doesCodeExist.mockResolvedValue(false);
+			mockFamilyQueries.updateInvitationCode.mockResolvedValue(true);
+
+			const code = await FamilyServices.createInvitationCode(familyId);
+			expect(code).toBeDefined();
+			expect(code).toHaveLength(32);
+		});
+
+		it('should throw an error if the code cannot be updated', async () => {
+			const familyId = 'familyId';
+
+			mockFamilyQueries.doesCodeExist.mockResolvedValue(false);
+			mockFamilyQueries.updateInvitationCode.mockResolvedValue(false);
+
+			await expect(FamilyServices.createInvitationCode(familyId)).rejects.toThrow('Échec lors de la création du code d\'invitation');
+		});
+	});
+
+	describe('getFamilyIdByInviteCode', () => {
+		it('should return family id for a valid invite code', async () => {
+			const inviteCode = 'validInviteCode';
+			const mockFamilyId = 'familyId';
+			mockFamilyQueries.getFamilyByInviteCode.mockResolvedValue({id_family: mockFamilyId});
+
+			const familyId = await FamilyServices.getFamilyIdByInviteCode(inviteCode);
+			expect(familyId).toBe(mockFamilyId);
+		});
+
+		it('should return undefined for an invalid invite code', async () => {
+			const inviteCode = 'invalidInviteCode';
+			mockFamilyQueries.getFamilyByInviteCode.mockResolvedValue(undefined);
+
+			const familyId = await FamilyServices.getFamilyIdByInviteCode(inviteCode);
+			expect(familyId).toBeUndefined();
+		});
+	});
 });

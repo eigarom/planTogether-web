@@ -1,8 +1,8 @@
-# Modifier les informations
+# Création d'un code d'invitation
 
-Modifie les informations de l'utilisateur authentifié.
+Créer un code d'invitation avec une date de validité à partager à un autre utilisateur.
 
-**URL** : `/users/me`
+**URL** : `/families/my-family/invite`
 
 **Méthode** : `PUT`
 
@@ -18,12 +18,8 @@ Modifie les informations de l'utilisateur authentifié.
 
 ```json
 {
-    "id": 1,
-    "email": "johndoe@exemple.com",
-	"name": "John Doe",
-	"color": "#FF0000",
-	"lang": "fr",
-	"theme": "dark"
+	"status":200,
+	"inviteCode":"7147d5eef8e906c6834d68002cac1472"
 }
 ```
 
@@ -38,19 +34,6 @@ Modifie les informations de l'utilisateur authentifié.
 {
     "status":401,
     "message":"Erreur lors de la récupération du token"
-}
-```
-
-### Si le token utilisé contient l'id d'un utilisateur inexistant.
-
-**Code** : `404 Not found`
-
-**Contenu** :
-
-```json
-{
-    "status":404,
-    "message":"Utilisateur introuvable"
 }
 ```
 

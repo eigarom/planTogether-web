@@ -20,24 +20,6 @@ class MemberQueries {
 			client.release();
 		}
 	}
-	static async insertMember(member, client) {
-		const result = await (client|| pool).query (
-			`INSERT INTO member(name, color, id_family)
-			 VALUES ($1, $2, $3)
-			 RETURNING id_member`,
-			[member.name, member.color, member.familyId]
-		);
-
-		return result.rows[0].id_member;
-	}
-
-	static async insertGuestMember(memberId, client) {
-		await (client || pool).query(
-			`INSERT INTO guest_member(id_member)
-			 VALUES ($1)`,
-			[memberId]
-		);
-	}
 
 	static async getMemberById(memberId) {
 		const result = await pool.query(
@@ -59,6 +41,25 @@ class MemberQueries {
 		return result.rows[0];
 	}
 
+	static async insertGuestMember(memberId, client) {
+		await (client || pool).query(
+			`INSERT INTO guest_member(id_member)
+             VALUES ($1)`,
+			[memberId]
+		);
+	}
+
+	static async insertMember(member, client) {
+		const result = await (client || pool).query(
+			`INSERT INTO member(name, color, id_family)
+             VALUES ($1, $2, $3)
+             RETURNING id_member`,
+			[member.name, member.color, member.familyId]
+		);
+
+		return result.rows[0].id_member;
+	}
+
 	static async isMemberInFamily(memberId, familyId) {
 		const result = await pool.query(
 			`SELECT *
@@ -71,7 +72,7 @@ class MemberQueries {
 	}
 
 	static async updateMemberFamilyId(memberId, familyId, client) {
-		await (pool || client).query(
+		await (client || pool).query(
 			`UPDATE member
              SET id_family = $2
              WHERE id_member = $1`,

@@ -29,6 +29,8 @@ requête.
 
 * [Récupération des informations](families/get.md) : `GET /families/my-family`
 * [Récupération de l'image de profil](families/get_image.md) : `GET /families/my-family/image`
+* [Création d'un code d'invitation](families/put_invite.md) : `GET /families/my-family/invite`
+* [Rejoindre une famille](families/put_join.md) : `GET /families/my-family/join`
 
 ### Membre
 

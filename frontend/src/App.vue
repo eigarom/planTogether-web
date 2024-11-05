@@ -48,7 +48,7 @@ export default {
 				try {
 					this.family = await getFamilyFromToken(this.token);
 					if (!this.family) {
-						this.$router.push('/families/add');
+						this.$router.push('/families/add-or-join');
 					}
 				} catch (error) {
 					console.error('Erreur:', error);

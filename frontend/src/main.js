@@ -9,7 +9,9 @@ import EventsList from './pages/events/EventsList.vue';
 import EventDetails from './pages/events/EventDetails.vue';
 import EventCreationForm from './pages/events/EventCreationForm.vue';
 import LoginForm from "@/pages/auth/LoginForm.vue";
+import FamilyOptions from "@/pages/families/FamilyOptions.vue";
 import FamilyCreationForm from "@/pages/families/FamilyCreationForm.vue";
+import FamilyJoinForm from "@/pages/families/FamilyJoinForm.vue";
 import RegisterForm from "@/pages/auth/RegisterForm.vue";
 import MemberCreationForm from "@/pages/members/MemberCreationForm.vue";
 import UserProfile from "@/pages/users/UserProfile.vue";
@@ -41,7 +43,9 @@ const router = createRouter({
 		{path: '/events', component: EventsList},
 		{path: '/events/:id', name: 'EventDetails', component: EventDetails, props: true},
 		{path: '/events/add', component: EventCreationForm},
+		{path: '/families/add-or-join', component: FamilyOptions},
 		{path: '/families/add', component: FamilyCreationForm},
+		{path: '/families/join', component: FamilyJoinForm},
 		{path: '/members/add', component: MemberCreationForm},
 		{path: '/profile', component: UserProfile},
 		{path: '/', redirect: '/events'}
