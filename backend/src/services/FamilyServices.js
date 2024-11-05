@@ -58,7 +58,7 @@ class FamilyServices {
 
 	static async updateFamily(family) {
 		await FamilyQueries.updateFamily(family);
-		return this.getUserById(family.id);
+		return this.getFamilyById(family.id);
 	}
 
 	static async updateFamilyImage(familyId, imageBuffer, imageContentType) {
