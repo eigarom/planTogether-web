@@ -10,9 +10,7 @@ describe('Test user account services', () => {
 				id: 'userId',
 				email: 'email',
 				name: 'name',
-				color: 'color',
-				lang: 'lang',
-				theme: 'theme'
+				color: 'color'
 			};
 			const expectUserDetails = mockUserDetails;
 
@@ -63,9 +61,7 @@ describe('Test user account services', () => {
 				id: 'userId',
 				email: 'newemail@example.com',
 				name: 'newname',
-				color: 'newcolor',
-				lang: 'newlang',
-				theme: 'newtheme'
+				color: 'newcolor'
 			};
 
 			const expectedUserDetails = mockUserDetails;

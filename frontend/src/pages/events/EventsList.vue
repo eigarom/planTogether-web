@@ -1,5 +1,5 @@
 <template>
-	<h1>Événements</h1>
+	<h1>{{ $t('eventsTitle') }}</h1>
 	<Button as="router-link" label="Ajouter un événement" to="/events/add" />
 	<div v-if="!loading">
 		<div v-for="(events, date) in sortedEventsByTime" :key="date">
@@ -55,7 +55,7 @@ export default {
 				return 'Date invalide';
 			}
 
-			const options = { year: 'numeric', month: 'long', day: 'numeric' };
+			const options = {year: 'numeric', month: 'long', day: 'numeric'};
 			return date.toLocaleDateString('fr-FR', options);
 		}
 	},
@@ -90,7 +90,7 @@ export default {
 				event.periods.forEach(period => {
 					const periodKey = `${event.id}-${period.startDateTime}-${period.endDateTime}`;
 					if (!uniqueEvents.has(periodKey)) {
-						uniqueEvents.set(periodKey, { ...event, periods: [period] });
+						uniqueEvents.set(periodKey, {...event, periods: [period]});
 					}
 				});
 			});

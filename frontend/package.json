@@ -14,13 +14,14 @@
 	"dependencies": {
 		"@nightwatch/vue": "^3.1.2",
 		"@primevue/themes": "^4.1.0",
-		"joi": "^17.13.3",
 		"primeicons": "^7.0.0",
 		"primevue": "^4.1.0",
 		"tailwindcss-primeui": "^0.3.4",
 		"vue": "^3.4.29",
 		"vue-cookies": "^1.8.4",
-		"vue-router": "^4.4.5"
+		"vue-i18n": "^10.0.4",
+		"vue-router": "^4.4.5",
+		"yup": "^1.4.0"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.11.1",
