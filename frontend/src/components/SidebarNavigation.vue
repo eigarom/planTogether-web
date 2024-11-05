@@ -1,8 +1,7 @@
 <template>
-	<Menu v-if="!isLoading" id="sidebar" :model="items" class="p-1 border-0 h-fit">
+	<Menu v-if="!isLoading" id="sidebar" :model="items" class="p-1 h-fit">
 		<template #start>
-			<div class="flex flex-col items-center py-2">
-				<span class="text-xl font-semibold">PLAN<span class="text-blue-300">TOGETHER</span></span>
+			<div class="flex justify-center">
 				<Image v-if="familyImageUrl" :src="familyImageUrl" alt="Image famille"
 					   image-class="rounded-xl"
 					   width="170"/>
@@ -30,15 +29,6 @@
 					</router-link>
 					<span class="pi pi-sign-out pr-3" @click="logout"></span>
 				</div>
-
-				<Button icon="pi pi-user-plus" label="Créer une invitation" @click="createInvitation"/>
-				
-				<Dialog v-model:visible="dialogVisible" header="Code d'invitation">
-					<div class="flex flex-col items-center gap-3">
-						<p>{{ inviteCode }}</p>
-						<Button icon="pi pi-copy" label="Copier le code" @click="copyInviteCode"/>
-					</div>
-				</Dialog>
 			</div>
 		</template>
 	</Menu>
@@ -50,7 +40,7 @@ import Image from "primevue/image";
 import Avatar from "primevue/avatar";
 import Button from "primevue/button";
 import Dialog from "primevue/dialog";
-import {createInvitationCode, getFamilyImage} from "@/services/familyServices.js";
+import {getFamilyImage} from "@/services/familyServices.js";
 
 export default {
 	components: {
@@ -59,11 +49,6 @@ export default {
 	inject: ['token', 'user', 'logout'],
 	data() {
 		return {
-			items: [
-				{separator: true},
-				{label: 'Calendrier', icon: 'pi pi-calendar', route: '/events'},
-				{separator: true}
-			],
 			familyImageUrl: '',
 			isLoading: true,
 			dialogVisible: false,
@@ -73,24 +58,13 @@ export default {
 	computed: {
 		userInitial() {
 			return this.user.name.charAt(0).toUpperCase();
-		}
-	},
-	methods: {
-		async createInvitation() {
-			try {
-				const response = await createInvitationCode(this.token);
-				this.inviteCode = response.inviteCode;
-				this.dialogVisible = true;
-			} catch (error) {
-				console.error('Erreur:', error);
-			}
 		},
-		copyInviteCode() {
-			navigator.clipboard.writeText(this.inviteCode).then(() => {
-				console.log('Code d\'invitation copié dans le presse-papiers');
-			}).catch(err => {
-				console.error('Erreur lors de la copie du code:', err);
-			});
+		items() {
+			return [
+				{separator: true},
+				{label: this.$t('calendar'), icon: 'pi pi-calendar', route: '/events'},
+				{separator: true}
+			];
 		}
 	},
 	async created() {

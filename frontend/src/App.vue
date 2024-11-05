@@ -1,6 +1,6 @@
 <template>
 	<AppHeader/>
-	<div v-if="!isLoading" class="flex gap-3 w-full h-screen p-3 bg-surface-50">
+	<div v-if="!isLoading" class="flex gap-3 w-full h-screen p-3 bg-surface-50 pt-20">
 		<SidebarNavigation v-if="user && family"/>
 		<main class="flex-grow">
 			<router-view></router-view>
