@@ -60,17 +60,16 @@ export default {
 				color: this.color
 			}
 
-			const {error} = memberSchema.validate({name: this.name, color: this.color});
-			if (error) {
-				this.errorMessage = error.message;
-				return
-			}
-
 			try {
+				await memberSchema.validate({name: this.name, color: this.color});
 				await createMember(memberInformations, this.token);
 				this.$router.push('/events');
-			} catch {
-				this.errorMessage = "Échec lors de la création.";
+			} catch (err) {
+				if (err.name === 'ValidationError') {
+					this.errorMessage = err.message;
+				} else {
+					this.errorMessage = "Échec lors de la création.";
+				}
 			}
 		}
 	}

@@ -58,7 +58,6 @@ import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import {registrationSchema} from "@/schemas/authSchemas.js";
 import {register} from "@/services/authServices.js";
-import i18n from "@/locales/i18n.js";
 
 export default {
 	components: {
@@ -89,7 +88,6 @@ export default {
 			}
 
 			try {
-				console.log(i18n.global.t('passwordsDoNotMatch'));
 				await registrationSchema.validate(userInformations);
 				const token = await register(this.email, this.password, this.name);
 				this.$cookies.set("jwtToken", token);

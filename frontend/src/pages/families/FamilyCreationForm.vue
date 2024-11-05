@@ -32,7 +32,7 @@ import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import ColorPicker from 'primevue/colorpicker';
 import {createFamily} from "@/services/familyServices.js";
-import {createFamilySchema} from "@/schemas/familySchemas.js";
+import {familySchema} from "@/schemas/familySchemas.js";
 import FloatingTitle from "@/components/AppHeader.vue";
 
 export default {
@@ -64,21 +64,18 @@ export default {
 				color: this.color
 			}
 
-			const {error} = createFamilySchema.validate(newFamily);
-
-			if (error) {
-				this.errorMessage = error.message;
-				return
-			}
-
 			try {
+				await familySchema.validate(newFamily);
 				const token = this.$cookies.get('jwtToken');
 				const result = await createFamily(newFamily, token);
 				this.$cookies.set("jwtToken", result.token);
 				window.location.href = '/';
 			} catch (err) {
-				this.errorMessage = "Échec de la création de la famille.";
-				console.error("An error occurred:", err);
+				if (err.name === 'ValidationError') {
+					this.errorMessage = err.message;
+				} else {
+					this.errorMessage = "Échec de la création de la famille.";
+				}
 			}
 		}
 	}

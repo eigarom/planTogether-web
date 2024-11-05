@@ -116,12 +116,6 @@ export default {
 				this.color = '#' + this.color;
 			}
 
-			const {error} = userSchema.validate({name: this.name, email: this.email, color: this.color});
-			if (error) {
-				this.errorMessage = error.message;
-				return
-			}
-
 			const userInformations = {
 				name: this.name,
 				email: this.email,
@@ -130,6 +124,7 @@ export default {
 				theme: this.theme
 			}
 			try {
+				await userSchema.validate({name: this.name, email: this.email, color: this.color});
 				await updateUser(this.token, userInformations);
 				this.user.name = this.name;
 				this.user.email = this.email;
@@ -140,8 +135,12 @@ export default {
 					detail: 'Les informations sont modifiées',
 					life: 3000
 				});
-			} catch {
-				this.errorMessage = "Échec lors de la modification.";
+			} catch (err) {
+				if (err.name === 'ValidationError') {
+					this.errorMessage = err.message;
+				} else {
+					this.errorMessage = "Échec lors de la modification.";
+				}
 			}
 		}
 	},
