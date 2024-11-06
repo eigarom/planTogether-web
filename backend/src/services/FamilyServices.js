@@ -24,6 +24,14 @@ class FamilyServices {
 		return code;
 	}
 
+	static async deleteFamilyIfNoAccountMembers(familyId) {
+		const accountMembersCount = parseInt(await FamilyQueries.getFamilyAccountMembersCount(familyId));
+
+		if (accountMembersCount === 0) {
+			await FamilyQueries.deleteFamily(familyId);
+		}
+	}
+
 	static async getFamilyById(familyId) {
 		const result = await FamilyQueries.getFamilyById(familyId);
 		if (result) {

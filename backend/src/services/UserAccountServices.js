@@ -1,7 +1,17 @@
 const MemberQueries = require("../queries/MemberQueries");
 const UserAccountQueries = require("../queries/UserAccountQueries");
+const FamilyServices = require("../services/FamilyServices");
 
 class UserAccountServices {
+
+	static async deleteUser(userId, familyId) {
+		await MemberQueries.deleteMember(userId);
+		if (await this.getUserById(userId)) {
+			throw new Error("Erreur lors de la suppression de l'utilisateur");
+		}
+
+		await FamilyServices.deleteFamilyIfNoAccountMembers(familyId);
+	}
 
 	static async getUserById(userId) {
 		const result = await UserAccountQueries.getUserByID(userId);

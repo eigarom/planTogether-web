@@ -23,6 +23,16 @@ class FamilyQueries {
 		}
 	}
 
+	static async deleteFamily(familyId) {
+		const result = await pool.query(
+			`DELETE
+             FROM family
+             WHERE id_family = $1`,
+			[familyId]
+		);
+		return result.rowCount > 0;
+	}
+
 	static async doesCodeExist(code) {
 		const result = await pool.query(
 			`SELECT COUNT(*)
@@ -31,6 +41,17 @@ class FamilyQueries {
 			[code]
 		);
 		return result.rows[0].count > 0;
+	}
+
+	static async getFamilyAccountMembersCount(familyId) {
+		const result = await pool.query(
+			`SELECT COUNT(*)
+             FROM account_member
+                      INNER JOIN member ON account_member.id_member = member.id_member
+             WHERE id_family = $1`,
+			[familyId]
+		);
+		return result.rows[0].count;
 	}
 
 	static async getFamilyById(familyId) {
