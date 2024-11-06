@@ -71,3 +71,21 @@ export async function getEvent(token, idEvent) {
         throw new Error(result.message || `Erreur lors de l'obtention de l'événement ${idEvent}`);
     }
 }
+
+export async function createEvent(eventDetails, token) {
+	const response = await fetch("/api/families/my-family/events", {
+		method: "POST",
+		headers: {
+			'Authorization': `Bearer ${token}`,
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(eventDetails),
+	});
+	const result = await response.json();
+
+	if (response.ok) {
+		return result;
+	} else {
+		throw new Error(result.message || "L'événement n'a pas pu être créé:");
+	}
+}

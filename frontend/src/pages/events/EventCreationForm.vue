@@ -30,14 +30,19 @@
 					</FloatLabel>
 				</div>
 				<div class="flex items-center gap-3">
-					<DatePicker id="startTime" v-model="startTime" timeOnly fluid :placeholder="placeholderTime" />
-					<DatePicker id="endTime" v-model="endTime" timeOnly fluid />
+					<p>Journée entière</p>
+					<ToggleSwitch id="allDay" v-model.trim="allDay" />
+				</div>
+				<div class="flex items-center gap-3" v-if="!allDay">
+					<DatePicker id="startTime" v-model="startTime" timeOnly fluid :placeholder="placeholderStartTime" />
+					<DatePicker id="endTime" v-model="endTime" timeOnly fluid :placeholder="placeholderEndTime" />
 				</div>
 				<div class="flex items-center gap-3">
 					<label>Répétition</label>
 					<Select v-model="selectedFrequency" :options="frequencies" optionLabel="name" default="none" />
 				</div>
-				<div class="flex items-center gap-3" v-if="selectedFrequency !== null && selectedFrequency.code !== 'none'">
+				<div class="flex items-center gap-3"
+					v-if="selectedFrequency !== null && selectedFrequency.code !== 'none'">
 					<label for="numberRepeats">Nombre de répétitions</label>
 					<InputNumber v-model="numberRepeats" inputId="numberRepeats" showButtons buttonLayout="vertical"
 						style="width: 10rem" :min="0" :max="365" fluid />
@@ -74,8 +79,8 @@ import Button from "primevue/button";
 import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import Toast from 'primevue/toast';
-//import { eventSchema } from "@/schemas/memberSchemas.js";
-//import { createEvent } from "@/services/eventServices.js";
+import { eventSchema } from "@/schemas/eventSchemas.js";
+import { createEvent } from "@/services/eventServices.js";
 
 export default {
 	inject: ['token'],
@@ -90,10 +95,12 @@ export default {
 			isVisible: "",
 			startDate: null,
 			endDate: null,
+			allDay: false,
 			startTime: null,
-			placeholderTime: null,
 			endTime: null,
-			selectedFrequency: null,
+			placeholderStartTime: null,
+			placeholderEndTime: null,			
+			selectedFrequency: { name: 'Aucune', code: 'none' },
 			frequencies: [
 				{ name: 'Aucune', code: 'none' },
 				{ name: 'Quotidienne', code: 'daily' },
@@ -112,8 +119,8 @@ export default {
 			],
 			selectedParticipants: [],
 			participantsList: [
-				{ name: 'Diddy', code: 'diddy'},
-				{ name: 'Dixie', code: 'dixie'}
+				{ name: 'Diddy', code: 'diddy' },
+				{ name: 'Dixie', code: 'dixie' }
 			],
 			periods: [],
 			alerts: [],
@@ -130,38 +137,44 @@ export default {
 		async submitCreateEvent() {
 			this.errorMessage = "";
 
-			if (!this.color.startsWith('#')) {
-				this.color = '#' + this.color;
-			}
 
-			const eventInformations = {
+
+			const eventDetails = {
 				// name: this.name,
 				// color: this.color
 			}
 
-			const { error } = eventSchema.validate({ name: this.name, description: this.description });
+			const { error } = eventSchema.validate({ name: this.name, isVisible: this.isVisible });
 			if (error) {
 				this.errorMessage = error.message;
 				return
 			}
 
 			try {
-				await createEvent(eventInformations, this.token);
+				await createEvent(eventDetails, this.token);
 				this.$router.push('/events');
 			} catch {
 				this.errorMessage = "Échec lors de la création.";
 			}
 		},
-		setPlaceholderTime() {
+		setPlaceholderStartTime() {
 			const now = new Date();
 
 			const hours = String(now.getHours()).padStart(2, '0');
 			const minutes = String(now.getMinutes()).padStart(2, '0');
-			this.placeholderTime = `${hours}:${minutes}`;
+			this.placeholderStartTime = `${hours}:${minutes}`;
+		},
+		setPlaceholderEndTime() {
+			const now = new Date();
+
+			const hours = String(now.getHours() + 1).padStart(2, '0');
+			const minutes = String(now.getMinutes()).padStart(2, '0');
+			this.placeholderEndTime = `${hours}:${minutes}`;
 		},
 	},
 	mounted() {
-		this.setPlaceholderTime();
+		this.setPlaceholderStartTime();
+		this.setPlaceholderEndTime();
 	},
 	watch: {
 		startDate(newStartDate) {
@@ -173,6 +186,13 @@ export default {
 			const endTime = new Date(newStartTime);
 			endTime.setHours(endTime.getHours() + 1);
 			this.endTime = endTime;
+		},
+		endTime(newEndTime) {
+			if (newEndTime < this.startTime) {
+				const startTime = new Date(newEndTime);
+				startTime.setHours(startTime.getHours() - 1);
+				this.startTime = startTime;
+			}
 		}
 	}
 };
