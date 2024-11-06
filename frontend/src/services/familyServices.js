@@ -76,7 +76,7 @@ export async function updateFamily(familyInformations, token) {
 	if (response.ok) {
 		return result;
 	} else {
-		throw new Error(result.message || "La famille n'a pas pu être mis à jour:");
+		throw new Error(result.message || "Erreur lors de la mise à jour de la famille");
 	}
 }
 

@@ -1,5 +1,5 @@
 <template>
-    <div v-if="family" class="flex h-full justify-center items-center">
+    <div v-if="family" class="flex justify-center items-center p-10">
         <div class="w-96 gap-3 flex flex-col">
             <h1 class="text-3xl mb-8 text-center">Ma famille</h1>
             <form id="profileForm" class="flex flex-col gap-5 border p-3 rounded-lg"
@@ -17,7 +17,7 @@
                 <Button :disabled="isSubmitButtonDisabled" label="Enregistrer les modifications" raised type="submit" />
             </form>
 
-            <div class="card flex flex-inline items-center justify-between border p-3 rounded-lg">
+            <div class="flex items-center justify-between border p-3 rounded-lg">
                 <div class="flex flex-col gap-3">
                     <FileUpload auto chooseLabel="Choisir une image" class="p-button-outlined" customUpload mode="basic"
                         severity="secondary" @select="onImageSelect" />
@@ -27,8 +27,24 @@
                 <img v-if="family.imageUrl" :src="family.imageUrl" alt="Image" class="shadow-md rounded-xl h-24" />
             </div>
 
-            <Button icon="pi pi-user-plus" label="Créer une invitation" @click="createInvitation" />
 
+            <div class="flex flex-col border p-3 rounded-lg gap-3">
+                <h2 class="text-2xl text-center">Membres principaux</h2>
+                <div v-for="accountMember in accountMembers" :key="accountMember.id"
+                    class="flex flex-inline items-center justify-between border p-3 rounded-lg">
+                    <p>{{ accountMember.name }}</p>
+                    <span class="w-10 h-4 border rounded-lg" :style="{ backgroundColor: accountMember.color }"></span>
+                </div>
+                <Button icon="pi pi-user-plus" label="Créer une invitation" @click="createInvitation" />
+            </div>
+            <div class="flex flex-col border p-3 rounded-lg gap-3">
+                <h2 class="text-2xl mb-8 text-center">Membres secondaires</h2>
+                <div v-for="guestMember in guestMembers" :key="guestMember.id"
+                    class="flex flex-inline items-center justify-between border p-3 rounded-lg">
+                    <p>{{ guestMember.name }}</p>
+                    <span class="w-10 h-4 border rounded-lg" :style="{ backgroundColor: guestMember.color }"></span>
+                </div>
+            </div>
             <Dialog v-model:visible="dialogVisible" header="Code d'invitation">
                 <div class="flex flex-col items-center gap-3">
                     <p>{{ inviteCode }}</p>
@@ -54,6 +70,7 @@ import { familySchema } from "@/schemas/familySchemas.js";
 import { deleteFamilyImage, uploadFamilyImage } from "@/services/familyServices.js";
 import Dialog from 'primevue/dialog';
 import { createInvitationCode } from "@/services/familyServices.js";
+import { getAllMembersByFamilyId } from "@/services/memberServices.js";
 
 export default {
     inject: ['family', 'token'],
@@ -67,7 +84,9 @@ export default {
             familyImageUrl: '',
             errorMessage: "",
             dialogVisible: false,
-            inviteCode: ''
+            inviteCode: '',
+            accountMembers: [],
+            guestMembers: []
         };
     },
     computed: {
@@ -129,7 +148,7 @@ export default {
                 color: this.color,
             }
             try {
-                await updateFamily(this.token, familyInformations);
+                await updateFamily(familyInformations, this.token);
                 this.family.name = this.name;
                 this.family.color = this.color;
                 this.$refs.toast.add({
@@ -157,10 +176,20 @@ export default {
             }).catch(err => {
                 console.error('Erreur lors de la copie du code:', err);
             });
+        },
+        async getAllFamilyMembers() {
+            try {
+                const familyMembers = await getAllMembersByFamilyId(this.token);
+                this.accountMembers = familyMembers.accountMembers;
+                this.guestMembers = familyMembers.guestMembers;
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
         }
     },
     created() {
         this.initializeFamilyData();
+        this.getAllFamilyMembers();
     }
 };
 </script>
