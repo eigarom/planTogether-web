@@ -2,7 +2,6 @@
 	<Menu id="sidebar" :model="items" class="p-1 border-0 h-fit">
 		<template #start>
 			<div class="flex flex-col items-center py-2">
-				<span class="text-xl font-semibold">PLAN<span class="text-blue-300">TOGETHER</span></span>
 				<Image v-if="family.imageUrl" :src="family.imageUrl" alt="Image famille" image-class="rounded-xl"
 					width="170" />
 			</div>
