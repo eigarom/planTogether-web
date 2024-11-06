@@ -1,5 +1,5 @@
 <template>
-	<Menu id="sidebar" :model="items" class="p-1 border-0 h-fit">
+	<Menu id="sidebar" :model="items" class="p-1 h-fit">
 		<template #start>
 			<div class="flex flex-col items-center py-2">
 				<Image v-if="family.imageUrl" :src="family.imageUrl" alt="Image famille" image-class="rounded-xl"
@@ -54,7 +54,7 @@ export default {
 			return [
 				{ separator: true },
 				{ label: this.$t('calendar'), icon: 'pi pi-calendar', route: '/events' },
-				{ label: this.$t('familyMenu'), icon: 'pi pi-users', route: '/my-family/' },
+				{ label: this.$t('familyMenu'), icon: 'pi pi-users', route: '/my-family' },
 				{ separator: true }
 			];
 		}
