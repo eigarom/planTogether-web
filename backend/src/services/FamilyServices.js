@@ -56,8 +56,8 @@ class FamilyServices {
 		return undefined;
 	}
 
-	static async updateFamily(family) {
-		await FamilyQueries.updateFamily(family);
+	static async updateFamilyInformations(family) {
+		await FamilyQueries.updateFamilyInformations(family);
 		return this.getFamilyById(family.id);
 	}
 

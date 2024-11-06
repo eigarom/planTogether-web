@@ -74,6 +74,17 @@ class FamilyQueries {
 		return result.rows[0].id_family;
 	}
 
+	static async updateFamilyInformations(family) {
+		const result = await pool.query(
+			`UPDATE family
+			 SET name = $2,
+				 color = $3
+			 WHERE id_family = $1`,
+			[family.id, family.name, family.color]
+		);
+		return result.rowCount > 0;
+	}
+
 	static async updateFamilyImage(familyId, imageBuffer, imageContentType) {
 		const result = await pool.query(
 			`UPDATE family

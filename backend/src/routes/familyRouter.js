@@ -59,6 +59,25 @@ router.get('/my-family/image', verifyJWT, async (req, res, next) => {
 	}
 });
 
+router.put('/my-family', verifyJWT, async (req, res, next) => {
+	const {error} = familySchema.validate(req.body);
+	if (error) {
+		return next(new HttpError(400, error.message));
+	}
+	const updatedFamily = {
+		id: req.user.familyId,
+		name: "" + req.body.name,
+		color: "" + req.body.color
+	};
+
+	try {
+		const family = await FamilyServices.updateFamilyInformations(updatedFamily);
+		res.status(200).json(family);
+	} catch (err) {
+		return next(err);
+	}
+});
+
 router.put('/my-family/image', verifyJWT,
 	// Fonction middleware de multer pour gérer l'upload d'un fichier dans ce endpoint.
 	// Cet appel de middleware doit venir après celui de l'authentification.
@@ -80,7 +99,7 @@ router.put('/my-family/image', verifyJWT,
 				if (imageInfo.imageContentType) {
 					res.header('Content-Type', imageInfo.imageContentType);
 				}
-				res.send(imageInfo.imageContent);
+				return res.send(imageInfo.imageContent);
 			}
 			res.json("");
 		} catch (err) {
