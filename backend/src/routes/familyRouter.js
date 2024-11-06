@@ -142,4 +142,22 @@ router.put('/join', verifyJWT, async (req, res, next) => {
 	}
 });
 
+router.delete('/my-family/image', verifyJWT, async (req, res, next) => {
+	try {
+		const family = await FamilyServices.getFamilyById(req.user.familyId);
+		if (!family) {
+			return next(new HttpError(404, `Famille introuvable`));
+		}
+
+		const imageInfo = await FamilyServices.updateFamilyImage(req.user.familyId, null, null);
+		if (!imageInfo.imageContent && !imageInfo.imageContentType) {
+			res.json({});
+		} else {
+			next(new HttpError(500, `Erreur lors de la suppression de l'image`))
+		}
+	} catch (err) {
+		next(err);
+	}
+});
+
 module.exports = router;
