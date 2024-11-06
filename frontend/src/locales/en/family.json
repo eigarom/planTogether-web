@@ -1,11 +1,12 @@
 {
-	"familyOptionsTitle": "Create or join a family",
-	"createFamily": "Create a family",
-	"joinFamily": "Join a family",
-	"familyName": "Family name",
-	"commonEventsColor": "Common events color",
-	"inviteCode": "Invitation code",
-	"confirmButton": "Confirm",
-	"colorInvalid": "The color is invalid",
-	"colorRequired": "The color is required"
+    "familyOptionsTitle": "Create or join a family",
+    "createFamily": "Create a family",
+    "joinFamily": "Join a family",
+    "familyName": "Family name",
+    "commonEventsColor": "Common events color",
+    "inviteCode": "Invitation code",
+    "confirmButton": "Confirm",
+    "colorInvalid": "The color is invalid",
+    "colorRequired": "The color is required",
+    "familyMenu": "My family"
 }

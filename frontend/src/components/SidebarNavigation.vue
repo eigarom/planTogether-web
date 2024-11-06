@@ -55,6 +55,7 @@ export default {
 			return [
 				{ separator: true },
 				{ label: this.$t('calendar'), icon: 'pi pi-calendar', route: '/events' },
+				{ label: this.$t('familyMenu'), icon: 'pi pi-users', route: '/my-family/' },
 				{ separator: true }
 			];
 		}

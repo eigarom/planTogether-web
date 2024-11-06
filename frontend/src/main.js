@@ -46,7 +46,7 @@ const router = createRouter({
 		{path: '/families/add-or-join', component: FamilyOptions},
 		{path: '/families/add', component: FamilyCreationForm},
 		{path: '/families/join', component: FamilyJoinForm},
-		{path: '/families', component: FamilyProfile},
+		{path: '/my-family', component: FamilyProfile},
 		{path: '/members/add', component: MemberCreationForm},
 		{path: '/profile', component: UserProfile},
 		{path: '/', redirect: '/events'}
