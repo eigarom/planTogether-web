@@ -1,7 +1,7 @@
 <template>
     <div v-if="family" class="flex justify-center items-center p-10">
         <div class="w-96 gap-3 flex flex-col">
-            <h1 class="text-3xl mb-8 text-center">Ma famille</h1>
+            <h1 class="text-3xl mb-4 text-center">Ma famille</h1>
             <form id="profileForm" class="flex flex-col gap-5 border p-3 rounded-lg"
                 @submit.prevent="submitUpdateFamily">
                 <div class="flex flex-inline items-center justify-between">
@@ -41,7 +41,7 @@
                 <Button icon="pi pi-user-plus" label="Créer une invitation" @click="createInvitation" />
             </div>
             <div class="flex flex-col border p-3 rounded-lg gap-3">
-                <h2 class="text-2xl mb-8 text-center">Membres secondaires</h2>
+                <h2 class="text-2xl text-center">Membres secondaires</h2>
                 <div v-for="guestMember in guestMembers" :key="guestMember.id"
                     class="flex flex-inline items-center justify-between border p-3 rounded-lg">
                     <p>{{ guestMember.name }}</p>
