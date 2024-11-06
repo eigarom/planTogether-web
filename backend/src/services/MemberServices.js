@@ -21,14 +21,17 @@ class MemberServices {
 
 	static async getAllMembersByFamilyId(familyId) {
 		const accountMembers = await MemberQueries.getAccountMembersByFamilyId(familyId);
-		
+
 		const accountMembersInfos = accountMembers.map(accountMember => ({
+			id: accountMember.id_member,
 			name: accountMember.name,
 			color: accountMember.color,
+		
 		}));
 
 		const guestMembers = await MemberQueries.getGuestMembersByFamilyId(familyId);
 		const guestMembersInfos = guestMembers.map(guestMember => ({
+			id: guestMember.id_member,
 			name: guestMember.name,
 			color: guestMember.color,
 		}));

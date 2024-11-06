@@ -33,7 +33,10 @@
                 <div v-for="accountMember in accountMembers" :key="accountMember.id"
                     class="flex flex-inline items-center justify-between border p-3 rounded-lg">
                     <p>{{ accountMember.name }}</p>
-                    <span class="w-10 h-4 border rounded-lg" :style="{ backgroundColor: accountMember.color }"></span>
+                    <Avatar v-if="accountMember.imageUrl" :image="accountMember.imageUrl" shape="circle" size="small"
+                        class="border-4" :style="{ borderColor: accountMember.color }" />
+                    <Avatar v-else :label="accountMemberInitial" :style="`background-color: ${accountMember.color}`"
+                        class="font-semibold text-white" shape="circle" size="small" />
                 </div>
                 <Button icon="pi pi-user-plus" label="Créer une invitation" @click="createInvitation" />
             </div>
@@ -42,7 +45,10 @@
                 <div v-for="guestMember in guestMembers" :key="guestMember.id"
                     class="flex flex-inline items-center justify-between border p-3 rounded-lg">
                     <p>{{ guestMember.name }}</p>
-                    <span class="w-10 h-4 border rounded-lg" :style="{ backgroundColor: guestMember.color }"></span>
+                    <Avatar v-if="guestMember.imageUrl" :image="guestMember.imageUrl" shape="circle" size="small"
+                        class="border-4" :style="{ borderColor: guestMember.color }" />
+                    <Avatar v-else :label="accountMemberInitial" :style="`background-color: ${guestMember.color}`"
+                        class="font-semibold text-white" shape="circle" size="small" />
                 </div>
             </div>
             <Dialog v-model:visible="dialogVisible" header="Code d'invitation">
@@ -71,11 +77,13 @@ import { deleteFamilyImage, uploadFamilyImage } from "@/services/familyServices.
 import Dialog from 'primevue/dialog';
 import { createInvitationCode } from "@/services/familyServices.js";
 import { getAllMembersByFamilyId } from "@/services/memberServices.js";
+import Avatar from "primevue/avatar";
+import { getMemberImage } from "@/services/memberServices.js";
 
 export default {
     inject: ['family', 'token'],
     components: {
-        InputText, Button, Message, FloatLabel, ColorPicker, FileUpload, Toast, Dialog
+        InputText, Button, Message, FloatLabel, ColorPicker, FileUpload, Toast, Dialog, Avatar
     },
     data: () => {
         return {
@@ -92,6 +100,9 @@ export default {
     computed: {
         isSubmitButtonDisabled() {
             return this.name === this.family.name && this.color === this.family.color;
+        },
+        accountMemberInitial() {
+            return this.accountMembers[0].name.charAt(0).toUpperCase();
         }
     },
     methods: {
@@ -181,7 +192,13 @@ export default {
             try {
                 const familyMembers = await getAllMembersByFamilyId(this.token);
                 this.accountMembers = familyMembers.accountMembers;
+                this.accountMembers.forEach(async accountMember => {
+                    accountMember.imageUrl = await getMemberImage(this.token, accountMember.id);
+                });
                 this.guestMembers = familyMembers.guestMembers;
+                this.guestMembers.forEach(async guestMember => {
+                    guestMember.imageUrl = await getMemberImage(this.token, guestMember.id);
+                });
             } catch (error) {
                 console.error('Erreur:', error);
             }

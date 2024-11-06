@@ -1,7 +1,7 @@
 <template>
 	<div class="flex h-full justify-center items-center">
 		<div class="w-80">
-			<h1 class="text-3xl mb-8 text-center">Mon profil</h1>
+			<h1 class="text-3xl mb-8 text-center">Création d'un membre</h1>
 			<form id="profileForm" class="flex flex-col gap-5" @submit.prevent="submitCreateMember">
 				<div class="flex flex-inline items-center justify-between">
 					<FloatLabel variant="on">
