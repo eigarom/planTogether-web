@@ -59,6 +59,25 @@ router.get('/my-family/image', verifyJWT, async (req, res, next) => {
 	}
 });
 
+router.put('/my-family', verifyJWT, async (req, res, next) => {
+	const {error} = familySchema.validate(req.body);
+	if (error) {
+		return next(new HttpError(400, error.message));
+	}
+	const updatedFamily = {
+		id: req.user.familyId,
+		name: "" + req.body.name,
+		color: "" + req.body.color
+	};
+
+	try {
+		const family = await FamilyServices.updateFamilyInformations(updatedFamily);
+		res.status(200).json(family);
+	} catch (err) {
+		return next(err);
+	}
+});
+
 router.put('/my-family/image', verifyJWT,
 	// Fonction middleware de multer pour gérer l'upload d'un fichier dans ce endpoint.
 	// Cet appel de middleware doit venir après celui de l'authentification.
@@ -80,7 +99,7 @@ router.put('/my-family/image', verifyJWT,
 				if (imageInfo.imageContentType) {
 					res.header('Content-Type', imageInfo.imageContentType);
 				}
-				res.send(imageInfo.imageContent);
+				return res.send(imageInfo.imageContent);
 			}
 			res.json("");
 		} catch (err) {
@@ -120,6 +139,24 @@ router.put('/join', verifyJWT, async (req, res, next) => {
 		res.status(200).json({token});
 	} catch (err) {
 		return next(err);
+	}
+});
+
+router.delete('/my-family/image', verifyJWT, async (req, res, next) => {
+	try {
+		const family = await FamilyServices.getFamilyById(req.user.familyId);
+		if (!family) {
+			return next(new HttpError(404, `Famille introuvable`));
+		}
+
+		const imageInfo = await FamilyServices.updateFamilyImage(req.user.familyId, null, null);
+		if (!imageInfo.imageContent && !imageInfo.imageContentType) {
+			res.json({});
+		} else {
+			next(new HttpError(500, `Erreur lors de la suppression de l'image`))
+		}
+	} catch (err) {
+		next(err);
 	}
 });
 
