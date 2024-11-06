@@ -37,17 +37,24 @@
 					<label>Répétition</label>
 					<Select v-model="selectedFrequency" :options="frequencies" optionLabel="name" default="none" />
 				</div>
-				<div class="flex items-center gap-3">
+				<div class="flex items-center gap-3" v-if="selectedFrequency !== null && selectedFrequency.code !== 'none'">
 					<label for="numberRepeats">Nombre de répétitions</label>
-					<InputNumber v-model="numberRepeats" inputId="numberRepeats" showButtons buttonLayout="vertical" style="width: 10rem" :min="0" :max="365" fluid />
+					<InputNumber v-model="numberRepeats" inputId="numberRepeats" showButtons buttonLayout="vertical"
+						style="width: 10rem" :min="0" :max="365" fluid />
 				</div>
-				<div>
+				<div class="flex items-center gap-3">
 					<label>Alertes</label>
-					<MultiSelect v-model="selectedAlertTypes" :options="alertTypes" optionLabel="name" placeholder="Aucune" />
+					<MultiSelect v-model="selectedAlertTypes" :options="alertTypes" optionLabel="name"
+						placeholder="Aucune" :showSelectAll="false" />
+				</div>
+				<div class="flex items-center gap-3">
+					<label>Participants</label>
+					<MultiSelect v-model="selectedParticipants" :options="participantsList" optionLabel="name"
+						placeholder="Aucune" :showSelectAll="false" />
 				</div>
 				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-				<Button :disabled="isSubmitButtonDisabled" label="Ajouter l'événement" raised type="submit" />
+				<Button :disabled="isSubmitButtonDisabled" :label="$t('buttonCreateEvent')" raised type="submit" />
 			</form>
 
 			<Toast ref="toast" position="bottom-right" />
@@ -67,8 +74,8 @@ import Button from "primevue/button";
 import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import Toast from 'primevue/toast';
-import { memberSchema } from "@/schemas/memberSchemas.js";
-import { createMember } from "@/services/memberServices.js";
+//import { eventSchema } from "@/schemas/memberSchemas.js";
+//import { createEvent } from "@/services/eventServices.js";
 
 export default {
 	inject: ['token'],
@@ -86,7 +93,7 @@ export default {
 			startTime: null,
 			placeholderTime: null,
 			endTime: null,
-			selectedFrequency: { name: 'Aucune', code: 'none' },
+			selectedFrequency: null,
 			frequencies: [
 				{ name: 'Aucune', code: 'none' },
 				{ name: 'Quotidienne', code: 'daily' },
@@ -95,14 +102,18 @@ export default {
 				{ name: 'Annuelle', code: 'annual' }
 			],
 			numberRepeats: '',
-			selectedAlertTypes: null,
+			selectedAlertTypes: [],
 			alertTypes: [
-				{ name: 'Aucune', code: 'none' },
 				{ name: '10 minutes avant', code: '10min' },
 				{ name: '30 minutes avant', code: '30min' },
 				{ name: '1 heure avant', code: '1Hour' },
 				{ name: '4 heures avant', code: '4Hour' },
 				{ name: '24 heures avant', code: '24hours' },
+			],
+			selectedParticipants: [],
+			participantsList: [
+				{ name: 'Diddy', code: 'diddy'},
+				{ name: 'Dixie', code: 'dixie'}
 			],
 			periods: [],
 			alerts: [],
@@ -128,7 +139,7 @@ export default {
 				// color: this.color
 			}
 
-			const { error } = memberSchema.validate({ name: this.name, color: this.color });
+			const { error } = eventSchema.validate({ name: this.name, description: this.description });
 			if (error) {
 				this.errorMessage = error.message;
 				return

@@ -11,5 +11,6 @@
 	"alerts": "Alertes",
 	"alertDate": "Temps",
 	"noAlerts": "Pas d'alertes",
-	"participants": "Participants"
+	"participants": "Participants",
+	"buttonCreateEvent": "Ajouter un événement"
 }

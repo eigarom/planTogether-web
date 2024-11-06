@@ -1,6 +1,6 @@
 <template>
 	<h1>{{ $t('eventsTitle') }}</h1>
-	<Button as="router-link" label="Ajouter un événement" to="/events/add" />
+	<Button as="router-link" :label="$t('buttonCreateEvent')" to="/events/add" />
 	<div v-if="!loading">
 		<div v-for="(events, date) in sortedEventsByTime" :key="date">
 			<h2> {{ formatPrettyDate(date) }} </h2>
