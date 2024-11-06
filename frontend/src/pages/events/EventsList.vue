@@ -1,11 +1,12 @@
 <template>
-	<h1>Événements</h1>
+	<h1>{{ $t('eventsTitle') }}</h1>
 	<div v-if="!loading">
 		<div v-for="(events, date) in sortedEventsByTime" :key="date">
 			<h2> {{ formatPrettyDate(date) }} </h2>
 			<div>
-				<DailyEvents v-for="event in events" :key="event.id" :id="event.id" :name="event.name" :color="event.color"
-					:periods="event.periods" />
+				<DailyEvents v-for="event in events" :id="event.id" :key="event.id" :color="event.color"
+							 :name="event.name"
+							 :periods="event.periods"/>
 			</div>
 		</div>
 	</div>
@@ -13,7 +14,7 @@
 
 <script>
 import DailyEvents from './DailyEvents.vue'
-import { getEventsList } from '../../services/eventServices';
+import {getEventsList} from '@/services/eventServices.js';
 
 export default {
 	components: {
@@ -54,7 +55,7 @@ export default {
 				return 'Date invalide';
 			}
 
-			const options = { year: 'numeric', month: 'long', day: 'numeric' };
+			const options = {year: 'numeric', month: 'long', day: 'numeric'};
 			return date.toLocaleDateString('fr-FR', options);
 		}
 	},
@@ -89,7 +90,7 @@ export default {
 				event.periods.forEach(period => {
 					const periodKey = `${event.id}-${period.startDateTime}-${period.endDateTime}`;
 					if (!uniqueEvents.has(periodKey)) {
-						uniqueEvents.set(periodKey, { ...event, periods: [period] });
+						uniqueEvents.set(periodKey, {...event, periods: [period]});
 					}
 				});
 			});

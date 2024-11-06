@@ -45,17 +45,18 @@ export default {
 	inject: ['token', 'user', 'family', 'logout'],
 	data() {
 		return {
-			items: [
-				{ separator: true },
-				{ label: 'Calendrier', icon: 'pi pi-calendar', route: '/events' },
-				{ label: 'Famille', icon: 'pi pi-users', route: '/families' },
-				{ separator: true }
-			]
 		};
 	},
 	computed: {
 		userInitial() {
 			return this.user.name.charAt(0).toUpperCase();
+		},
+		items() {
+			return [
+				{ separator: true },
+				{ label: this.$t('calendar'), icon: 'pi pi-calendar', route: '/events' },
+				{ separator: true }
+			];
 		}
 	}
 }

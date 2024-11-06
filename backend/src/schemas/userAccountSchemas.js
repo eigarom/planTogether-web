@@ -9,9 +9,7 @@ const userAccountSchema = Joi.object({
 		.messages({
 			'string.pattern.base': `Le nom n'est pas valide`
 		}),
-	color: Joi.string().uppercase().pattern(new RegExp('^#[0-9A-F]{6}$')).required(),
-	lang: Joi.string().valid('en', 'fr').required(),
-	theme: Joi.string().valid('dark', 'light').required()
+	color: Joi.string().uppercase().pattern(new RegExp('^#[0-9A-F]{6}$')).required()
 });
 
 module.exports = {

@@ -1,18 +1,19 @@
-import Joi from 'joi';
+import * as Yup from 'yup';
+import i18n from "../locales/i18n";
 
-export const userSchema = Joi.object({
-	name: Joi.string()
-		.pattern(new RegExp('^[a-zA-Z0-9- \\u00C0-\\u00FF]+$'))
-		.required()
-		.max(50)
-		.messages({
-			'string.pattern.base': `Le nom n'est pas valide`
-		}),
-	color: Joi.string().uppercase().pattern(new RegExp('^#[0-9A-F]{6}$')).required(),
-	email: Joi.string()
-		.email({tlds: {allow: false}})
-		.required()
-		.messages({
-			'string.email': `Le courriel n'est pas valide`
+export const userSchema = Yup.object({
+	name: Yup.string()
+		.max(50, () => i18n.global.t('nameMax'))
+		.matches(/^[a-zA-Z0-9- \u00C0-\u00FF]+$/, {
+			message: () => i18n.global.t('nameInvalid')
 		})
+		.required(() => i18n.global.t('nameRequired')),
+	color: Yup.string()
+		.matches(/^#[0-9A-F]{6}$/, {
+			message: () => i18n.global.t('colorInvalid')
+		})
+		.required(() => i18n.global.t('colorRequired')),
+	email: Yup.string()
+		.email(() => i18n.global.t('invalidMail'))
+		.required(() => i18n.global.t('emailRequired'))
 });

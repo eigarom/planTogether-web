@@ -1,9 +1,10 @@
 <template>
-	<div v-if="!isLoading" class="flex gap-3 w-full h-screen p-3 bg-surface-50">
+	<AppHeader />
+	<div v-if="!isLoading" class="flex gap-3 w-full h-screen p-3 bg-surface-50 pt-20">
 		<SidebarNavigation v-if="user && family" />
-		<div class="flex-grow">
+		<main class="flex-grow">
 			<router-view></router-view>
-		</div>
+		</main>
 	</div>
 </template>
 
@@ -14,10 +15,11 @@ import { getUserFromToken } from "@/services/userServices.js";
 import { getFamilyFromToken } from "@/services/familyServices.js";
 import { getMemberImage } from "@/services/memberServices.js";
 import { getFamilyImage } from "@/services/familyServices.js";
+import AppHeader from './components/AppHeader.vue';
 
 export default {
 	components: {
-		SidebarNavigation
+		AppHeader, SidebarNavigation
 	},
 	data() {
 		return {
@@ -60,12 +62,19 @@ export default {
 		logout() {
 			this.$cookies.remove("jwtToken");
 			window.location.href = "/";
+		},
+		chargeLanguage() {
+			const savedLanguage = this.$cookies.get('language');
+			if (savedLanguage) {
+				this.$i18n.locale = savedLanguage;
+			}
 		}
 	},
 	async created() {
 		this.getToken();
 		await this.getUserDetails();
 		await this.getFamilyDetails();
+		this.chargeLanguage();
 		this.isLoading = false;
 	},
 	provide() {

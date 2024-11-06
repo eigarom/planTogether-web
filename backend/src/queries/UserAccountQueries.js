@@ -4,7 +4,7 @@ const MemberQueries = require("../queries/MemberQueries");
 class UserAccountQueries {
 	static async getUserByID(userId) {
 		const result = await pool.query(
-			`SELECT email, name, color, lang, theme
+			`SELECT email, name, color
              FROM account_member
                       INNER JOIN member ON member.id_member = account_member.id_member
              WHERE account_member.id_member = $1`,
@@ -65,11 +65,9 @@ class UserAccountQueries {
 
 			await client.query(
 				`UPDATE account_member
-                 SET email = $2,
-                     lang  = $3,
-                     theme = $4
+                 SET email = $2
                  WHERE id_member = $1`,
-				[user.id, user.email, user.lang, user.theme]
+				[user.id, user.email]
 			);
 
 			await client.query('COMMIT');

@@ -1,0 +1,11 @@
+{
+	"memberTitle": "Edit profile",
+	"userTitle": "Edit my profile",
+	"name": "Name",
+	"mail": "Email",
+	"updateImageButton": "Choose an image",
+	"deleteImageButton": "Delete image",
+	"updateButton": "Update",
+	"colorInvalid": "The color is invalid",
+	"colorRequired": "The color is required"
+}
