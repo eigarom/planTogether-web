@@ -102,16 +102,6 @@ class MemberQueries {
 		);
 	}
 
-	static async getAllMembersByFamilyId(familyId) {
-		const result = await pool.query(
-			`SELECT id_member, name, color
-			 FROM member
-			 WHERE id_family = $1`,
-			[familyId]
-		);
-		return result.rows;
-	}
-
 	static async getAccountMembersByFamilyId(familyId) {
 		const result = await pool.query(
 			`SELECT m.id_member, name, color
