@@ -2,6 +2,8 @@ const UserAccountServices = require('../../src/services/UserAccountServices');
 
 jest.mock('../../src/queries/UserAccountQueries');
 const mockUserAccountQueries = require('../../src/queries/UserAccountQueries');
+const mockMemberQueries = require('../../src/queries/MemberQueries');
+const mockFamilyServices = require('../../src/services/FamilyServices');
 
 describe('Test user account services', () => {
 	describe('getUserById', () => {
@@ -71,6 +73,24 @@ describe('Test user account services', () => {
 
 			const updatedUser = await UserAccountServices.updateUser(mockUserDetails);
 			expect(updatedUser).toEqual(expectedUserDetails);
+		});
+	});
+
+	describe('deleteUser', () => {
+		const userId = 1;
+		const familyId = 1;
+
+		it('should delete the user and not throw an error', async () => {
+			mockUserAccountQueries.getUserByID.mockResolvedValue(undefined);
+
+			await expect(UserAccountServices.deleteUser(userId, familyId)).resolves.not.toThrow();
+		});
+
+		it('should throw an error if the user is not deleted', async () => {
+			mockUserAccountQueries.getUserByID.mockResolvedValue({id: userId});
+
+			await expect(UserAccountServices.deleteUser(userId, familyId)).rejects.toThrow('Erreur lors de la suppression' +
+				' de l\'utilisateur');
 		});
 	});
 });
