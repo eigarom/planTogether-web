@@ -99,7 +99,7 @@ export default {
 			startTime: null,
 			endTime: null,
 			placeholderStartTime: null,
-			placeholderEndTime: null,			
+			placeholderEndTime: null,
 			selectedFrequency: { name: 'Aucune', code: 'none' },
 			frequencies: [
 				{ name: 'Aucune', code: 'none' },
@@ -137,11 +137,17 @@ export default {
 		async submitCreateEvent() {
 			this.errorMessage = "";
 
+			this.setIsVisible();
+			this.setPeriods();
 
 
 			const eventDetails = {
-				// name: this.name,
-				// color: this.color
+				name: this.name,
+				description: this.description,
+				isVisible: this.isVisible,
+				periods: this.periods,
+				alerts: this.alerts,
+				members: this.members
 			}
 
 			const { error } = eventSchema.validate({ name: this.name, isVisible: this.isVisible });
@@ -155,6 +161,84 @@ export default {
 				this.$router.push('/events');
 			} catch {
 				this.errorMessage = "Échec lors de la création.";
+			}
+		},
+		setIsVisible() {
+			if (this.checked) {
+				this.isVisible = false;
+			} else {
+				this.isVisible = true;
+			}
+		},
+		setPeriods() {
+			this.setTimeForAllDay();
+
+			const initialStartDateTime = this.combineDateTime(this.startDate, this.startTime);
+			const initialEndDateTime = this.combineDateTime(this.endDate, this.endTime);
+
+			const newPeriod = { "startDateTime": initialStartDateTime, "endDateTime": initialEndDateTime }
+
+			this.periods.push(newPeriod);
+
+			if (this.selectedFrequency.code !== 'none') {
+				this.handleFrequency(this.selectedFrequency.code, initialStartDateTime, initialEndDateTime);
+			}
+		},
+		setTimeForAllDay() {
+			if (this.allDay) {
+				this.startTime = "00:00";
+				this.endTime = "23:59";
+			}
+		},
+		combineDateTime(date, time) {
+			if (!date || !time) return null; // Vérifie si les deux valeurs existent
+
+			// Convertit startDate et startTime en chaînes pour obtenir les parties de date et d'heure
+			const datePart = date.toISOString().split('T')[0]; // YYYY-MM-DD
+			const [hours, minutes] = time.split(':'); // HH:mm du format HH:mm
+
+			// Combine les parties de date et d'heure dans un format ISO
+			return new Date(`${datePart}T${hours}:${minutes}:00.000Z`).toISOString();
+		},
+		handleFrequency(frequencyCode, initialStartDateTime, initialEndDateTime) {
+			const newStartDate = new Date(initialStartDateTime);
+			const newEndDate = new Date(initialEndDateTime);
+
+			switch (frequencyCode) {
+				case 'daily':
+					for (let i = 0; i < this.numberRepeats; i++) {
+						newStartDate.setDate(newStartDate.getDate() + 1);
+						newEndDate.setDate(newEndDate.getDate() + 1);
+						const newPeriod = { "startDateTime": newStartDate, "endDateTime": newEndDate }
+						this.periods.push(newPeriod);
+					}
+					break;
+				case 'weekly':
+					for (let i = 0; i < this.numberRepeats; i++) {
+						newStartDate.setDate(newStartDate.getDate() + 7);
+						newEndDate.setDate(newEndDate.getDate() + 7);
+						const newPeriod = { "startDateTime": newStartDate, "endDateTime": newEndDate }
+						this.periods.push(newPeriod);
+					}
+					break;
+				case 'monthly':
+					for (let i = 0; i < this.numberRepeats; i++) {
+						newStartDate.setMonth(newStartDate.getMonth() + 1);
+						newEndDate.setMonth(newEndDate.getMonth() + 1);
+						const newPeriod = { "startDateTime": newStartDate, "endDateTime": newEndDate }
+						this.periods.push(newPeriod);
+					}
+					break;
+				case 'annual':
+					for (let i = 0; i < this.numberRepeats; i++) {
+						newStartDate.setFullYear(newStartDate.getFullYear() + 1);
+						newEndDate.setFullYear(newEndDate.getFullYear() + 1);
+						const newPeriod = { "startDateTime": newStartDate, "endDateTime": newEndDate }
+						this.periods.push(newPeriod);
+					}
+					break;
+				default:
+					console.log("Fréquence non reconnue");
 			}
 		},
 		setPlaceholderStartTime() {
