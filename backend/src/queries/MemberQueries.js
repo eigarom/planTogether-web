@@ -101,6 +101,28 @@ class MemberQueries {
 			[memberId, name, color]
 		);
 	}
+
+	static async getAccountMembersByFamilyId(familyId) {
+		const result = await pool.query(
+			`SELECT m.id_member, name, color
+			 FROM member m
+			 INNER JOIN account_member am ON m.id_member = am.id_member
+			 WHERE m.id_family = $1`,
+			[familyId]
+		);
+		return result.rows;
+	}
+
+	static async getGuestMembersByFamilyId(familyId) {
+		const result = await pool.query(
+			`SELECT m.id_member, name, color
+			 FROM member m
+			 INNER JOIN guest_member gm ON m.id_member = gm.id_member
+			 WHERE m.id_family = $1`,
+			[familyId]
+		);
+		return result.rows;
+	}
 }
 
 module.exports = MemberQueries;
