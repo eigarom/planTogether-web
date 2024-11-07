@@ -20,6 +20,7 @@ requête.
 
 * [Récupération des informations](users/get.md) : `GET /users/me`
 * [Modification des informations](users/put.md) : `PUT /users/me`
+* [Suppression de l'utilisateur](users/delete.md) : `DELETE /users/me`
 
 ### Famille
 

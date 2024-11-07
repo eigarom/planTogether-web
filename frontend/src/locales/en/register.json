@@ -14,7 +14,7 @@
 	"alreadyRegistered": "Already registered?",
 	"login": "Log in",
 	"unavailableMail": "The email is not available",
-	"invalidMail": "The email is not valid",
+	"emailInvalid": "The email is not valid",
 	"emailRequired": "The email field is required",
 	"passwordInvalid": "The password must contain at least 16 characters, one uppercase letter, one lowercase letter, one digit, and one special character",
 	"passwordMax": "The password must not exceed 50 characters",

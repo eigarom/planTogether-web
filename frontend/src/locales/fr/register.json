@@ -14,7 +14,7 @@
 	"alreadyRegistered": "Déjà inscrit ?",
 	"login": "Se connecter",
 	"unavailableMail": "Le courriel n'est pas disponible",
-	"invalidMail": "Le courriel n'est pas valide",
+	"emailInvalid": "Le courriel n'est pas valide",
 	"emailRequired": "Le champ courriel est obligatoire",
 	"passwordInvalid": "Le mot de passe doit contenir au moins 16 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial",
 	"passwordMax": "Le mot de passe ne doit pas dépasser 50 caractères",
