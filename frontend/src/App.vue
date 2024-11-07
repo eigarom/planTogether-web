@@ -1,11 +1,10 @@
 <template>
 	<AppHeader/>
-	<div v-if="!isLoading" class="flex gap-3 w-full h-screen p-3 pt-20">
-		<SidebarNavigation v-if="user && family"/>
-		<main class="flex-grow">
-			<router-view></router-view>
-		</main>
-	</div>
+	<SidebarNavigation v-if="user && family"/>
+	<main v-if="!isLoading" class="flex justify-center items-center">
+		<router-view></router-view>
+	</main>
+	<AppFooter/>
 </template>
 
 <script>
@@ -15,9 +14,11 @@ import {getUserFromToken} from "@/services/userServices.js";
 import {getFamilyFromToken, getFamilyImage} from "@/services/familyServices.js";
 import {getMemberImage} from "@/services/memberServices.js";
 import AppHeader from './components/AppHeader.vue';
+import AppFooter from "@/components/AppFooter.vue";
 
 export default {
 	components: {
+		AppFooter,
 		AppHeader, SidebarNavigation
 	},
 	data() {

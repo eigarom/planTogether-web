@@ -1,21 +1,19 @@
 <template>
 	<FloatingTitle/>
 
-	<div class="flex h-full justify-center items-center">
-		<div class="w-80">
-			<h1 class="text-3xl mb-8 text-center font-medium">{{ $t('joinFamily') }}</h1>
-			<form id="familyJoinForm" class="flex flex-col gap-5" @submit.prevent="submitJoinFamily">
+	<div class="w-80">
+		<h1 class="text-3xl mb-8 text-center font-medium">{{ $t('joinFamily') }}</h1>
+		<form id="familyJoinForm" class="flex flex-col gap-5" @submit.prevent="submitJoinFamily">
 
-				<FloatLabel variant="on">
-					<InputText id="inviteCode" v-model.trim="inviteCode" class="w-full"/>
-					<label for="inviteCode">{{ $t('inviteCode') }}</label>
-				</FloatLabel>
+			<FloatLabel variant="on">
+				<InputText id="inviteCode" v-model.trim="inviteCode" class="w-full"/>
+				<label for="inviteCode">{{ $t('inviteCode') }}</label>
+			</FloatLabel>
 
-				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
+			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-				<Button :disabled="isButtonDisabled" :label=" $t('confirmButton')" raised type="submit"/>
-			</form>
-		</div>
+			<Button :disabled="isButtonDisabled" :label=" $t('confirmButton')" raised type="submit"/>
+		</form>
 	</div>
 </template>
 

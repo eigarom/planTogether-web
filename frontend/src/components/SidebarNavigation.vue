@@ -1,5 +1,5 @@
 <template>
-	<Menu id="sidebar" :model="items" class="p-1 h-fit">
+	<Menu id="sidebar" :model="items" class="fixed top-20 left-3 p-1 h-fit">
 		<template #start>
 			<div class="flex flex-col items-center py-2">
 				<Image v-if="family.imageUrl" :src="family.imageUrl" alt="Image famille" image-class="rounded-xl"
