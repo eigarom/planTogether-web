@@ -1,7 +1,7 @@
 <template>
-	<AppHeader />
+	<AppHeader/>
 	<div v-if="!isLoading" class="flex gap-3 w-full h-screen p-3 pt-20">
-		<SidebarNavigation v-if="user && family" />
+		<SidebarNavigation v-if="user && family"/>
 		<main class="flex-grow">
 			<router-view></router-view>
 		</main>
@@ -9,12 +9,11 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+import {computed} from 'vue';
 import SidebarNavigation from './components/SidebarNavigation.vue';
-import { getUserFromToken } from "@/services/userServices.js";
-import { getFamilyFromToken } from "@/services/familyServices.js";
-import { getMemberImage } from "@/services/memberServices.js";
-import { getFamilyImage } from "@/services/familyServices.js";
+import {getUserFromToken} from "@/services/userServices.js";
+import {getFamilyFromToken, getFamilyImage} from "@/services/familyServices.js";
+import {getMemberImage} from "@/services/memberServices.js";
 import AppHeader from './components/AppHeader.vue';
 
 export default {
@@ -30,6 +29,9 @@ export default {
 		};
 	},
 	methods: {
+		initializeLanguage() {
+			this.$i18n.locale = this.$cookies.get('lang') || 'fr';
+		},
 		getToken() {
 			this.token = this.$cookies.get('jwtToken');
 		},
@@ -71,6 +73,7 @@ export default {
 		}
 	},
 	async created() {
+		this.initializeLanguage();
 		this.getToken();
 		await this.getUserDetails();
 		await this.getFamilyDetails();

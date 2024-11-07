@@ -1,8 +1,9 @@
 <template>
 	<div v-if="user" class="flex h-full justify-center items-center">
-		<div class="w-80">
+		<div class="flex flex-col gap-3 w-80">
 			<h1 class="text-3xl mb-8 text-center">{{ $t('userTitle') }}</h1>
-			<form id="profileForm" class="flex flex-col gap-5" @submit.prevent="submitUpdateUser">
+			<form id="userProfileForm" class="flex flex-col gap-5 border p-3 rounded-lg"
+				  @submit.prevent="submitUpdateUser">
 				<div class="flex items-center justify-between">
 					<FloatLabel variant="on">
 						<InputText id="name" v-model.trim="name" class="w-60"/>
@@ -13,56 +14,52 @@
 
 				<FloatLabel variant="on">
 					<InputText id="email" v-model.trim="email" class="w-full"/>
-					<label for="email">{{ $t('mail') }}</label>
+					<label for="email">{{ $t('email') }}</label>
 				</FloatLabel>
-
-				<div class="card flex items-center justify-between">
-					<div class="flex flex-col gap-3">
-						<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
-									mode="basic" severity="secondary" @select="onImageSelect"/>
-						<Button v-if="user.imageUrl" :label="$t('deleteImageButton')"
-								icon="pi pi-minus"
-								outlined severity="warn" @click="deleteUserImage"/>
-					</div>
-					<img v-if="user.imageUrl" :src="user.imageUrl" alt="Image" class="shadow-md rounded-xl h-24"/>
-				</div>
-
-				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
 				<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" raised type="submit"/>
 			</form>
 
+			<div class="flex items-center justify-between border p-3 rounded-lg">
+				<div class="flex flex-col gap-3">
+					<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
+								mode="basic" severity="secondary" @select="onImageSelect"/>
+					<Button v-if="user.imageUrl" :label="$t('deleteImageButton')"
+							icon="pi pi-minus"
+							outlined severity="warn" @click="deleteUserImage"/>
+				</div>
+				<img v-if="user.imageUrl" :src="user.imageUrl" alt="Image" class="shadow-md rounded-xl h-24"/>
+			</div>
+
+			<Button :label="$t('deleteButton')" raised severity="danger" @click="confirm($event)"/>
+			<ConfirmDialog></ConfirmDialog>
 			<Toast ref="toast" position="bottom-right"/>
 		</div>
 	</div>
 </template>
 
 <script>
-import {updateUser} from "@/services/userServices.js";
+import {deleteUser, updateUser} from "@/services/userServices.js";
 import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
-import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import ColorPicker from 'primevue/colorpicker';
 import FileUpload from 'primevue/fileupload';
 import Toast from 'primevue/toast';
+import ConfirmDialog from 'primevue/confirmdialog';
 import {userSchema} from "@/schemas/userSchemas.js";
 import {deleteMemberImage, uploadMemberImage} from "@/services/memberServices.js";
 
 export default {
 	inject: ['user', 'token'],
 	components: {
-		InputText, Button, Message, FloatLabel, ColorPicker, FileUpload, Toast
+		InputText, Button, FloatLabel, ColorPicker, FileUpload, Toast, ConfirmDialog
 	},
 	data: () => {
 		return {
 			name: '',
 			email: '',
 			color: '',
-			lang: '',
-			theme: '',
-			userImageUrl: '',
-			errorMessage: "",
 		};
 	},
 	computed: {
@@ -75,8 +72,6 @@ export default {
 			this.name = this.user.name;
 			this.email = this.user.email;
 			this.color = this.user.color;
-			this.lang = this.user.lang;
-			this.theme = this.user.theme;
 		},
 		async onImageSelect(event) {
 			const formData = new FormData();
@@ -87,12 +82,17 @@ export default {
 				this.user.imageUrl = await uploadMemberImage(this.token, this.user.id, formData);
 				this.$refs.toast.add({
 					severity: 'success',
-					summary: 'Succès',
-					detail: 'Image supprimée avec succès',
+					summary: this.$t('toastSuccessTitle'),
+					detail: this.$t('toastUpdateImageSuccessMessage'),
 					life: 3000
 				});
 			} catch {
-				this.errorMessage = "Échec lors de la modification."
+				this.$refs.toast.add({
+					severity: 'error',
+					summary: this.$t('toastErrorTitle'),
+					detail: this.$t('errorUpdateMessage'),
+					life: 5000
+				});
 			}
 		},
 		async deleteUserImage() {
@@ -101,12 +101,17 @@ export default {
 				this.user.imageUrl = '';
 				this.$refs.toast.add({
 					severity: 'success',
-					summary: 'Succès',
-					detail: 'Image supprimée avec succès',
+					summary: this.$t('toastSuccessTitle'),
+					detail: this.$t('toastDeleteImageSuccessMessage'),
 					life: 3000
 				});
 			} catch {
-				this.errorMessage = "Échec lors de la suppression.";
+				this.$refs.toast.add({
+					severity: 'error',
+					summary: this.$t('toastErrorTitle'),
+					detail: this.$t('errorDeleteMessage'),
+					life: 5000
+				});
 			}
 		},
 		async submitUpdateUser() {
@@ -119,29 +124,67 @@ export default {
 			const userInformations = {
 				name: this.name,
 				email: this.email,
-				color: this.color,
-				lang: this.lang,
-				theme: this.theme
+				color: this.color
 			}
 			try {
-				await userSchema.validate({name: this.name, email: this.email, color: this.color});
+				await userSchema.validate(userInformations);
 				await updateUser(this.token, userInformations);
 				this.user.name = this.name;
 				this.user.email = this.email;
 				this.user.color = this.color;
 				this.$refs.toast.add({
 					severity: 'success',
-					summary: 'Succès',
-					detail: 'Les informations sont modifiées',
+					summary: this.$t('toastSuccessTitle'),
+					detail: this.$t('toastUpdateProfileSuccessMessage'),
 					life: 3000
 				});
 			} catch (err) {
 				if (err.name === 'ValidationError') {
-					this.errorMessage = err.message;
+					this.$refs.toast.add({
+						severity: 'error',
+						summary: this.$t('toastErrorTitle'),
+						detail: err.message,
+						life: 5000
+					});
 				} else {
-					this.errorMessage = "Échec lors de la modification.";
+					this.$refs.toast.add({
+						severity: 'error',
+						summary: this.$t('toastErrorTitle'),
+						detail: this.$t('errorUpdateMessage'),
+						life: 5000
+					});
 				}
 			}
+		},
+		async confirm(event) {
+			this.$confirm.require({
+				target: event.currentTarget,
+				message: this.$t('deleteAccountConfirm'),
+				icon: 'pi pi-info-circle',
+				rejectProps: {
+					label: this.$t('cancelButton'),
+					severity: 'secondary',
+					outlined: true
+				},
+				acceptProps: {
+					label: this.$t('deleteButton'),
+					severity: 'danger'
+				},
+				accept: async () => {
+					try {
+						await deleteUser(this.token);
+						document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+						window.location.href = '/';
+					} catch {
+						this.$refs.toast.add({
+							severity: 'error',
+							summary: this.$t('toastErrorTitle'),
+							detail: this.$t('errorDeleteMessage'),
+							life: 5000
+						});
+					}
+				}
+			});
 		}
 	},
 	created() {
