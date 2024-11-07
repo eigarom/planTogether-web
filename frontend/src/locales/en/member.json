@@ -1,11 +1,21 @@
 {
 	"memberTitle": "Edit profile",
 	"userTitle": "Edit my profile",
-	"name": "Name",
-	"mail": "Email",
+	"memberName": "Name",
+	"email": "Email",
 	"updateImageButton": "Choose an image",
 	"deleteImageButton": "Delete image",
 	"updateButton": "Update",
 	"colorInvalid": "The color is invalid",
-	"colorRequired": "The color is required"
+	"colorRequired": "The color is required",
+	"deleteButton": "Delete",
+	"cancelButton": "Cancel",
+	"deleteAccountConfirm": "Do you really want to delete your account?",
+	"toastSuccessTitle": "Success",
+	"toastErrorTitle": "Error",
+	"toastUpdateProfileSuccessMessage": "The profile has been updated",
+	"toastUpdateImageSuccessMessage": "The image has been updated",
+	"toastDeleteImageSuccessMessage": "The image has been deleted",
+	"errorUpdateMessage": "Error during update",
+	"errorDeleteMessage": "Error during deletion"
 }

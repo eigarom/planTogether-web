@@ -122,5 +122,42 @@ describe('Tests routes', () => {
 				.expect(500);
 		});
 	});
+
+	describe('DELETE /users/me', () => {
+		it('should delete the user and return a 200 status code', async () => {
+			const mockUserDetails = {
+				id: 'userId',
+				email: 'email',
+				name: 'name',
+				color: 'color'
+			}
+
+			mockUserAccountServices.getUserById.mockResolvedValue(mockUserDetails);
+
+			const response = await request(app)
+				.delete('/users/me')
+				.expect(200);
+
+			expect(response.body).toEqual({});
+		});
+
+		it('should return a 404 status code if the user is not found', async () => {
+			mockUserAccountServices.getUserById.mockResolvedValue(undefined);
+
+			const response = await request(app)
+				.delete('/users/me')
+				.expect(404);
+
+			expect(response.body.message).toEqual('Utilisateur introuvable');
+		});
+
+		it('should return a 500 status code if the service fails', async () => {
+			mockUserAccountServices.getUserById.mockRejectedValue(new Error());
+
+			await request(app)
+				.delete('/users/me')
+				.expect(500);
+		});
+	});
 });
 

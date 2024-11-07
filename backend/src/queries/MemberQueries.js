@@ -21,6 +21,16 @@ class MemberQueries {
 		}
 	}
 
+	static async deleteMember(memberId) {
+		const result = await pool.query(
+			`DELETE
+             FROM member
+             WHERE id_member = $1`,
+			[memberId]
+		);
+		return result.rowCount > 0;
+	}
+
 	static async getMemberById(memberId) {
 		const result = await pool.query(
 			`SELECT name, color

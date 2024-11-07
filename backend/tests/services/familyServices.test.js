@@ -88,4 +88,24 @@ describe('Test family services', () => {
 			expect(familyId).toBeUndefined();
 		});
 	});
+
+	describe('deleteFamilyIfNoAccountMembers', () => {
+		const familyId = 1;
+
+		it('should not delete the family if there are account members', async () => {
+			mockFamilyQueries.getFamilyAccountMembersCount.mockResolvedValue('1');
+
+			await FamilyServices.deleteFamilyIfNoAccountMembers(familyId);
+
+			expect(mockFamilyQueries.deleteFamily).not.toHaveBeenCalled();
+		});
+
+		it('should delete the family if there are no account members', async () => {
+			mockFamilyQueries.getFamilyAccountMembersCount.mockResolvedValue('0');
+
+			await FamilyServices.deleteFamilyIfNoAccountMembers(familyId);
+
+			expect(mockFamilyQueries.deleteFamily).toHaveBeenCalledWith(familyId);
+		});
+	});
 });

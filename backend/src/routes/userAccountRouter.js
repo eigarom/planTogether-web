@@ -44,4 +44,19 @@ router.put('/me', verifyJWT, async (req, res, next) => {
 		next(err);
 	}
 });
+
+router.delete('/me', verifyJWT, async (req, res, next) => {
+	try {
+		const user = await UserAccountServices.getUserById(req.user.userId);
+		if (!user) {
+			return next(new HttpError(404, `Utilisateur introuvable`));
+		}
+
+		await UserAccountServices.deleteUser(req.user.userId, req.user.familyId);
+
+		res.json({});
+	} catch (err) {
+		next(err);
+	}
+});
 module.exports = router;

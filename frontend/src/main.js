@@ -3,6 +3,7 @@ import {createRouter, createWebHistory} from 'vue-router';
 import VueCookies from 'vue-cookies';
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
+import ConfirmationService from 'primevue/confirmationservice';
 import i18n from './locales/i18n.js';
 
 import App from './App.vue';
@@ -32,6 +33,7 @@ app.use(PrimeVue, {
 		}
 	}
 });
+app.use(ConfirmationService);
 
 // Cookies
 app.use(VueCookies, {expires: '100d'});

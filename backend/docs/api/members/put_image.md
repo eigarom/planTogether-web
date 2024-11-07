@@ -10,6 +10,10 @@ Fourni l'image de profil du membre correspondant à l'id.
 
 **Permissions requises** : Aucune
 
+**Contraintes de données**
+
+Image .jpg ou .png.
+
 ## Opération réussie
 
 **Code** : `200 OK`
