@@ -10,6 +10,26 @@ Modifie les informations de l'utilisateur authentifié.
 
 **Permissions requises** : Aucune
 
+**Contraintes de données**
+
+```json
+{
+    "username": "[courriel valide]",
+    "name": "[nom valide]",
+    "color": "[couleur valide]"
+}
+```
+
+**Exemple de données**
+
+```json
+{
+	"email": "johndoe@exemple.com",
+	"name": "John Doe",
+	"color": "#FF0000"
+}
+```
+
 ## Opération réussie
 
 **Code** : `200 OK`
@@ -21,9 +41,7 @@ Modifie les informations de l'utilisateur authentifié.
     "id": 1,
     "email": "johndoe@exemple.com",
 	"name": "John Doe",
-	"color": "#FF0000",
-	"lang": "fr",
-	"theme": "dark"
+	"color": "#FF0000"
 }
 ```
 
