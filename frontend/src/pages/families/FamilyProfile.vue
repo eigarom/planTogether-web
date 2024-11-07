@@ -35,7 +35,7 @@
                     <p>{{ accountMember.name }}</p>
                     <Avatar v-if="accountMember.imageUrl" :image="accountMember.imageUrl" shape="circle" size="small"
                         class="border-4" :style="{ borderColor: accountMember.color }" />
-                    <Avatar v-else :label="accountMemberInitial" :style="`background-color: ${accountMember.color}`"
+                    <Avatar v-else :label=accountMember.name[0] :style="`background-color: ${accountMember.color}`"
                         class="font-semibold text-white" shape="circle" size="small" />
                 </div>
                 <Button icon="pi pi-user-plus" label="Créer une invitation" @click="createInvitation" />
@@ -47,7 +47,7 @@
                     <p>{{ guestMember.name }}</p>
                     <Avatar v-if="guestMember.imageUrl" :image="guestMember.imageUrl" shape="circle" size="small"
                         class="border-4" :style="{ borderColor: guestMember.color }" />
-                    <Avatar v-else :label="accountMemberInitial" :style="`background-color: ${guestMember.color}`"
+                    <Avatar v-else :label=guestMember.name[0] :style="`background-color: ${guestMember.color}`"
                         class="font-semibold text-white" shape="circle" size="small" />
                 </div>
             </div>
@@ -100,9 +100,6 @@ export default {
     computed: {
         isSubmitButtonDisabled() {
             return this.name === this.family.name && this.color === this.family.color;
-        },
-        accountMemberInitial() {
-            return this.accountMembers[0].name.charAt(0).toUpperCase();
         }
     },
     methods: {
