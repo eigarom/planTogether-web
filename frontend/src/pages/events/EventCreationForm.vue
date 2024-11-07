@@ -56,7 +56,8 @@
 					<p class="text-lg text-center">Participants</p>
 					<div v-for="member in allMembers" :key="member.id"
 						class="flex flex-inline items-center justify-between border p-3 rounded-lg"
-						:class="{ 'bg-blue-100': isSelected(member) }" @click="toggleMemberSelection(member)">
+						:class="{ 'bg-blue-100': isSelected(member) }" @click="toggleMemberSelection(member)"
+						style="cursor: pointer;">
 						<p>{{ member.name }}</p>
 						<Avatar v-if="member.imageUrl" :image="member.imageUrl" shape="circle" size="small"
 							class="border-4" :style="{ borderColor: member.color }" />
@@ -252,17 +253,17 @@ export default {
 			return member.name.charAt(0).toUpperCase();
 		},
 		toggleMemberSelection(member) {
-			const index = this.selectedParticipants.findIndex(m => m.id === member.id);
+			const index = this.selectedParticipants.indexOf(member.id);
 			if (index === -1) {
 				// Si le membre n'est pas encore sélectionné, on l'ajoute
-				this.selectedParticipants.push(member);
+				this.selectedParticipants.push(member.id);
 			} else {
 				// Si le membre est déjà sélectionné, on le retire
 				this.selectedParticipants.splice(index, 1);
 			}
 		},
 		isSelected(member) {
-			return this.selectedParticipants.some(m => m.id === member.id);
+			return this.selectedParticipants.includes(member.id);
 		},
 		setPlaceholderStartTime() {
 			const now = new Date();
@@ -283,13 +284,26 @@ export default {
 				const familyMembers = await getAllMembersByFamilyId(this.token);
 
 				this.allMembers = [
-					...familyMembers.accountMembers, 
+					...familyMembers.accountMembers,
 					...familyMembers.guestMembers
 				];
 
 				this.allMembers.forEach(async member => {
 					member.imageUrl = await getMemberImage(this.token, member.id);
 				});
+
+				if (this.user) {
+					// Filtre pour retirer toute occurrence de `this.user` dans `allMembers` dans le but de l'ajouter au début de la liste
+					this.allMembers = this.allMembers.filter(member => member.id !== this.user.id);
+
+					// Ajoute `this.user` au début de la liste
+					this.allMembers.unshift(this.user);
+
+					// Sélectionner l'utilisateur par défaut
+					if (!this.selectedParticipants.includes(this.user.id)) {
+						this.selectedParticipants.push(this.user.id);
+					}
+				}
 			} catch (error) {
 				console.error('Erreur:', error);
 			}
