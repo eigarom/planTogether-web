@@ -20,6 +20,19 @@ const verifyMemberId = async (req, res, next) => {
 	next();
 };
 
+router.get('/', verifyJWT, async (req, res, next) => {
+	try {
+		const allFamilyMembers = await MemberServices.getAllMembersByFamilyId(req.user.familyId);
+		if (allFamilyMembers) {
+			res.json(allFamilyMembers);
+		} else {
+			next(new HttpError(404, `Membres de la famille introuvables`))
+		}
+	} catch (err) {
+		return next(err);
+	}
+});
+
 router.get('/:id/image', verifyJWT, verifyMemberId, async (req, res, next) => {
 	try {
 		const imageInfo = await MemberServices.getMemberImageContent(req.params.id);

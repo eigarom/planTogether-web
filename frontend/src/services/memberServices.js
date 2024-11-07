@@ -1,3 +1,24 @@
+export async function getAllMembersByFamilyId(token) { 
+	const response = await fetch("/api/families/my-family/members", {
+		headers: {
+			'Authorization': `Bearer ${token}`,
+		},
+	});
+	const result = await response.json();
+
+	if (response.ok) {
+		const allFamilyMembers = {
+			accountMembers: result.accountMembers,
+			guestMembers: result.guestMembers
+		}
+
+		return allFamilyMembers;
+	
+	} else {
+		throw new Error(result.message || `Erreur lors de l'obtention de la liste des membres`);
+	}
+}
+
 export async function createMember(memberInformations, token) {
 	const response = await fetch("/api/families/my-family/members", {
 		method: "POST",

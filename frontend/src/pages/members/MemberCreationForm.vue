@@ -5,17 +5,17 @@
 			<form id="profileForm" class="flex flex-col gap-5" @submit.prevent="submitCreateMember">
 				<div class="flex flex-inline items-center justify-between">
 					<FloatLabel variant="on">
-						<InputText id="name" v-model.trim="name" class="w-60"/>
+						<InputText id="name" v-model.trim="name" class="w-60" />
 						<label for="name">{{ $t('memberName') }}</label>
 					</FloatLabel>
-					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
+					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color" />
 				</div>
 				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-				<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" raised type="submit"/>
+				<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" raised type="submit" />
 			</form>
 
-			<Toast ref="toast" position="bottom-right"/>
+			<Toast ref="toast" position="bottom-right" />
 		</div>
 	</div>
 </template>
@@ -27,8 +27,8 @@ import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import ColorPicker from 'primevue/colorpicker';
 import Toast from 'primevue/toast';
-import {memberSchema} from "@/schemas/memberSchemas.js";
-import {createMember} from "@/services/memberServices.js";
+import { memberSchema } from "@/schemas/memberSchemas.js";
+import { createMember } from "@/services/memberServices.js";
 
 export default {
 	inject: ['token'],
@@ -61,7 +61,7 @@ export default {
 			}
 
 			try {
-				await memberSchema.validate({name: this.name, color: this.color});
+				await memberSchema.validate({ name: this.name, color: this.color });
 				await createMember(memberInformations, this.token);
 				this.$router.push('/events');
 			} catch (err) {
