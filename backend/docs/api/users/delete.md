@@ -1,10 +1,10 @@
-# Récupérer les informations
+# Supprimer l'utilisateur
 
-Fourni les informations de l'utilisateur authentifié.
+Supprime les informations de l'utilisateur.
 
 **URL** : `/users/me`
 
-**Méthode** : `GET`
+**Méthode** : `DELETE`
 
 **Authentification requise** : Oui
 
@@ -14,15 +14,10 @@ Fourni les informations de l'utilisateur authentifié.
 
 **Code** : `200 OK`
 
-**Exemple de contenu**
+**Contenu**
 
 ```json
-{
-    "id": 1,
-    "email": "johndoe@exemple.com",
-	"name": "John Doe",
-	"color": "#FF0000"
-}
+{}
 ```
 
 ## Opération échouée
@@ -36,19 +31,6 @@ Fourni les informations de l'utilisateur authentifié.
 {
     "status":401,
     "message":"Erreur lors de la récupération du token"
-}
-```
-
-### Si le membre ne fait pas parti de la famille de l'utilisateur authentifié.
-
-**Code** : `403 Forbidden`
-
-**Contenu** :
-
-```json
-{
-    "status":404,
-    "message":"Utilisateur introuvable"
 }
 ```
 

@@ -2,10 +2,20 @@
 	"memberTitle": "Modifier le profil",
 	"userTitle": "Modifier mon profil",
 	"memberName": "Nom",
-	"mail": "Courriel",
+	"email": "Courriel",
 	"updateImageButton": "Choisir une image",
 	"deleteImageButton": "Supprimer l'image",
 	"updateButton": "Mettre à jour",
 	"colorInvalid": "La couleur n'est pas valide",
-	"colorRequired": "La couleur est requise"
+	"colorRequired": "La couleur est requise",
+	"deleteButton": "Supprimer",
+	"cancelButton": "Annuler",
+	"deleteAccountConfirm": "Voulez-vous vraiment supprimer votre compte ?",
+	"toastSuccessTitle": "Succès",
+	"toastErrorTitle": "Erreur",
+	"toastUpdateProfileSuccessMessage": "Le profil a été mis à jour",
+	"toastUpdateImageSuccessMessage": "L'image a été mis à jour",
+	"toastDeleteImageSuccessMessage": "L'image a été supprimée",
+	"errorUpdateMessage": "Erreur lors de la mise à jour",
+	"errorDeleteMessage": "Erreur lors de la suppression"
 }

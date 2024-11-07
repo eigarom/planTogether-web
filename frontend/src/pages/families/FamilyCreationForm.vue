@@ -1,27 +1,25 @@
 <template>
 	<FloatingTitle/>
 
-	<div class="flex h-full justify-center items-center">
-		<div class="w-80">
-			<h1 class="text-3xl mb-8 text-center font-medium">{{ $t('createFamily') }}</h1>
-			<form id="familycreationForm" class="flex flex-col gap-5" @submit.prevent="submitCreateFamily">
+	<div class="w-80">
+		<h1 class="text-3xl mb-8 text-center font-medium">{{ $t('createFamily') }}</h1>
+		<form id="familycreationForm" class="flex flex-col gap-5" @submit.prevent="submitCreateFamily">
 
-				<FloatLabel variant="on">
-					<InputText id="name" v-model.trim="name" class="w-full"/>
-					<label for="name">{{ $t('familyName') }}</label>
-				</FloatLabel>
+			<FloatLabel variant="on">
+				<InputText id="name" v-model.trim="name" class="w-full"/>
+				<label for="name">{{ $t('familyName') }}</label>
+			</FloatLabel>
 
 
-				<div class="flex justify-between px-3">
-					<label class="font-medium" for="color">{{ $t('commonEventsColor') }}</label>
-					<ColorPicker v-model="color" format="hex" inputId="color"/>
-				</div>
+			<div class="flex justify-between px-3">
+				<label class="font-medium" for="color">{{ $t('commonEventsColor') }}</label>
+				<ColorPicker v-model="color" format="hex" inputId="color"/>
+			</div>
 
-				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
+			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-				<Button :disabled="isCreateFamilyDisabled" :label=" $t('confirmButton')" raised type="submit"/>
-			</form>
-		</div>
+			<Button :disabled="isCreateFamilyDisabled" :label=" $t('confirmButton')" raised type="submit"/>
+		</form>
 	</div>
 </template>
 
