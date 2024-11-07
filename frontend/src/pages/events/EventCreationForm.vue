@@ -52,10 +52,17 @@
 					<MultiSelect v-model="selectedAlertTypes" :options="alertTypes" optionLabel="name"
 						placeholder="Aucune" :showSelectAll="false" />
 				</div>
-				<div class="flex items-center gap-3">
-					<label>Participants</label>
-					<MultiSelect v-model="selectedParticipants" :options="participantsList" optionLabel="name"
-						placeholder="Aucune" :showSelectAll="false" />
+				<div class="flex flex-col border p-3 rounded-lg gap-3">
+					<p class="text-lg text-center">Participants</p>
+					<div v-for="member in allMembers" :key="member.id"
+						class="flex flex-inline items-center justify-between border p-3 rounded-lg"
+						:class="{ 'bg-blue-100': isSelected(member) }" @click="toggleMemberSelection(member)">
+						<p>{{ member.name }}</p>
+						<Avatar v-if="member.imageUrl" :image="member.imageUrl" shape="circle" size="small"
+							class="border-4" :style="{ borderColor: member.color }" />
+						<Avatar v-else :label="memberInitials(member)" :style="`background-color: ${member.color}`"
+							class="font-semibold text-white" shape="circle" size="small" />
+					</div>
 				</div>
 				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
@@ -81,11 +88,14 @@ import FloatLabel from "primevue/floatlabel";
 import Toast from 'primevue/toast';
 import { eventSchema } from "@/schemas/eventSchemas.js";
 import { createEvent } from "@/services/eventServices.js";
+import { getAllMembersByFamilyId } from "@/services/memberServices.js";
+import { getMemberImage } from "@/services/memberServices.js";
+import Avatar from "primevue/avatar";
 
 export default {
-	inject: ['token'],
+	inject: ['token', 'user'],
 	components: {
-		InputText, Textarea, ToggleSwitch, DatePicker, Select, InputNumber, MultiSelect, Button, Message, FloatLabel, Toast
+		InputText, Textarea, ToggleSwitch, DatePicker, Select, InputNumber, MultiSelect, Button, Message, FloatLabel, Toast, Avatar
 	},
 	data: () => {
 		return {
@@ -118,10 +128,7 @@ export default {
 				{ name: '24 heures avant', code: '24hours' },
 			],
 			selectedParticipants: [],
-			participantsList: [
-				{ name: 'Diddy', code: 'diddy' },
-				{ name: 'Dixie', code: 'dixie' }
-			],
+			allMembers: [],
 			periods: [],
 			alerts: [],
 			members: [],
@@ -241,6 +248,22 @@ export default {
 					console.log("Fréquence non reconnue");
 			}
 		},
+		memberInitials(member) {
+			return member.name.charAt(0).toUpperCase();
+		},
+		toggleMemberSelection(member) {
+			const index = this.selectedParticipants.findIndex(m => m.id === member.id);
+			if (index === -1) {
+				// Si le membre n'est pas encore sélectionné, on l'ajoute
+				this.selectedParticipants.push(member);
+			} else {
+				// Si le membre est déjà sélectionné, on le retire
+				this.selectedParticipants.splice(index, 1);
+			}
+		},
+		isSelected(member) {
+			return this.selectedParticipants.some(m => m.id === member.id);
+		},
 		setPlaceholderStartTime() {
 			const now = new Date();
 
@@ -255,10 +278,27 @@ export default {
 			const minutes = String(now.getMinutes()).padStart(2, '0');
 			this.placeholderEndTime = `${hours}:${minutes}`;
 		},
+		async getAllFamilyMembers() {
+			try {
+				const familyMembers = await getAllMembersByFamilyId(this.token);
+
+				this.allMembers = [
+					...familyMembers.accountMembers, 
+					...familyMembers.guestMembers
+				];
+
+				this.allMembers.forEach(async member => {
+					member.imageUrl = await getMemberImage(this.token, member.id);
+				});
+			} catch (error) {
+				console.error('Erreur:', error);
+			}
+		}
 	},
 	mounted() {
 		this.setPlaceholderStartTime();
 		this.setPlaceholderEndTime();
+		this.getAllFamilyMembers();
 	},
 	watch: {
 		startDate(newStartDate) {
