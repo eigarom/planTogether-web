@@ -80,6 +80,11 @@ describe('Test user account services', () => {
 		const userId = 1;
 		const familyId = 1;
 
+		beforeEach(() => {
+			mockMemberQueries.deleteMember = jest.fn();
+			mockFamilyServices.deleteFamilyIfNoAccountMembers = jest.fn();
+		});
+
 		it('should delete the user and not throw an error', async () => {
 			mockUserAccountQueries.getUserByID.mockResolvedValue(undefined);
 
@@ -87,7 +92,9 @@ describe('Test user account services', () => {
 		});
 
 		it('should throw an error if the user is not deleted', async () => {
+			mockMemberQueries.deleteMember.mockResolvedValue();
 			mockUserAccountQueries.getUserByID.mockResolvedValue({id: userId});
+			mockFamilyServices.deleteFamilyIfNoAccountMembers.mockResolvedValue();
 
 			await expect(UserAccountServices.deleteUser(userId, familyId)).rejects.toThrow('Erreur lors de la suppression' +
 				' de l\'utilisateur');
