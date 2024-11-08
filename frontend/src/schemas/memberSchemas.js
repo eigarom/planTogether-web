@@ -9,7 +9,7 @@ export const memberSchema = Yup.object({
 		})
 		.required(() => i18n.global.t('nameRequired')),
 	color: Yup.string()
-		.matches(/^#[0-9A-F]{6}$/, {
+		.matches(/^#[0-9A-Fa-f]{6}$/, {
 			message: () => i18n.global.t('colorInvalid')
 		})
 		.required(() => i18n.global.t('colorRequired'))
