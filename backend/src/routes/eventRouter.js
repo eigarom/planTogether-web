@@ -4,6 +4,15 @@ const HttpError = require("../middlewares/error/HttpError");
 const EventServices = require("../services/EventServices");
 const verifyJWT = require("../middlewares/auth/authMiddleware");
 
+const verifyEventId = async (req, res, next) => {
+	const eventId = req.params.id;
+
+	if (!await EventServices.isEventInFamily(eventId, req.user.familyId)) {
+		return next(new HttpError(403, "Accès non autorisé aux données de cet événement"));
+	}
+	next();
+};
+
 router.get('/', verifyJWT, async (req, res, next) => {
 	const familyId = req.user.familyId;
 
@@ -20,16 +29,15 @@ router.get('/', verifyJWT, async (req, res, next) => {
 	}
 });
 
-router.get('/:id', verifyJWT, async (req, res, next) => {
-	const familyId = req.user.familyId;
+router.get('/:id', verifyJWT, verifyEventId, async (req, res, next) => {
 	const userId = req.user.userId;
 	const eventId = req.params.id;
 
 	try {
-		const event = await EventServices.getEventByIds(eventId, familyId);
+		const event = await EventServices.getEventById(eventId);
 
 		if (!event) {
-			return next(new HttpError(404, `Événement ${eventId} pour la famille ${familyId} introuvable`));
+			return next(new HttpError(404, `Événement ${eventId} introuvable`));
 		}
 		if (event.isVisible || event.members.some(member => member.id === userId)) {
 			res.json(event);

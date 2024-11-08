@@ -42,8 +42,8 @@ class EventServices {
         return undefined;
     }
 
-    static async getEventByIds(eventId, familyId) {
-        const result = await EventQueries.getEventByIdAndFamilyId(eventId, familyId);
+    static async getEventById(eventId) {
+        const result = await EventQueries.getEventById(eventId);
 
         if (result) {
             const periods = await EventQueries.getPeriodsByEventId(eventId);
@@ -79,6 +79,10 @@ class EventServices {
         }
         return undefined;
     }
+
+    static async isEventInFamily(eventId, familyId) {
+		return await EventQueries.isEventInFamily(eventId, familyId);
+	}
 }
 
 module.exports = EventServices;

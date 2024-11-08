@@ -42,14 +42,25 @@ class EventQueries {
         return result.rows;
     }
 
-    static async getEventByIdAndFamilyId(eventId, familyId) {
+    static async getEventById(eventId) {
 		const result = await pool.query(
 			`SELECT *
              FROM event
-             WHERE id_event = $1 AND id_family = $2`,
-			[eventId, familyId]
+             WHERE id_event = $1`,
+			[eventId]
 		);
 		return result.rows[0];
+	}
+
+    static async isEventInFamily(eventId, familyId) {
+		const result = await pool.query(
+			`SELECT *
+             FROM event
+             WHERE id_event = $1
+               AND id_family = $2`,
+			[eventId, familyId]
+		);
+		return result.rowCount > 0;
 	}
 }
 
