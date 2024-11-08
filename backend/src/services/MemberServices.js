@@ -11,9 +11,9 @@ class MemberServices {
 		const result = await MemberQueries.getMemberById(memberId);
 		if (result) {
 			return {
+				id: memberId,
 				name: result.name,
-				color: result.color,
-				memberId: memberId
+				color: result.color
 			}
 		}
 		return undefined;
@@ -56,6 +56,11 @@ class MemberServices {
 
 	static async isMemberInFamily(memberId, familyId) {
 		return await MemberQueries.isMemberInFamily(memberId, familyId);
+	}
+
+	static async updateMemberInformations(member) {
+		await MemberQueries.updateMemberInformations(member.id, member.name, member.color);
+		return this.getMemberById(member.id);
 	}
 
 	static async updateMemberImage(memberId, imageBuffer, imageContentType) {

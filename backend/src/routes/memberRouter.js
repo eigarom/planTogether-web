@@ -33,6 +33,19 @@ router.get('/', verifyJWT, async (req, res, next) => {
 	}
 });
 
+router.get('/:id', verifyJWT, async (req, res, next) => {
+	try {
+		const member = await MemberServices.getMemberById(req.params.id);
+		if (member) {
+			res.json(member);
+		} else {
+			next(new HttpError(404, `Membre introuvable`))
+		}
+	} catch (err) {
+		return next(err);
+	}
+});
+
 router.get('/:id/image', verifyJWT, verifyMemberId, async (req, res, next) => {
 	try {
 		const imageInfo = await MemberServices.getMemberImageContent(req.params.id);
@@ -115,6 +128,33 @@ router.delete('/:id/image', verifyJWT, verifyMemberId, async (req, res, next) =>
 		next(err);
 	}
 });
+
+router.put('/:id', verifyJWT, verifyMemberId,
+	async (req, res, next) => {
+		const {error} = memberSchema.validate(req.body);
+		if (error) {
+			return next(new HttpError(400, error.message));
+		}
+		const memberId = req.params.id;
+		try {
+			const member = await MemberServices.getMemberById(memberId);
+			if (!member) {
+				return next(new HttpError(404, `Membre introuvable`));
+			}
+
+			const memberInformations = {
+				id: "" + memberId,
+				name: "" + req.body.name,
+				color: "" + req.body.color
+			};
+
+			const memberInfo = await MemberServices.updateMemberInformations(memberInformations);
+
+			res.json(memberInfo);
+		} catch (err) {
+			next(err);
+		}
+	});
 
 
 module.exports = router;
