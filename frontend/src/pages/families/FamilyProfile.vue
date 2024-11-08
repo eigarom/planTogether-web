@@ -1,53 +1,57 @@
 <template>
     <div v-if="family" class="top-20 w-96 gap-3 flex flex-col pt-20 pb-16">
-        <h1 class="text-3xl mb-4 text-center">Ma famille</h1>
+        <h1 class="text-3xl mb-4 text-center">{{ $t('myFamily') }}</h1>
         <form id="profileForm" class="flex flex-col gap-5 border p-3 rounded-lg" @submit.prevent="submitUpdateFamily">
             <div class="flex flex-inline items-center justify-between">
                 <FloatLabel variant="on">
                     <InputText id="name" v-model.trim="name" class="w-60" />
-                    <label for="name">Nom</label>
+                    <label for="name">{{ $t('familyName') }}</label>
                 </FloatLabel>
                 <ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color" />
             </div>
 
             <Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-            <Button :disabled="isSubmitButtonDisabled" label="Enregistrer les modifications" raised type="submit" />
+            <Button :disabled="isSubmitButtonDisabled" :label="$t('saveModifications')" raised type="submit" />
         </form>
 
         <div class="flex items-center justify-between border p-3 rounded-lg">
             <div class="flex flex-col gap-3">
-                <FileUpload auto chooseLabel="Choisir une image" class="p-button-outlined" customUpload mode="basic"
-                    severity="secondary" @select="onImageSelect" />
-                <Button v-if="family.imageUrl" icon="pi pi-minus" label="Supprimer l'image" outlined severity="warn"
-                    @click="deleteFamilyImage" />
+                <FileUpload auto :chooseLabel="$t('updateImageButton')" class="p-button-outlined" customUpload
+                    mode="basic" severity="secondary" @select="onImageSelect" />
+                <Button v-if="family.imageUrl" icon="pi pi-minus" :label="$t('deleteImageButton')" outlined
+                    severity="warn" @click="deleteFamilyImage" />
             </div>
             <img v-if="family.imageUrl" :src="family.imageUrl" alt="Image" class="shadow-md rounded-xl h-24" />
         </div>
 
 
         <div class="flex flex-col border p-3 rounded-lg gap-3">
-            <h2 class="text-2xl text-center">Membres principaux</h2>
-            <div v-for="accountMember in accountMembers" :key="accountMember.id"
+            <h2 class="text-2xl text-center">{{ $t('accountMembers') }}</h2>
+            <router-link v-for="accountMember in accountMembers" :key="accountMember.id"
+                :to="accountMember.id === user.id ? '/profile' : `/members/${accountMember.id}`"
                 class="flex flex-inline items-center justify-between border p-3 rounded-lg">
                 <p>{{ accountMember.name }}</p>
                 <Avatar v-if="accountMember.imageUrl" :image="accountMember.imageUrl" shape="circle" size="small"
                     class="border-4" :style="{ borderColor: accountMember.color }" />
-                <Avatar v-else :label=accountMember.name[0] :style="`background-color: ${accountMember.color}`"
-                    class="font-semibold text-white" shape="circle" size="small" />
-            </div>
-            <Button icon="pi pi-user-plus" label="Créer une invitation" @click="createInvitation" />
+                <Avatar v-else :label="accountMember.name[0].toUpperCase()"
+                    :style="`background-color: ${accountMember.color}`" class="font-semibold text-white" shape="circle"
+                    size="small" />
+            </router-link>
+            <Button icon="pi pi-user-plus" :label="$t('inviteCode')" @click="createInvitation" />
         </div>
         <div class="flex flex-col border p-3 rounded-lg gap-3">
-            <h2 class="text-2xl text-center">Membres secondaires</h2>
-            <div v-for="guestMember in guestMembers" :key="guestMember.id"
+            <h2 class="text-2xl text-center">{{ $t('guestMembers') }}</h2>
+            <router-link v-for="guestMember in guestMembers" :key="guestMember.id" :to="`/members/${guestMember.id}`"
                 class="flex flex-inline items-center justify-between border p-3 rounded-lg">
                 <p>{{ guestMember.name }}</p>
                 <Avatar v-if="guestMember.imageUrl" :image="guestMember.imageUrl" shape="circle" size="small"
                     class="border-4" :style="{ borderColor: guestMember.color }" />
-                <Avatar v-else :label=guestMember.name[0] :style="`background-color: ${guestMember.color}`"
-                    class="font-semibold text-white" shape="circle" size="small" />
-            </div>
+                <Avatar v-else :label="guestMember.name[0].toUpperCase()"
+                    :style="`background-color: ${guestMember.color}`" class="font-semibold text-white" shape="circle"
+                    size="small" />
+            </router-link>
+            <Button icon="pi pi-user-plus" :label="$t('addMember')" @click="navigateToAddMember" />
         </div>
         <Dialog v-model:visible="dialogVisible" header="Code d'invitation">
             <div class="flex flex-col items-center gap-3">
@@ -75,7 +79,7 @@ import { getAllMembersByFamilyId, getMemberImage } from "@/services/memberServic
 import Avatar from "primevue/avatar";
 
 export default {
-    inject: ['family', 'token'],
+    inject: ['user', 'family', 'token'],
     components: {
         InputText, Button, Message, FloatLabel, ColorPicker, FileUpload, Toast, Dialog, Avatar
     },
@@ -179,14 +183,20 @@ export default {
                 console.error('Erreur lors de la copie du code:', err);
             });
         },
+        navigateToAddMember() {
+            this.$router.push('/members/add');
+        },
+        sortMembersAlphabetically(members) {
+            return members.sort((a, b) => a.name.localeCompare(b.name));
+        },
         async getAllFamilyMembers() {
             try {
                 const familyMembers = await getAllMembersByFamilyId(this.token);
-                this.accountMembers = familyMembers.accountMembers;
+                this.accountMembers = this.sortMembersAlphabetically(familyMembers.accountMembers);
                 this.accountMembers.forEach(async accountMember => {
                     accountMember.imageUrl = await getMemberImage(this.token, accountMember.id);
                 });
-                this.guestMembers = familyMembers.guestMembers;
+                this.guestMembers = this.sortMembersAlphabetically(familyMembers.guestMembers);
                 this.guestMembers.forEach(async guestMember => {
                     guestMember.imageUrl = await getMemberImage(this.token, guestMember.id);
                 });
