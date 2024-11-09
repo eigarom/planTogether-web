@@ -21,12 +21,12 @@ class EventQueries {
         return result.rows;
     }
 
-    static async getAlertsByEventId(eventId) {
+    static async getAlertsByPeriodId(periodId) {
         const result = await pool.query(
             `SELECT *
             FROM alert
-            WHERE id_event = $1`,
-            [eventId]
+            WHERE id_period = $1`,
+            [periodId]
         );
         return result.rows;
     }
@@ -69,9 +69,18 @@ class EventQueries {
         try {
             await client.query("BEGIN");
             const eventId = await this.insertEvent(newEvent, client);
+
+            // Insérer les périodes et récupérer leurs identifiants
             await this.insertPeriods(eventId, newEvent.periods, client);
-            await this.insertAlerts(eventId, newEvent.alerts, client);
+
+            // Insérer les alertes pour chaque période en utilisant les `id_period` obtenus
+            // await Promise.all(newEvent.periods.map(async (period, index) => {
+            //     const periodId = periodIds[index].id_period;
+            //     await this.insertAlerts(periodId, period.alerts, client);
+            // }));
+
             await this.insertParticipations(eventId, newEvent.members, client);
+
             await client.query("COMMIT");
             return eventId;
         } catch (err) {
@@ -95,30 +104,38 @@ class EventQueries {
 
     static async insertPeriods(eventId, periods, client) {
         try {
+            const periodIds = [];
+
             // Boucle sur chaque période et exécute une requête d'insertion
             for (const period of periods) {
-                console.log("Inserting period:", period.startDateTime, period.endDateTime);
-                await (client || pool).query(
+
+                const result = await (client || pool).query(
                     `INSERT INTO period (start_date_time, end_date_time, id_event)
-                    VALUES ($1, $2, $3)`,
+                    VALUES ($1, $2, $3)
+                    RETURNING id_period`,
                     [period.startDateTime, period.endDateTime, eventId]
                 );
+                // Récupération de l'id_period
+                const periodId = result.rows[0].id_period;
+
+                await this.insertAlerts(periodId, period.alerts, client);
             }
             console.log("Toutes les périodes ont été insérées avec succès.");
+            return periodIds;
         } catch (error) {
             console.error("Erreur lors de l'insertion des périodes :", error);
             throw error;
         }
     }
 
-    static async insertAlerts(eventId, alerts, client) {
+    static async insertAlerts(periodId, alerts, client) {
         try {
             // Boucle sur chaque dateTime du tableau d'alertes
             for (const dateTime of alerts) {
                 await (client || pool).query(
-                    `INSERT INTO alert (date_time, id_event)
+                    `INSERT INTO alert (date_time, id_period)
                     VALUES ($1, $2)`,
-                    [dateTime, eventId]
+                    [dateTime, periodId]
                 );
             }
             console.log("Toutes les alertes ont été insérées avec succès.");
@@ -151,8 +168,8 @@ class EventQueries {
         try {
             await client.query("BEGIN");
             await this.deleteInEventTable(eventId, client);
-            await this.deletePeriods(eventId, client);
             await this.deleteAlerts(eventId, client);
+            await this.deletePeriods(eventId, client);            
             await this.deleteParticipations(eventId, client);
             await client.query("COMMIT");
         } catch (err) {
@@ -161,46 +178,69 @@ class EventQueries {
         } finally {
             client.release();
         }
-	}
+    }
 
     static async deleteInEventTable(eventId, client) {
         const result = await (client || pool).query(
-			`DELETE
+            `DELETE
              FROM event
              WHERE id_event = $1`,
-			[eventId]
-		);
-		return result.rowCount > 0;
+            [eventId]
+        );
+        return result.rowCount > 0;
     }
 
     static async deletePeriods(eventId, client) {
         const result = await (client || pool).query(
-			`DELETE
+            `DELETE
              FROM period
              WHERE id_event = $1`,
-			[eventId]
-		);
-		return result.rowCount > 0;
+            [eventId]
+        );
+        return result.rowCount > 0;
     }
 
     static async deleteAlerts(eventId, client) {
-        const result = await (client || pool).query(
-			`DELETE
-             FROM alert
-             WHERE id_event = $1`,
-			[eventId]
-		);
-		return result.rowCount > 0;
+        try {
+            // Récupérer les `id_period` associés à l'événement
+            const periodIdsResult = await (client || pool).query(
+                `SELECT id_period
+                 FROM period
+                 WHERE id_event = $1`,
+                [eventId]
+            );
+    
+            const periodIds = periodIdsResult.rows.map(row => row.id_period);
+    
+            // Si aucun `id_period` n'est trouvé, retourne false car il n'y a pas d'alertes à supprimer
+            if (periodIds.length === 0) {
+                return false;
+            }
+    
+            // Supprimer les alertes pour les `id_period` associés
+            await (client || pool).query(
+                `DELETE
+                 FROM alert
+                 WHERE id_period = ANY($1::int[])`, //vérifie si id_period dans la table alert correspond à l’un des éléments du tableau periodIds
+                [periodIds]
+            );
+    
+            console.log("Les alertes ont été supprimées avec succès pour l'événement.");
+            return true;
+        } catch (error) {
+            console.error("Erreur lors de la suppression des alertes :", error);
+            throw error;
+        }
     }
 
     static async deleteParticipations(eventId, client) {
         const result = await (client || pool).query(
-			`DELETE
+            `DELETE
              FROM participation
              WHERE id_event = $1`,
-			[eventId]
-		);
-		return result.rowCount > 0;
+            [eventId]
+        );
+        return result.rowCount > 0;
     }
 }
 

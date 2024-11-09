@@ -75,7 +75,7 @@ CREATE TABLE alert
 (
     id_alert  serial PRIMARY KEY,
     date_time timestamp with time zone NOT NULL,
-    id_event  int                      NOT NULL REFERENCES event (id_event) ON DELETE CASCADE
+    id_period  int                      NOT NULL REFERENCES period (id_period) ON DELETE CASCADE
 );
 
 CREATE TABLE shopping_list

@@ -3,8 +3,8 @@
 		<div :style="{ fontSize: '24px' }"> {{ event.name }}</div>
 		<div>{{ $t('description') }} : {{ event.description }}</div>
 		<div>{{ $t('visibility') }} : {{ formatIsVisible(event.isVisible) }}</div>
-		<br/>
-		<hr/>
+		<br />
+		<hr />
 		<div>
 			<h3>{{ $t('periods') }} :</h3>
 			<ul>
@@ -12,22 +12,23 @@
 					{{ $t('startDate') }} : {{ formatDate(period.startDateTime) }} - {{ $t('endDate') }} : {{
 						formatDate(period.endDateTime)
 					}}
+					<div>
+						<h3>{{ $t('alerts') }} :</h3>
+						<ul v-if="period.alerts && period.alerts.length > 0">
+							<li v-for="(alert, alertIndex) in period.alerts" :key="alertIndex">
+								{{ $t('alertDate') }}: {{ alert.dateTime }}
+							</li>
+						</ul>
+						<p v-else>{{ $t('noAlerts') }}</p>
+					</div>
 				</li>
 			</ul>
 		</div>
-		<br/>
-		<hr/>
-		<div>
-			<h3>{{ $t('alerts') }} :</h3>
-			<ul v-if="event.alerts && event.alerts.length > 0">
-				<li v-for="(alert, index) in event.alerts" :key="index">
-					{{ $t('alertDate') }}: {{ alert.dateTime }}
-				</li>
-			</ul>
-			<p v-else>{{ $t('noAlerts') }}</p>
-		</div>
-		<br/>
-		<hr/>
+		<br />
+		<hr />
+
+		<br />
+		<hr />
 		<div>
 			<h3>{{ $t('participants') }}:</h3>
 			<ul>
@@ -40,7 +41,7 @@
 </template>
 
 <script>
-import {getEvent} from '@/services/eventServices.js';
+import { getEvent } from '@/services/eventServices.js';
 
 export default {
 	props: {

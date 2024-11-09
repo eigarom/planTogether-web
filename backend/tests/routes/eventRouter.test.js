@@ -30,10 +30,10 @@ describe("Event Routes", () => {
                             {
                                 "id": 1,
                                 "startDateTime": "2024-10-23T20:00:00.000Z",
-                                "endDateTime": "2024-10-23T22:00:00.000Z"
+                                "endDateTime": "2024-10-23T22:00:00.000Z",
+                                "alerts": []
                             }
-                        ],
-                        "alerts": [],
+                        ],                        
                         "members": [
                             {
                                 "id": 1,
@@ -55,10 +55,10 @@ describe("Event Routes", () => {
                             {
                                 "id": 2,
                                 "startDateTime": "2024-10-23T18:00:00.000Z",
-                                "endDateTime": "2024-10-23T18:15:00.000Z"
+                                "endDateTime": "2024-10-23T18:15:00.000Z",
+                                "alerts": []
                             }
                         ],
-                        "alerts": [],
                         "members": [
                             {
                                 "id": 2,
@@ -111,15 +111,16 @@ describe("Event Routes", () => {
                     {
                         "id": 3,
                         "startDateTime": "2024-10-27T20:00:00.000Z",
-                        "endDateTime": "2024-10-27T22:00:00.000Z"
+                        "endDateTime": "2024-10-27T22:00:00.000Z",
+                        "alerts": []
                     },
                     {
                         "id": 5,
                         "startDateTime": "2024-10-28T20:00:00.000Z",
-                        "endDateTime": "2024-10-28T22:00:00.000Z"
+                        "endDateTime": "2024-10-28T22:00:00.000Z",
+                        "alerts": []
                     }
                 ],
-                "alerts": [],
                 "members": [
                     {
                         "id": 3,

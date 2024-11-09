@@ -82,7 +82,7 @@ garage_period AS (
     INSERT INTO period (start_date_time, end_date_time, id_event)
     SELECT '2024-11-05 08:30:00', '2024-11-05 10:00:00', id_event
     FROM garage_event
-    RETURNING id_event
+    RETURNING id_period
 ),
 
 -- Insertion dans 'Participation' pour 'Diddy' pour l'événement "Garage"
@@ -93,9 +93,9 @@ participation_garage AS (
 ),
 
 alert_garage AS (
-    INSERT INTO alert (date_time, id_event)
-    SELECT '2024-11-05 07:30:00', id_event
-    FROM garage_event
+    INSERT INTO alert (date_time, id_period)
+    SELECT '2024-11-05 07:30:00', id_period
+    FROM garage_period
 ),
 
 -- Insertion de 'Dixie' dans la table 'member'

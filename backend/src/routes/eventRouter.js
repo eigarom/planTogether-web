@@ -63,9 +63,9 @@ router.post('/', verifyJWT, async (req, res, next) => {
 			isVisible: req.body.isVisible,
 			periods: req.body.periods.map(period => ({
 				startDateTime: period.startDateTime,
-				endDateTime: period.endDateTime
-			})),
-			alerts: req.body.alerts.map(alert => alert),
+				endDateTime: period.endDateTime,
+				alerts: period.alerts
+			})),			
 			members: req.body.members.map(member => member)
 		};
 		const newEvent = await EventServices.createEvent(eventDetails);
@@ -93,6 +93,36 @@ router.delete('/:id', verifyJWT, verifyEventId, async (req, res, next) => {
 		}
 
 		await EventServices.deleteEvent(eventId);
+
+		res.json({});
+	} catch (err) {
+		next(err);
+	}
+});
+
+router.delete('/:id/:periodId', verifyJWT, verifyEventId, async (req, res, next) => {
+	const userId = req.user.userId;
+	const eventId = req.params.id;
+	const periodId = req.params.periodId;
+
+	try {
+		const event = await EventServices.getEventById(eventId);
+		if (!event) {
+			return next(new HttpError(404, `Événement introuvable`));
+		}
+
+		if (event.isVisible || event.members.some(member => member.id === userId)) {
+			res.json(event);
+		} else {
+			return next(new HttpError(403, `L'utilisateur ${userId} n'a pas les droits requis`));
+		}
+
+		const period = await EventServices.getPeriodById(periodId, eventId);
+		if (!period) {
+			return next(new HttpError(404, `Période introuvable`));
+		}
+
+		await EventServices.deletePeriod(periodId, eventId);
 
 		res.json({});
 	} catch (err) {

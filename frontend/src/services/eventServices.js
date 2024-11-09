@@ -15,11 +15,11 @@ export async function getEventsList(token) {
             periods: event.periods.map(period => ({
                 id: period.id,
                 startDateTime: period.startDateTime,
-                endDateTime: period.endDateTime
-            })),
-            alerts: event.alerts.map(alert => ({
-                id: alert.id,
-                dateTime: alert.dateTime
+                endDateTime: period.endDateTime,
+                alerts: period.alerts.map(alert => ({
+                    id: alert.id,
+                    dateTime: alert.dateTime
+                })),
             })),
             members: event.members.map(member => ({
                 id: member.id,
@@ -52,11 +52,11 @@ export async function getEvent(token, idEvent) {
             periods: result.periods.map(period => ({
                 id: period.id,
                 startDateTime: period.startDateTime,
-                endDateTime: period.endDateTime
-            })),
-            alerts: result.alerts.map(alert => ({
-                id: alert.id,
-                dateTime: alert.dateTime
+                endDateTime: period.endDateTime,
+                alerts: period.alerts.map(alert => ({
+                    id: alert.id,
+                    dateTime: alert.dateTime
+                })),
             })),
             members: result.members.map(member => ({
                 id: member.id,
@@ -73,19 +73,19 @@ export async function getEvent(token, idEvent) {
 }
 
 export async function createEvent(eventDetails, token) {
-	const response = await fetch("/api/families/my-family/events", {
-		method: "POST",
-		headers: {
-			'Authorization': `Bearer ${token}`,
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify(eventDetails),
-	});
-	const result = await response.json();
+    const response = await fetch("/api/families/my-family/events", {
+        method: "POST",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(eventDetails),
+    });
+    const result = await response.json();
 
-	if (response.ok) {
-		return result;
-	} else {
-		throw new Error(result.message || "L'événement n'a pas pu être créé:");
-	}
+    if (response.ok) {
+        return result;
+    } else {
+        throw new Error(result.message || "L'événement n'a pas pu être créé:");
+    }
 }
