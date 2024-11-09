@@ -7,8 +7,8 @@ describe('Test event services', () => {
 	describe('getEventById', () => {
 
 		it('should return "undefined" if event id not found', async () => {
-			mockEventQueries.getEventByIdAndFamilyId.mockResolvedValue(undefined);
-			const familyDetails = await EventServices.getEventByIds('eventId','familyId');
+			mockEventQueries.getEventById.mockResolvedValue(undefined);
+			const familyDetails = await EventServices.getEventById('eventId');
 			expect(familyDetails).toBeUndefined();
 		});
 	});
