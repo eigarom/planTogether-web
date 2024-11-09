@@ -17,6 +17,7 @@ import FamilyProfile from "@/pages/families/FamilyProfile.vue";
 import RegisterForm from "@/pages/auth/RegisterForm.vue";
 import MemberCreationForm from "@/pages/members/MemberCreationForm.vue";
 import UserProfile from "@/pages/users/UserProfile.vue";
+import MemberProfile from './pages/members/MemberProfile.vue';
 
 const app = createApp(App);
 
@@ -50,6 +51,7 @@ const router = createRouter({
 		{path: '/families/join', component: FamilyJoinForm},
 		{path: '/my-family', component: FamilyProfile},
 		{path: '/members/add', component: MemberCreationForm},
+		{path: '/members/:id', component: MemberProfile, props: true},
 		{path: '/profile', component: UserProfile},
 		{path: '/', redirect: '/events'}
 	]

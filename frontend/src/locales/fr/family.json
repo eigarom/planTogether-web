@@ -1,11 +1,19 @@
 {
-	"familyOptionsTitle": "Créer ou rejoindre une famille",
-	"createFamily": "Créer une famille",
-	"joinFamily": "Rejoindre une famille",
-	"familyName": "Nom de la famille",
-	"commonEventsColor": "Couleur des événements communs",
-	"inviteCode": "Code d'invitation",
-	"confirmButton": "Confirmer",
-	"colorInvalid": "La couleur n'est pas valide",
-	"colorRequired": "La couleur est requise"
+    "myFamily": "Ma famille",
+    "saveModifications": "Enregistrer les modifications",
+    "familyOptionsTitle": "Créer ou rejoindre une famille",
+    "createFamily": "Créer une famille",
+    "joinFamily": "Rejoindre une famille",
+    "familyName": "Nom de la famille",
+    "commonEventsColor": "Couleur des événements communs",
+    "inviteCode": "Code d'invitation",
+    "pasteCode": "Copier le code",
+    "confirmButton": "Confirmer",
+    "colorInvalid": "La couleur n'est pas valide",
+    "colorRequired": "La couleur est requise",
+    "accountMembers": "Membres principaux",
+    "guestMembers": "Membres secondaires",
+    "addMember": "Ajouter un membre",
+    "toastCopiedMessage": "Code copié",
+    "toastErrorCopyMessage": "Erreur lors de la copie"
 }

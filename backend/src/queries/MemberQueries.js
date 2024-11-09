@@ -7,7 +7,7 @@ class MemberQueries {
 		try {
 			await client.query("BEGIN");
 			const memberId = await this.insertMember(member, client);
-			await MemberQueries.insertGuestMember(
+			await this.insertGuestMember(
 				memberId,
 				client
 			);

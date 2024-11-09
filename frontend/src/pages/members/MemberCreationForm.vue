@@ -1,20 +1,20 @@
 <template>
 	<div class="w-80 pt-20">
-		<h1 class="text-3xl mb-8 text-center">{{ $t('memberTitle') }}</h1>
+		<h1 class="text-3xl mb-8 text-center">{{ $t('addMemberTitle') }}</h1>
 		<form id="profileForm" class="flex flex-col gap-5" @submit.prevent="submitCreateMember">
 			<div class="flex flex-inline items-center justify-between">
 				<FloatLabel variant="on">
-					<InputText id="name" v-model.trim="name" class="w-60"/>
+					<InputText id="name" v-model.trim="name" class="w-60" />
 					<label for="name">{{ $t('memberName') }}</label>
 				</FloatLabel>
-				<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
+				<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color" />
 			</div>
 			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-			<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" raised type="submit"/>
+			<Button :disabled="isSubmitButtonDisabled" :label="$t('submitButton')" raised type="submit" />
 		</form>
 
-		<Toast ref="toast" position="bottom-right"/>
+		<Toast ref="toast" position="bottom-right" />
 	</div>
 </template>
 
@@ -25,8 +25,8 @@ import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import ColorPicker from 'primevue/colorpicker';
 import Toast from 'primevue/toast';
-import {memberSchema} from "@/schemas/memberSchemas.js";
-import {createMember} from "@/services/memberServices.js";
+import { memberSchema } from "@/schemas/memberSchemas.js";
+import { createMember } from "@/services/memberServices.js";
 
 export default {
 	inject: ['token'],
@@ -59,14 +59,17 @@ export default {
 			}
 
 			try {
-				await memberSchema.validate({name: this.name, color: this.color});
+				await memberSchema.validate({ name: this.name, color: this.color });
 				await createMember(memberInformations, this.token);
-				this.$router.push('/events');
+				this.$router.push('/my-family');
 			} catch (err) {
 				if (err.name === 'ValidationError') {
-					this.errorMessage = err.message;
-				} else {
-					this.errorMessage = "Échec lors de la création.";
+					this.$refs.toast.add({
+						severity: 'error',
+						summary: this.$t('toastErrorTitle'),
+						detail: err.message,
+						life: 5000
+					});
 				}
 			}
 		}
