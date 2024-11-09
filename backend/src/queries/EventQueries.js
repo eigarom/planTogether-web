@@ -52,6 +52,16 @@ class EventQueries {
         return result.rows[0];
     }
 
+    static async getPeriodById(periodId, eventId) {
+        const result = await pool.query(
+            `SELECT *
+            FROM period
+            WHERE id_period = $1 AND id_event = $2`,
+            [periodId, eventId]
+        );
+        return result.rows;
+    }
+
     static async isEventInFamily(eventId, familyId) {
         const result = await pool.query(
             `SELECT *
@@ -169,7 +179,7 @@ class EventQueries {
             await client.query("BEGIN");
             await this.deleteInEventTable(eventId, client);
             await this.deleteAlerts(eventId, client);
-            await this.deletePeriods(eventId, client);            
+            await this.deletePeriods(eventId, client);
             await this.deleteParticipations(eventId, client);
             await client.query("COMMIT");
         } catch (err) {
@@ -209,14 +219,14 @@ class EventQueries {
                  WHERE id_event = $1`,
                 [eventId]
             );
-    
+
             const periodIds = periodIdsResult.rows.map(row => row.id_period);
-    
+
             // Si aucun `id_period` n'est trouvé, retourne false car il n'y a pas d'alertes à supprimer
             if (periodIds.length === 0) {
                 return false;
             }
-    
+
             // Supprimer les alertes pour les `id_period` associés
             await (client || pool).query(
                 `DELETE
@@ -224,7 +234,7 @@ class EventQueries {
                  WHERE id_period = ANY($1::int[])`, //vérifie si id_period dans la table alert correspond à l’un des éléments du tableau periodIds
                 [periodIds]
             );
-    
+
             console.log("Les alertes ont été supprimées avec succès pour l'événement.");
             return true;
         } catch (error) {
@@ -239,6 +249,44 @@ class EventQueries {
              FROM participation
              WHERE id_event = $1`,
             [eventId]
+        );
+        return result.rowCount > 0;
+    }
+
+    static async deletePeriod(periodId, eventId) {
+        const client = await pool.connect();
+
+        try {
+            await client.query("BEGIN");
+
+            await this.deletePeriodById(periodId, eventId, client);
+            await this.deleteAlertsByPeriodId(periodId, client);
+
+            await client.query("COMMIT");
+        } catch (err) {
+            await client.query("ROLLBACK");
+            throw err;
+        } finally {
+            client.release();
+        }
+    }
+
+    static async deletePeriodById(periodId, eventId, client) {
+        const result = await (client || pool).query(
+            `DELETE
+            FROM period
+            WHERE id_period = $1 AND id_event = $2`,
+            [periodId, eventId]
+        );
+        return result.rowCount > 0;
+    }
+
+    static async deleteAlertsByPeriodId(periodId, client) {
+        const result = await (client || pool).query(
+            `DELETE
+            FROM alert
+            WHERE id_period = $1`,
+            [periodId]
         );
         return result.rowCount > 0;
     }

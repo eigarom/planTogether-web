@@ -24,26 +24,26 @@ class EventServices {
                     };
                 }));
 
-                    const members = await EventQueries.getMembersByEventId(row.id_event);
-                    const formattedMembers = members.map(member => ({
-                        id: member.id_member,
-                        name: member.name,
-                        color: member.color
-                    }));
-
-                    return {
-                        id: row.id_event,
-                        name: row.name,
-                        description: row.description,
-                        isVisible: row.isvisible,
-                        periods: formattedPeriods,
-                        members: formattedMembers
-                    };
+                const members = await EventQueries.getMembersByEventId(row.id_event);
+                const formattedMembers = members.map(member => ({
+                    id: member.id_member,
+                    name: member.name,
+                    color: member.color
                 }));
-                return events;
-            }
-        return undefined;
+
+                return {
+                    id: row.id_event,
+                    name: row.name,
+                    description: row.description,
+                    isVisible: row.isvisible,
+                    periods: formattedPeriods,
+                    members: formattedMembers
+                };
+            }));
+            return events;
         }
+        return undefined;
+    }
 
     static async getEventById(eventId) {
         const result = await EventQueries.getEventById(eventId);
@@ -52,19 +52,19 @@ class EventServices {
             const periods = await EventQueries.getPeriodsByEventId(eventId);
 
             const formattedPeriods = await Promise.all(periods.map(async (period) => {
-                    const alerts = await EventQueries.getAlertsByPeriodId(period.id_period);
-                    const formattedAlerts = alerts.map(alert => ({
-                        id: alert.id_alert,
-                        dateTime: alert.date_time,
-                    }));
-
-                    return {
-                        id: period.id_period,
-                        startDateTime: period.start_date_time,
-                        endDateTime: period.end_date_time,
-                        alerts: formattedAlerts
-                    };
+                const alerts = await EventQueries.getAlertsByPeriodId(period.id_period);
+                const formattedAlerts = alerts.map(alert => ({
+                    id: alert.id_alert,
+                    dateTime: alert.date_time,
                 }));
+
+                return {
+                    id: period.id_period,
+                    startDateTime: period.start_date_time,
+                    endDateTime: period.end_date_time,
+                    alerts: formattedAlerts
+                };
+            }));
 
             const members = await EventQueries.getMembersByEventId(eventId);
             const formattedMembers = members.map(member => ({
@@ -107,13 +107,27 @@ class EventServices {
         const result = await EventQueries.getPeriodById(periodId, eventId);
 
         if (result) {
+            const alerts = await EventQueries.getAlertsByPeriodId(periodId);
+            const formattedAlerts = alerts.map(alert => ({
+                id: alert.id_alert,
+                dateTime: alert.date_time,
+            }));
+
             return {
-                periodId: result.name,
+                periodId: result.id_period,
                 startDateTime: result.start_date_time,
                 endDateTime: result.end_date_time,
+                alerts: formattedAlerts
             }
         }
         return undefined;
+    }
+
+    static async deletePeriod(periodId, eventId) {
+        await EventQueries.deletePeriod(periodId, eventId);
+        if (await this.getPeriodById(periodId, eventId)) {
+            throw new Error("Erreur lors de la suppression de la période");
+        }
     }
 }
 

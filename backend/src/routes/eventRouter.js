@@ -86,9 +86,7 @@ router.delete('/:id', verifyJWT, verifyEventId, async (req, res, next) => {
 			return next(new HttpError(404, `Événement introuvable`));
 		}
 
-		if (event.isVisible || event.members.some(member => member.id === userId)) {
-			res.json(event);
-		} else {
+		if (!event.isVisible && !event.members.some(member => member.id === userId)) {
 			return next(new HttpError(403, `L'utilisateur ${userId} n'a pas les droits requis`));
 		}
 
