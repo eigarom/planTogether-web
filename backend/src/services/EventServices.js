@@ -89,6 +89,13 @@ class EventServices {
 
 		return this.getEventById(newEventId);
 	}
+
+    static async deleteEvent(eventId) {
+		await EventQueries.deleteEvent(eventId);
+		if (await this.getEventById(eventId)) {
+			throw new Error("Erreur lors de la suppression de l'événement");
+		}
+	}
 }
 
 module.exports = EventServices;

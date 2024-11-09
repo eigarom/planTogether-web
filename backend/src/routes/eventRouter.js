@@ -76,4 +76,28 @@ router.post('/', verifyJWT, async (req, res, next) => {
 	}
 });
 
+router.delete('/:id', verifyJWT, verifyEventId, async (req, res, next) => {
+	const userId = req.user.userId;
+	const eventId = req.params.id;
+
+	try {
+		const event = await EventServices.getEventById(eventId);
+		if (!event) {
+			return next(new HttpError(404, `Événement introuvable`));
+		}
+
+		if (event.isVisible || event.members.some(member => member.id === userId)) {
+			res.json(event);
+		} else {
+			return next(new HttpError(403, `L'utilisateur ${userId} n'a pas les droits requis`));
+		}
+
+		await EventServices.deleteEvent(eventId);
+
+		res.json({});
+	} catch (err) {
+		next(err);
+	}
+});
+
 module.exports = router;

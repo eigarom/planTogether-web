@@ -144,6 +144,64 @@ class EventQueries {
             throw error;
         }
     }
+
+    static async deleteEvent(eventId) {
+        const client = await pool.connect();
+
+        try {
+            await client.query("BEGIN");
+            await this.deleteInEventTable(eventId, client);
+            await this.deletePeriods(eventId, client);
+            await this.deleteAlerts(eventId, client);
+            await this.deleteParticipations(eventId, client);
+            await client.query("COMMIT");
+        } catch (err) {
+            await client.query("ROLLBACK");
+            throw err;
+        } finally {
+            client.release();
+        }
+	}
+
+    static async deleteInEventTable(eventId, client) {
+        const result = await (client || pool).query(
+			`DELETE
+             FROM event
+             WHERE id_event = $1`,
+			[eventId]
+		);
+		return result.rowCount > 0;
+    }
+
+    static async deletePeriods(eventId, client) {
+        const result = await (client || pool).query(
+			`DELETE
+             FROM period
+             WHERE id_event = $1`,
+			[eventId]
+		);
+		return result.rowCount > 0;
+    }
+
+    static async deleteAlerts(eventId, client) {
+        const result = await (client || pool).query(
+			`DELETE
+             FROM alert
+             WHERE id_event = $1`,
+			[eventId]
+		);
+		return result.rowCount > 0;
+    }
+
+    static async deleteParticipations(eventId, client) {
+        const result = await (client || pool).query(
+			`DELETE
+             FROM participation
+             WHERE id_event = $1`,
+			[eventId]
+		);
+		return result.rowCount > 0;
+    }
 }
 
 module.exports = EventQueries;
