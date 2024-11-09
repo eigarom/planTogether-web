@@ -70,7 +70,6 @@ export default {
                     this.name = this.member.name;
                     this.color = this.member.color;
                     this.member.imageUrl = await getMemberImage(this.token, this.id, formData);
-                    this.loading = false;
                 } catch {
                     this.$refs.toast.add({
                         severity: 'error',

@@ -10,8 +10,6 @@
                 <ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color" />
             </div>
 
-            <Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
-
             <Button :disabled="isSubmitButtonDisabled" :label="$t('saveModifications')" raised type="submit" />
         </form>
 
@@ -68,7 +66,6 @@
 import { createInvitationCode, deleteFamilyImage, updateFamily, uploadFamilyImage } from "@/services/familyServices.js";
 import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
-import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import ColorPicker from 'primevue/colorpicker';
 import FileUpload from 'primevue/fileupload';
@@ -81,14 +78,13 @@ import Avatar from "primevue/avatar";
 export default {
     inject: ['user', 'family', 'token'],
     components: {
-        InputText, Button, Message, FloatLabel, ColorPicker, FileUpload, Toast, Dialog, Avatar
+        InputText, Button, FloatLabel, ColorPicker, FileUpload, Toast, Dialog, Avatar
     },
     data: () => {
         return {
             name: '',
             color: '',
             familyImageUrl: '',
-            errorMessage: "",
             dialogVisible: false,
             inviteCode: '',
             accountMembers: [],
@@ -147,16 +143,9 @@ export default {
             }
         },
         async submitUpdateFamily() {
-            this.errorMessage = "";
 
             if (!this.color.startsWith('#')) {
                 this.color = '#' + this.color;
-            }
-
-            const { error } = familySchema.validate({ name: this.name, color: this.color });
-            if (error) {
-                this.errorMessage = error.message;
-                return
             }
 
             const familyInformations = {
@@ -164,6 +153,7 @@ export default {
                 color: this.color,
             }
             try {
+                await familySchema.validate(familyInformations);
                 await updateFamily(familyInformations, this.token);
                 this.family.name = this.name;
                 this.family.color = this.color;
