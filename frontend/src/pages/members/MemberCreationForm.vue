@@ -1,6 +1,6 @@
 <template>
 	<div class="w-80 pt-20">
-		<h1 class="text-3xl mb-8 text-center">{{ $t('memberTitle') }}</h1>
+		<h1 class="text-3xl mb-8 text-center">{{ $t('addMemberTitle') }}</h1>
 		<form id="profileForm" class="flex flex-col gap-5" @submit.prevent="submitCreateMember">
 			<div class="flex flex-inline items-center justify-between">
 				<FloatLabel variant="on">
@@ -11,7 +11,7 @@
 			</div>
 			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-			<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" raised type="submit" />
+			<Button :disabled="isSubmitButtonDisabled" :label="$t('submitButton')" raised type="submit" />
 		</form>
 
 		<Toast ref="toast" position="bottom-right" />
@@ -64,9 +64,12 @@ export default {
 				this.$router.push('/my-family');
 			} catch (err) {
 				if (err.name === 'ValidationError') {
-					this.errorMessage = err.message;
-				} else {
-					this.errorMessage = "Échec lors de la création.";
+					this.$refs.toast.add({
+						severity: 'error',
+						summary: this.$t('toastErrorTitle'),
+						detail: err.message,
+						life: 5000
+					});
 				}
 			}
 		}

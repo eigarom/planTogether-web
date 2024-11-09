@@ -33,7 +33,7 @@ router.get('/', verifyJWT, async (req, res, next) => {
 	}
 });
 
-router.get('/:id', verifyJWT, async (req, res, next) => {
+router.get('/:id', verifyJWT, verifyMemberId, async (req, res, next) => {
 	try {
 		const member = await MemberServices.getMemberById(req.params.id);
 		if (member) {

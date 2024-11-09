@@ -52,7 +52,6 @@ export default {
             name: '',
             color: '',
             imageUrl: '',
-            loading: true,
             member: null
         };
     },

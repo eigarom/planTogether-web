@@ -7,10 +7,13 @@
     "familyName": "Family name",
     "commonEventsColor": "Common events color",
     "inviteCode": "Invitation code",
+    "pasteCode": "Copy code",
     "confirmButton": "Confirm",
     "colorInvalid": "The color is invalid",
     "colorRequired": "The color is required",
     "accountMembers": "Core members",
     "guestMembers": "Guest members",
-    "addMember": "Add a member"
+    "addMember": "Add a member",
+    "toastCopiedMessage": "Code copied",
+    "toastErrorCopyMessage": "Error copying"
 }

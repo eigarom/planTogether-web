@@ -53,10 +53,10 @@
             </router-link>
             <Button icon="pi pi-user-plus" :label="$t('addMember')" @click="navigateToAddMember" />
         </div>
-        <Dialog v-model:visible="dialogVisible" header="Code d'invitation">
+        <Dialog v-model:visible="dialogVisible" :header="$t('inviteCode')">
             <div class="flex flex-col items-center gap-3">
                 <p>{{ inviteCode }}</p>
-                <Button icon="pi pi-copy" label="Copier le code" @click="copyInviteCode" />
+                <Button icon="pi pi-copy" :label="$t('pasteCode')" @click="copyInviteCode" />
             </div>
         </Dialog>
 
@@ -114,12 +114,17 @@ export default {
                 this.family.imageUrl = await uploadFamilyImage(this.family.id, this.token, formData);
                 this.$refs.toast.add({
                     severity: 'success',
-                    summary: 'Succès',
-                    detail: 'Image téléchargé avec succès',
+                    summary: this.$t('toastSuccessTitle'),
+                    detail: this.$t('toastUpdateImageSuccessMessage'),
                     life: 3000
                 });
             } catch {
-                this.errorMessage = "Échec lors de la modification."
+                this.$refs.toast.add({
+                    severity: 'error',
+                    summary: this.$t('toastErrorTitle'),
+                    detail: this.$t('errorUpdateMessage'),
+                    life: 5000
+                });
             }
         },
         async deleteFamilyImage() {
@@ -128,12 +133,17 @@ export default {
                 this.family.imageUrl = '';
                 this.$refs.toast.add({
                     severity: 'success',
-                    summary: 'Succès',
-                    detail: 'Image supprimée avec succès',
+                    summary: this.$t('toastSuccessTitle'),
+                    detail: this.$t('toastDeleteImageSuccessMessage'),
                     life: 3000
                 });
             } catch {
-                this.errorMessage = "Échec lors de la suppression.";
+                this.$refs.toast.add({
+                    severity: 'error',
+                    summary: this.$t('toastErrorTitle'),
+                    detail: this.$t('errorDeleteMessage'),
+                    life: 5000
+                });
             }
         },
         async submitUpdateFamily() {
@@ -159,12 +169,26 @@ export default {
                 this.family.color = this.color;
                 this.$refs.toast.add({
                     severity: 'success',
-                    summary: 'Succès',
-                    detail: 'Les informations sont modifiées',
+                    summary: this.$t('toastSuccessTitle'),
+                    detail: this.$t('toastUpdateProfileSuccessMessage'),
                     life: 3000
                 });
-            } catch {
-                this.errorMessage = "Échec lors de la modification.";
+            } catch (err) {
+                if (err.name === 'ValidationError') {
+                    this.$refs.toast.add({
+                        severity: 'error',
+                        summary: this.$t('toastErrorTitle'),
+                        detail: err.message,
+                        life: 5000
+                    });
+                } else {
+                    this.$refs.toast.add({
+                        severity: 'error',
+                        summary: this.$t('toastErrorTitle'),
+                        detail: this.$t('errorUpdateMessage'),
+                        life: 5000
+                    });
+                }
             }
         },
         async createInvitation() {
@@ -178,9 +202,19 @@ export default {
         },
         copyInviteCode() {
             navigator.clipboard.writeText(this.inviteCode).then(() => {
-                console.log('Code d\'invitation copié dans le presse-papiers');
-            }).catch(err => {
-                console.error('Erreur lors de la copie du code:', err);
+                this.$refs.toast.add({
+                    severity: 'success',
+                    summary: this.$t('toastSuccessTitle'),
+                    detail: this.$t('toastCopiedMessage'),
+                    life: 3000
+                });
+            }).catch(() => {
+                this.$refs.toast.add({
+                    severity: 'error',
+                    summary: this.$t('toastErrorTitle'),
+                    detail: this.$t('errorUpdateMessage'),
+                    life: 5000
+                });
             });
         },
         navigateToAddMember() {
@@ -193,13 +227,13 @@ export default {
             try {
                 const familyMembers = await getAllMembersByFamilyId(this.token);
                 this.accountMembers = this.sortMembersAlphabetically(familyMembers.accountMembers);
-                this.accountMembers.forEach(async accountMember => {
+                for (const accountMember of this.accountMembers) {
                     accountMember.imageUrl = await getMemberImage(this.token, accountMember.id);
-                });
+                }
                 this.guestMembers = this.sortMembersAlphabetically(familyMembers.guestMembers);
-                this.guestMembers.forEach(async guestMember => {
+                for (const guestMember of this.guestMembers) {
                     guestMember.imageUrl = await getMemberImage(this.token, guestMember.id);
-                });
+                }
             } catch (error) {
                 console.error('Erreur:', error);
             }
