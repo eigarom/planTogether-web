@@ -13,7 +13,6 @@ jest.mock("../../src/middlewares/auth/authMiddleware", () =>
 );
 jest.mock("../../src/utils/authUtils");
 jest.mock("../../src/services/EventServices");
-jest.mock("../../src/utils/authUtils");
 const mockEventServices = require("../../src/services/EventServices");
 
 describe("Event Routes", () => {
@@ -133,7 +132,8 @@ describe("Event Routes", () => {
                 ]
             }
 
-            mockEventServices.getEventByIds.mockResolvedValue(
+            mockEventServices.isEventInFamily.mockResolvedValue(true);
+            mockEventServices.getEventById.mockResolvedValue(
                 mockEventDetails
             );
 
@@ -145,19 +145,31 @@ describe("Event Routes", () => {
             expect(response.body).toEqual(mockEventDetails);
         });
 
-        it("should return null if event not found", async () => {
-            mockEventServices.getEventByIds.mockResolvedValue(null);
+        it('should return 403 if event is not in family', async () => {
+			mockEventServices.isEventInFamily.mockResolvedValue(false);
+
+			const response = await request(app)
+				.get("/families/my-family/events/3")
+				.expect(403);
+
+			expect(response.body.message).toEqual('Accès non autorisé aux données de cet événement');
+		});
+
+        it("should return 404 if event not found", async () => {
+            mockEventServices.isEventInFamily.mockResolvedValue(true);
+            mockEventServices.getEventById.mockResolvedValue(null);
 
             const response = await request(app)
                 .get("/families/my-family/events/3")
                 .expect("Content-Type", /json/)
                 .expect(404);
 
-            expect(response.body.message).toEqual("Événement 3 pour la famille familyId introuvable");
+            expect(response.body.message).toEqual("Événement 3 introuvable");
         });
 
         it("should return 500 if service fails", async () => {
-            mockEventServices.getEventByIds.mockRejectedValue(new Error());
+            mockEventServices.isEventInFamily.mockResolvedValue(true);
+            mockEventServices.getEventById.mockRejectedValue(new Error());
 
             await request(app).get("/families/my-family/events/3").expect(500);
         });
