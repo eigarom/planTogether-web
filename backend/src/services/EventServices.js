@@ -83,6 +83,12 @@ class EventServices {
     static async isEventInFamily(eventId, familyId) {
 		return await EventQueries.isEventInFamily(eventId, familyId);
 	}
+
+    static async createEvent(newEvent) {
+		const newEventId = await EventQueries.createEvent(newEvent);
+
+		return this.getEventById(newEventId);
+	}
 }
 
 module.exports = EventServices;

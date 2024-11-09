@@ -3,6 +3,7 @@ const router = express.Router();
 const HttpError = require("../middlewares/error/HttpError");
 const EventServices = require("../services/EventServices");
 const verifyJWT = require("../middlewares/auth/authMiddleware");
+//const {eventSchema} = require("../schemas/eventSchemas");
 
 const verifyEventId = async (req, res, next) => {
 	const eventId = req.params.id;
@@ -46,6 +47,32 @@ router.get('/:id', verifyJWT, verifyEventId, async (req, res, next) => {
 		}
 	} catch (error) {
 		return next(error);
+	}
+});
+
+router.post('/', verifyJWT, async (req, res, next) => {
+	//const { error } = eventSchema.validate(req.body);
+	// if (error) {
+	// 	return next(new HttpError(400, error.message));
+	// }
+	try {
+		const eventDetails = {
+			familyId: req.user.familyId,
+			name: req.body.name,
+			description: req.body.description,
+			isVisible: req.body.isVisible,
+			periods: req.body.periods.map(period => ({
+				startDateTime: period.startDateTime,
+				endDateTime: period.endDateTime
+			})),
+			alerts: req.body.alerts.map(alert => alert),
+			members: req.body.members.map(member => member)
+		};
+		const newEvent = await EventServices.createEvent(eventDetails);
+
+		res.status(201).json(newEvent);
+	} catch (err) {
+		return next(err);
 	}
 });
 
