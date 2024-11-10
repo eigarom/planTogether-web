@@ -80,14 +80,7 @@ class EventQueries {
             await client.query("BEGIN");
             const eventId = await this.insertEvent(newEvent, client);
 
-            // Insérer les périodes et récupérer leurs identifiants
             await this.insertPeriods(eventId, newEvent.periods, client);
-
-            // Insérer les alertes pour chaque période en utilisant les `id_period` obtenus
-            // await Promise.all(newEvent.periods.map(async (period, index) => {
-            //     const periodId = periodIds[index].id_period;
-            //     await this.insertAlerts(periodId, period.alerts, client);
-            // }));
 
             await this.insertParticipations(eventId, newEvent.members, client);
 
@@ -168,6 +161,93 @@ class EventQueries {
             console.log("Toutes les participations ont été insérées avec succès.");
         } catch (error) {
             console.error("Erreur lors de l'insertion des participations :", error);
+            throw error;
+        }
+    }
+
+    static async updateEvent(updatedEvent) {
+        const client = await pool.connect();
+
+        try {
+            await client.query("BEGIN");
+            
+            await this.updateEventTable(updatedEvent, client);
+
+            await this.updateParticipations(updatedEvent.id, updatedEvent.members, client);
+
+            await client.query("COMMIT");
+
+            return true;
+        } catch (err) {
+            await client.query("ROLLBACK");
+            throw err;
+        } finally {
+            client.release();
+        }
+    }
+
+    static async updateEventTable(event, client) {
+        const result = await (client || pool).query(
+            `UPDATE event
+            SET name = $2,
+                description = $3,
+                isvisible = $4
+            WHERE id_event = $1`,
+            [event.id, event.name, event.description, event.isVisible]
+        );
+
+        return result.rowCount > 0;
+    }
+
+    static async updateParticipations(eventId, members, client) {
+        try {
+            await this.deleteParticipations(eventId, client);
+            await this.insertParticipations(eventId, members, client);
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour des participations :", error);
+            throw error;
+        }
+    }
+
+    static async updatePeriod(updatedPeriod) {
+        const client = await pool.connect();
+
+        try {
+            await client.query("BEGIN");
+            
+            await this.updatePeriodTable(updatedPeriod, client);
+
+            await this.updateAlerts(updatedPeriod.periodId, updatedPeriod.alerts, client);
+
+            await client.query("COMMIT");
+
+            return true;
+        } catch (err) {
+            await client.query("ROLLBACK");
+            throw err;
+        } finally {
+            client.release();
+        }
+    }
+
+    static async updatePeriodTable(period, client) {
+        const result = await (client || pool).query(
+            `UPDATE period
+            SET start_date_time = $3,
+                end_date_time = $4
+            WHERE id_period= $1 AND id_event = $2`,
+            [period.periodId, period.eventId, period.startDateTime, period.endDateTime]
+        );
+
+        return result.rowCount > 0;
+    }
+
+    static async updateAlerts(periodId, alerts, client) {
+        try {
+            await this.deleteAlertsByPeriodId(periodId, client);
+            await this.insertAlerts(periodId, alerts, client);
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour des participations :", error);
             throw error;
         }
     }

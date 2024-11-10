@@ -96,6 +96,26 @@ class EventServices {
         return this.getEventById(newEventId);
     }
 
+    static async updateEvent(updatedEvent) {
+        const result = await EventQueries.updateEvent(updatedEvent);
+
+        if (!result) {
+			throw new Error("Erreur lors de la mise à jour de l'événement");
+		}
+
+        return this.getEventById(updatedEvent.id);
+    }
+
+    static async updatePeriod(updatedPeriod) {
+        const result = await EventQueries.updatePeriod(updatedPeriod);
+
+        if (!result) {
+			throw new Error("Erreur lors de la mise à jour de la période");
+		}
+
+        return this.getPeriodById(updatedPeriod.periodId, updatedPeriod.eventId);
+    }
+
     static async deleteEvent(eventId) {
         await EventQueries.deleteEvent(eventId);
         if (await this.getEventById(eventId)) {
