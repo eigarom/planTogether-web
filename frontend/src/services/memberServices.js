@@ -37,6 +37,26 @@ export async function createMember(memberInformations, token) {
 	}
 }
 
+export async function getMemberById(token, memberId) {
+	const response = await fetch(`/api/families/my-family/members/${memberId}`, {
+		headers: {
+			'Authorization': `Bearer ${token}`
+		}
+	});
+	const result = await response.json();
+
+	if (response.ok) {
+		const member = {
+			id: result.id,
+			name: result.name,
+			color: result.color
+		};
+		return member;
+	} else {
+		throw new Error(result.message || "Membre introuvable");
+	}
+}
+
 export async function getMemberImage(token, memberId) {
 	try {
 		const response = await fetch(`/api/families/my-family/members/${memberId}/image`, {
@@ -84,6 +104,24 @@ export async function deleteMemberImage(token, memberId) {
 			}
 		});
 	} catch (error) {
-		throw new Error(error || `Erreur lors du chargement de l'image du membre`);
+		throw new Error(error || `Erreur lors de la suppression de l'image du membre`);
+	}
+}
+
+export async function updateMemberById(token, memberInformations, memberId) {
+	const response = await fetch(`/api/families/my-family/members/${memberId}`, {
+		method: "PUT",
+		headers: {
+			'Authorization': `Bearer ${token}`,
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(memberInformations),
+	});
+	const result = await response.json();
+
+	if (response.ok) {
+		return result;
+	} else {
+		throw new Error(result.message || "L'utilisateur n'a pas pu être mis à jour:");
 	}
 }

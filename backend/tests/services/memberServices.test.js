@@ -7,7 +7,7 @@ describe('Test member services', () => {
 	describe('getMemberById', () => {
 		it('should return member information with valid member ID', async () => {
 			const mockMemberDetails = {
-				memberId: 'memberId',
+				id: 'memberId',
 				name: 'Test User',
 				color: '#ff0000'
 			};
