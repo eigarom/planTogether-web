@@ -13,6 +13,7 @@
     "deleteButton": "Delete",
     "cancelButton": "Cancel",
     "deleteAccountConfirm": "Do you really want to delete your account?",
+    "deleteMemberConfirm": "Do you really want to delete this member?",
     "toastSuccessTitle": "Success",
     "toastErrorTitle": "Error",
     "toastUpdateProfileSuccessMessage": "The profile has been updated",
