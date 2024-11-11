@@ -87,7 +87,7 @@ import Button from "primevue/button";
 import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import Toast from 'primevue/toast';
-import { eventSchema } from "@/schemas/eventSchemas.js";
+//import { eventSchema } from "@/schemas/eventSchemas.js";
 import { createEvent } from "@/services/eventServices.js";
 import { getAllMembersByFamilyId } from "@/services/memberServices.js";
 import { getMemberImage } from "@/services/memberServices.js";
@@ -131,7 +131,6 @@ export default {
 			selectedParticipants: [],
 			allMembers: [],
 			periods: [],
-			alerts: [],
 			members: [],
 			errorMessage: "",
 		};
@@ -148,21 +147,19 @@ export default {
 			this.setIsVisible();
 			this.setPeriods();
 
-
 			const eventDetails = {
 				name: this.name,
 				description: this.description,
 				isVisible: this.isVisible,
 				periods: this.periods,
-				alerts: this.alerts,
-				members: this.members
+				members: this.selectedParticipants
 			}
 
-			const { error } = eventSchema.validate({ name: this.name, isVisible: this.isVisible });
-			if (error) {
-				this.errorMessage = error.message;
-				return
-			}
+			// const { error } = eventSchema.validate({ name: this.name, isVisible: this.isVisible });
+			// if (error) {
+			// 	this.errorMessage = error.message;
+			// 	return
+			// }
 
 			try {
 				await createEvent(eventDetails, this.token);
@@ -184,18 +181,24 @@ export default {
 			const initialStartDateTime = this.combineDateTime(this.startDate, this.startTime);
 			const initialEndDateTime = this.combineDateTime(this.endDate, this.endTime);
 
-			const newPeriod = { "startDateTime": initialStartDateTime, "endDateTime": initialEndDateTime }
-
-			this.periods.push(newPeriod);
+			this.addToPeriods(initialStartDateTime, initialEndDateTime);
 
 			if (this.selectedFrequency.code !== 'none') {
 				this.handleFrequency(this.selectedFrequency.code, initialStartDateTime, initialEndDateTime);
 			}
+
+			if (this.selectedAlertTypes.length > 0) {
+				for (let alert of this.selectedAlertTypes) {
+					this.handleAlerts(alert.code);
+				}
+			}
 		},
 		setTimeForAllDay() {
-			if (this.allDay) {
-				this.startTime = "00:00";
-				this.endTime = "23:59";
+			if (this.allDay) { // Si toute la journée a été sélectionnée, régler startTime à minuit et endTime à 23h59
+				if (!this.startTime) this.startTime = new Date();
+				if (!this.endTime) this.endTime = new Date();
+				this.startTime.setHours(0, 0, 0, 0);
+				this.endTime.setHours(23, 59, 0, 0);
 			}
 		},
 		combineDateTime(date, time) {
@@ -203,50 +206,71 @@ export default {
 
 			// Convertit startDate et startTime en chaînes pour obtenir les parties de date et d'heure
 			const datePart = date.toISOString().split('T')[0]; // YYYY-MM-DD
-			const [hours, minutes] = time.split(':'); // HH:mm du format HH:mm
+
+			const hours = String(time.getHours()).padStart(2, '0');
+			const minutes = String(time.getMinutes()).padStart(2, '0');
 
 			// Combine les parties de date et d'heure dans un format ISO
 			return new Date(`${datePart}T${hours}:${minutes}:00.000Z`).toISOString();
 		},
+		addToPeriods(startDateTime, endDateTime) {
+			const newPeriod = { "startDateTime": startDateTime, "endDateTime": endDateTime, alerts: [] };
+			this.periods.push(newPeriod);
+		},
 		handleFrequency(frequencyCode, initialStartDateTime, initialEndDateTime) {
-			const newStartDate = new Date(initialStartDateTime);
-			const newEndDate = new Date(initialEndDateTime);
+			const startDateCopy = new Date(initialStartDateTime);
+			const endDateCopy = new Date(initialEndDateTime);
 
-			switch (frequencyCode) {
-				case 'daily':
-					for (let i = 0; i < this.numberRepeats; i++) {
-						newStartDate.setDate(newStartDate.getDate() + 1);
-						newEndDate.setDate(newEndDate.getDate() + 1);
-						const newPeriod = { "startDateTime": newStartDate, "endDateTime": newEndDate }
-						this.periods.push(newPeriod);
-					}
-					break;
-				case 'weekly':
-					for (let i = 0; i < this.numberRepeats; i++) {
-						newStartDate.setDate(newStartDate.getDate() + 7);
-						newEndDate.setDate(newEndDate.getDate() + 7);
-						const newPeriod = { "startDateTime": newStartDate, "endDateTime": newEndDate }
-						this.periods.push(newPeriod);
-					}
-					break;
-				case 'monthly':
-					for (let i = 0; i < this.numberRepeats; i++) {
-						newStartDate.setMonth(newStartDate.getMonth() + 1);
-						newEndDate.setMonth(newEndDate.getMonth() + 1);
-						const newPeriod = { "startDateTime": newStartDate, "endDateTime": newEndDate }
-						this.periods.push(newPeriod);
-					}
-					break;
-				case 'annual':
-					for (let i = 0; i < this.numberRepeats; i++) {
-						newStartDate.setFullYear(newStartDate.getFullYear() + 1);
-						newEndDate.setFullYear(newEndDate.getFullYear() + 1);
-						const newPeriod = { "startDateTime": newStartDate, "endDateTime": newEndDate }
-						this.periods.push(newPeriod);
-					}
-					break;
-				default:
-					console.log("Fréquence non reconnue");
+			const incrementDate = (date, frequency) => {
+				switch (frequency) {
+					case 'daily':
+						date.setDate(date.getDate() + 1);
+						break;
+					case 'weekly':
+						date.setDate(date.getDate() + 7);
+						break;
+					case 'monthly':
+						date.setMonth(date.getMonth() + 1);
+						break;
+					case 'annual':
+						date.setFullYear(date.getFullYear() + 1);
+						break;
+					default:
+						console.log("Fréquence non reconnue");
+				}
+			};
+
+			for (let i = 0; i < this.numberRepeats; i++) {
+				// Incrémente les dates pour la prochaine période
+				incrementDate(startDateCopy, frequencyCode);
+				incrementDate(endDateCopy, frequencyCode);
+
+				const convertedStartDateCopy = startDateCopy.toISOString();
+				const convertedEndDateCopy = endDateCopy.toISOString();
+
+				// Ajoute la période mise à jour
+				this.addToPeriods(convertedStartDateCopy, convertedEndDateCopy);
+			}
+		},
+		handleAlerts(alertCode) {
+			// Dictionnaire associant les codes d'alerte à la durée en millisecondes
+			const alertCalculation = {
+				'10min': 10 * 60 * 1000,
+				'30min': 30 * 60 * 1000,
+				'1Hour': 60 * 60 * 1000,
+				'4Hour': 4 * 60 * 60 * 1000,
+				'24hours': 24 * 60 * 60 * 1000
+			};
+
+			// Vérifie si le code d'alerte est valide
+			if (alertCalculation[alertCode] !== undefined) {
+				for (let period of this.periods) {
+					const startDateTime = new Date(period.startDateTime);
+					const alertTime = new Date(startDateTime.getTime() - alertCalculation[alertCode]);
+					period.alerts.push(alertTime);
+				}
+			} else {
+				console.log("Alerte non reconnue");
 			}
 		},
 		memberInitials(member) {
