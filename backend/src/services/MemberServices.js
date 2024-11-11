@@ -75,7 +75,7 @@ class MemberServices {
 	static async deleteMember(memberId) {
 		await MemberQueries.deleteMember(memberId);
 		if (await this.getMemberById(memberId)) {
-		throw new Error("Erreur lors de la suppression de l'utilisateur");
+			throw new Error("Erreur lors de la suppression de l'utilisateur");
 		}
 	}
 }

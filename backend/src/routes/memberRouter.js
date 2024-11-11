@@ -156,7 +156,7 @@ router.put('/:id', verifyJWT, verifyMemberId,
 		}
 	});
 
-	router.delete('/:id', verifyJWT, async (req, res, next) => {
+	router.delete('/:id', verifyJWT, verifyMemberId, async (req, res, next) => {
 		try {
 			const member = await MemberServices.getMemberById(req.params.id);
 			if (!member) {
