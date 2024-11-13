@@ -13,6 +13,8 @@
             <Button :disabled="isSubmitButtonDisabled" :label="$t('saveModifications')" raised type="submit" />
         </form>
 
+        <Button :label="$t('quitFamily')" raised severity="danger" @click="submitQuitFamily" />
+
         <div class="flex items-center justify-between border p-3 rounded-lg">
             <div class="flex flex-col gap-3">
                 <FileUpload auto :chooseLabel="$t('updateImageButton')" class="p-button-outlined" customUpload
@@ -63,7 +65,7 @@
 </template>
 
 <script>
-import { createInvitationCode, deleteFamilyImage, updateFamily, uploadFamilyImage } from "@/services/familyServices.js";
+import { createInvitationCode, deleteFamilyImage, updateFamily, uploadFamilyImage, quitFamily } from "@/services/familyServices.js";
 import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
 import FloatLabel from "primevue/floatlabel";
@@ -179,6 +181,20 @@ export default {
                         life: 5000
                     });
                 }
+            }
+        },
+        async submitQuitFamily() {
+            try {
+                const result = await quitFamily(this.token);
+                this.$cookies.set("jwtToken", result.token);
+                window.location.href = '/';
+            } catch {
+                this.$refs.toast.add({
+                    severity: 'error',
+                    summary: this.$t('toastErrorTitle'),
+                    detail: this.$t('errorUpdateMessage'),
+                    life: 5000
+                });
             }
         },
         async createInvitation() {
