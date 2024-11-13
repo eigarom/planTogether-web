@@ -2,7 +2,7 @@
 	<div class="flex h-full justify-center items-center">
 		<div class="w-96">
 			<h1 class="text-3xl mb-8 text-center">Nouvel événement</h1>
-			<form id="profileForm" class="flex flex-col gap-5" @submit.prevent="submitCreateEvent">
+			<form id="eventForm" class="flex flex-col gap-5" @submit.prevent="submitCreateEvent">
 				<div class="flex items-center justify-between">
 					<FloatLabel variant="on" class="w-full">
 						<InputText id="name" v-model.trim="name" class="w-full" />

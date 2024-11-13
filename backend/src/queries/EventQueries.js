@@ -59,7 +59,7 @@ class EventQueries {
             WHERE id_period = $1 AND id_event = $2`,
             [periodId, eventId]
         );
-        return result.rows;
+        return result.rows[0];
     }
 
     static async isEventInFamily(eventId, familyId) {

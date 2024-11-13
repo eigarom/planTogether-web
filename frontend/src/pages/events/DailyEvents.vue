@@ -1,11 +1,9 @@
 <template>
     <div>
-        <div>
-            <router-link :to="eventDetailsUrl(id)">
-                <div>{{ name }}</div>
-                <div v-for="period in sortedPeriods" :key="period.id">
-                    Début : {{ formatTime(period.startDateTime) }} - Fin : {{ formatTime(period.endDateTime) }}
-                </div>
+        <h2>{{ id }}</h2>
+        <div class="border m-3" v-for="event in events" :key="`${event.id}-${event.period.id}`"> 
+            <router-link :to="`events/${id}/periods/${event.period.id}`">
+                <div>{{ event.name }}</div>
             </router-link>
         </div>
     </div>
@@ -14,17 +12,13 @@
 <script>
 export default {
     props: {
-        id: Number,
-        name: String,
-        periods: Array
+        id: String,
+        events: Array
     },
     methods: {
         formatTime(dateTime) {
             const date = new Date(dateTime);
             return date.toISOString().split('T')[1].substring(0, 5);
-        },
-        eventDetailsUrl(eventId) {
-            return { name: 'EventDetails', params: { id: eventId } };
         }
     },
     computed: {

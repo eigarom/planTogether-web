@@ -50,6 +50,27 @@ router.get('/:id', verifyJWT, verifyEventId, async (req, res, next) => {
 	}
 });
 
+router.get('/:id/periods/:periodId', verifyJWT, verifyEventId, async (req, res, next) => {
+	const userId = req.user.userId;
+	const eventId = req.params.id;
+	const periodId = req.params.periodId
+
+	try {
+		const event = await EventServices.getEventWithPeriodId(eventId, periodId);
+
+		if (!event) {
+			return next(new HttpError(404, `Événement ${eventId} introuvable`));
+		}
+		if (event.isVisible || event.members.some(member => member.id === userId)) {
+			res.json(event);
+		} else {
+			return next(new HttpError(403, `L'utilisateur ${userId} n'a pas les droits requis`));
+		}
+	} catch (error) {
+		return next(error);
+	}
+});
+
 router.post('/', verifyJWT, async (req, res, next) => {
 	//const { error } = eventSchema.validate(req.body);
 	// if (error) {

@@ -1,6 +1,14 @@
 <template>
-	<div v-if="event">
-		<div :style="{ fontSize: '24px' }"> {{ event.name }}</div>
+	<div v-if="event" class="flex h-full justify-center items-center">
+		<form id="eventForm" class="flex flex-col gap-5 border p-3 rounded-lg" @submit.prevent="submitUpdateEvent">
+			<div class="flex items-center justify-between">
+				<FloatLabel variant="on" class="w-full">
+					<InputText id="name" v-model.trim="name" class="w-full" />
+					<label for="name">Nom</label>
+				</FloatLabel>
+			</div>
+		</form>
+
 		<div>{{ $t('description') }} : {{ event.description }}</div>
 		<div>{{ $t('visibility') }} : {{ formatIsVisible(event.isVisible) }}</div>
 		<br />
@@ -45,21 +53,26 @@ import { getEvent } from '@/services/eventServices.js';
 
 export default {
 	props: {
-		id: String
+		id: String,
+		periodId: String
 	},
 	data() {
 		return {
 			idEvent: this.id,
 			event: {},
+			name: "",
+			description: "",
+			isVisible: "",
+
 			loading: true
 		}
 	},
 	methods: {
-		async getEventWithToken(id) {
+		async getEventWithToken(id, periodId) {
 			const token = this.$cookies.get('jwtToken');
 			if (token) {
 				try {
-					this.event = await getEvent(token, id);
+					this.event = await getEvent(token, id, periodId);
 					console.log("Event data:", this.event);
 				} catch (error) {
 					this.event = null;
@@ -82,7 +95,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.getEventWithToken(this.id);
+		this.getEventWithToken(this.id, this.periodId);
 	}
 
 }

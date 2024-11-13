@@ -35,8 +35,8 @@ export async function getEventsList(token) {
     }
 }
 
-export async function getEvent(token, idEvent) {
-    const response = await fetch(`/api/families/my-family/events/${idEvent}`, {
+export async function getEvent(token, eventId, periodId) {
+    const response = await fetch(`/api/families/my-family/events/${eventId}/periods/${periodId}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -49,15 +49,15 @@ export async function getEvent(token, idEvent) {
             name: result.name,
             description: result.description,
             isVisible: result.isVisible,
-            periods: result.periods.map(period => ({
-                id: period.id,
-                startDateTime: period.startDateTime,
-                endDateTime: period.endDateTime,
-                alerts: period.alerts.map(alert => ({
+            period: {
+                id: result.period.id,
+                startDateTime: result.period.startDateTime,
+                endDateTime: result.period.endDateTime,
+                alerts: result.period.alerts.map(alert => ({
                     id: alert.id,
                     dateTime: alert.dateTime
                 })),
-            })),
+            },
             members: result.members.map(member => ({
                 id: member.id,
                 name: member.name,
@@ -68,7 +68,7 @@ export async function getEvent(token, idEvent) {
         return event;
 
     } else {
-        throw new Error(result.message || `Erreur lors de l'obtention de l'événement ${idEvent}`);
+        throw new Error(result.message || `Erreur lors de l'obtention de l'événement ${eventId}`);
     }
 }
 

@@ -86,6 +86,45 @@ class EventServices {
         return undefined;
     }
 
+    static async getEventWithPeriodId(eventId, periodId) {
+        const result = await EventQueries.getEventById(eventId);
+
+        if (result) {
+            const period = await EventQueries.getPeriodById(periodId, eventId);
+
+            const alerts = await EventQueries.getAlertsByPeriodId(periodId);
+            const formattedAlerts = alerts.map(alert => ({
+                id: alert.id_alert,
+                dateTime: alert.date_time,
+            }));
+
+            const formattedPeriod = {
+                id: period.id_period,
+                startDateTime: period.start_date_time,
+                endDateTime: period.end_date_time,
+                alerts: formattedAlerts
+            };
+
+            const members = await EventQueries.getMembersByEventId(eventId);
+            const formattedMembers = members.map(member => ({
+                id: member.id_member,
+                name: member.name,
+                color: member.color
+            }));
+
+            const event = {
+                id: result.id_event,
+                name: result.name,
+                description: result.description,
+                isVisible: result.isvisible,
+                period: formattedPeriod,
+                members: formattedMembers
+            };
+            return event;
+        }
+        return undefined;
+    }
+
     static async isEventInFamily(eventId, familyId) {
         return await EventQueries.isEventInFamily(eventId, familyId);
     }
@@ -100,8 +139,8 @@ class EventServices {
         const result = await EventQueries.updateEvent(updatedEvent);
 
         if (!result) {
-			throw new Error("Erreur lors de la mise à jour de l'événement");
-		}
+            throw new Error("Erreur lors de la mise à jour de l'événement");
+        }
 
         return this.getEventById(updatedEvent.id);
     }
@@ -110,8 +149,8 @@ class EventServices {
         const result = await EventQueries.updatePeriod(updatedPeriod);
 
         if (!result) {
-			throw new Error("Erreur lors de la mise à jour de la période");
-		}
+            throw new Error("Erreur lors de la mise à jour de la période");
+        }
 
         return this.getPeriodById(updatedPeriod.periodId, updatedPeriod.eventId);
     }

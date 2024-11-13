@@ -46,7 +46,7 @@ const router = createRouter({
 		{path: '/login', component: LoginForm},
 		{path: '/register', component: RegisterForm},
 		{path: '/events', component: EventsList},
-		{path: '/events/:id', name: 'EventDetails', component: EventDetails, props: true},
+		{path: '/events/:id/periods/:periodId', component: EventDetails, props: true},
 		{path: '/events/add', component: EventCreationForm},
 		{path: '/families/add-or-join', component: FamilyOptions},
 		{path: '/families/add', component: FamilyCreationForm},

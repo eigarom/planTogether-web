@@ -2,12 +2,7 @@
 	<h1>{{ $t('eventsTitle') }}</h1>
 	<Button as="router-link" :label="$t('buttonCreateEvent')" to="/events/add" />
 	<div v-if="!loading">
-		<div v-for="(events, date) in sortedEventsByTime" :key="date">
-			<h2> {{ formatPrettyDate(date) }} </h2>
-			<div>
-				<DailyEvents v-for="event in events" :key="event.id" :id="event.id" :name="event.name" :periods="event.periods" />
-			</div>
-		</div>
+		<DailyEvents v-for="date in dates" :key="date.id" :id="date.id" :events="date.events" />
 	</div>
 </template>
 
@@ -24,7 +19,7 @@ export default {
 	data() {
 		return {
 			eventsList: [],
-			currentDate: "",
+			dates: [],
 			loading: true
 		};
 	},
@@ -38,26 +33,40 @@ export default {
 					console.error('Erreur:', error);
 				}
 			}
+			this.generateDates();
+			console.log(this.dates);
+		},
+		generateDates() {
+			this.visibleEvents.forEach(event => {
+				event.periods.forEach(period => {
+					// Initialiser une boucle qui parcourt chaque jour dans l'intervalle de la période
+					for (let dt = new Date(period.startDateTime); dt <= new Date(period.endDateTime); dt.setDate(dt.getDate() + 1)) {
+						const dayId = dt.toISOString().split('T')[0]; // Format de la date en "YYYY-MM-DD"
+
+						// Vérifier si un objet `date` avec cet `id` existe déjà
+						let dateObj = this.dates.find(date => date.id === dayId);
+
+						if (!dateObj) {
+							// Si l'objet `date` n'existe pas, le créer avec cet `id` et un tableau `events` vide
+							dateObj = {
+								id: dayId,
+								events: []
+							};
+							this.dates.push(dateObj);
+						}
+
+						// Ajouter `newEvent` à `events` dans `dateObj`
+						dateObj.events.push({
+							id: event.id,
+							name: event.name,
+							period, // Ajout de la période entière ici
+							members: event.members
+						});
+					}
+				})
+			})
 			this.loading = false;
 		},
-		formatPrettyDate(dateString) {
-			const parts = dateString.split('/');
-			if (parts.length !== 3) {
-				console.warn(`Date invalide: ${dateString}`);
-				return 'Date invalide';
-			}
-
-			const formattedDateString = `${parts[2]}-${parts[1]}-${parts[0]}T00:00:00`;
-			const date = new Date(formattedDateString);
-
-			if (isNaN(date)) {
-				console.warn(`Date invalide: ${formattedDateString}`);
-				return 'Date invalide';
-			}
-
-			const options = {year: 'numeric', month: 'long', day: 'numeric'};
-			return date.toLocaleDateString('fr-FR', options);
-		}
 	},
 	computed: {
 		visibleEvents() {
@@ -66,48 +75,49 @@ export default {
 				return event.isVisible || isParticipant;
 			});
 		},
-		groupedEventsByDate() {
-			const eventsByDate = {};
 
-			this.visibleEvents.forEach(event => {
-				event.periods.forEach(period => {
-					const date = new Date(period.startDateTime).toLocaleDateString();
+		// groupedEventsByDate() {
+		// 	const eventsByDate = {};
 
-					if (!eventsByDate[date]) {
-						eventsByDate[date] = [];
-					}
+		// 	this.visibleEvents.forEach(event => {
+		// 		event.periods.forEach(period => {
+		// 			const date = new Date(period.startDateTime).toLocaleDateString();
 
-					eventsByDate[date].push(event);
-				});
-			});
+		// 			if (!eventsByDate[date]) {
+		// 				eventsByDate[date] = [];
+		// 			}
 
-			return eventsByDate;
-		},
-		sortedEventsByTime() {
-			const uniqueEvents = new Map();
+		// 			eventsByDate[date].push(event);
+		// 		});
+		// 	});
 
-			this.visibleEvents.forEach(event => {
-				event.periods.forEach(period => {
-					const periodKey = `${event.id}-${period.startDateTime}-${period.endDateTime}`;
-					if (!uniqueEvents.has(periodKey)) {
-						uniqueEvents.set(periodKey, {...event, periods: [period]});
-					}
-				});
-			});
+		// 	return eventsByDate;
+		// },
+		// sortedEventsByTime() {
+		// 	const uniqueEvents = new Map();
 
-			const sortedEvents = {};
+		// 	this.visibleEvents.forEach(event => {
+		// 		event.periods.forEach(period => {
+		// 			const periodKey = `${event.id}-${period.startDateTime}-${period.endDateTime}`;
+		// 			if (!uniqueEvents.has(periodKey)) {
+		// 				uniqueEvents.set(periodKey, { ...event, periods: [period] });
+		// 			}
+		// 		});
+		// 	});
 
-			uniqueEvents.forEach((event) => {
-				const date = new Date(event.periods[0].startDateTime).toLocaleDateString("fr-FR");
+		// 	const sortedEvents = {};
 
-				if (!sortedEvents[date]) {
-					sortedEvents[date] = [];
-				}
-				sortedEvents[date].push(event);
-			});
+		// 	uniqueEvents.forEach((event) => {
+		// 		const date = new Date(event.periods[0].startDateTime).toLocaleDateString("fr-FR");
 
-			return sortedEvents;
-		}
+		// 		if (!sortedEvents[date]) {
+		// 			sortedEvents[date] = [];
+		// 		}
+		// 		sortedEvents[date].push(event);
+		// 	});
+
+		// 	return sortedEvents;
+		// }
 	},
 	mounted() {
 		this.getEventsWithToken();
