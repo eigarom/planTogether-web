@@ -13,6 +13,7 @@
     "deleteButton": "Supprimer",
     "cancelButton": "Annuler",
     "deleteAccountConfirm": "Voulez-vous vraiment supprimer votre compte ?",
+    "deleteMemberConfirm": "Voulez-vous vraiment supprimer ce membre ?",
     "toastSuccessTitle": "Succès",
     "toastErrorTitle": "Erreur",
     "toastUpdateProfileSuccessMessage": "Le profil a été mis à jour",
