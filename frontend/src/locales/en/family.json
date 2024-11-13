@@ -14,6 +14,7 @@
     "accountMembers": "Core members",
     "guestMembers": "Guest members",
     "addMember": "Add a member",
+    "quitFamily": "Quit family",
     "toastCopiedMessage": "Code copied",
     "toastErrorCopyMessage": "Error copying"
 }
