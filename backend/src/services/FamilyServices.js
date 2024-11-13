@@ -1,5 +1,6 @@
 const FamilyQueries = require("../queries/FamilyQueries");
 const crypto = require('crypto');
+const MemberQueries = require("../queries/MemberQueries");
 
 class FamilyServices {
 	static async createFamily(family, userId) {
@@ -78,6 +79,16 @@ class FamilyServices {
 
 		return await this.getFamilyImageContent(familyId);
 	}
+
+	static async quitFamily(userId, familyId) {
+		 await FamilyQueries.quitFamily(userId, familyId);
+		await this.deleteFamilyIfNoAccountMembers(familyId);
+		if (await MemberQueries.isMemberInFamily(userId, familyId)) {
+			throw new Error("Erreur lors de la suppression de la famille du membre");
+		}
+		return { message: "Le membre a quitté la famille avec succès" };
+	}
+	
 }
 
 module.exports = FamilyServices;

@@ -142,6 +142,23 @@ router.put('/join', verifyJWT, async (req, res, next) => {
 	}
 });
 
+router.put('/quit', verifyJWT, async (req, res, next) => {
+	const userId = req.user.userId;
+	const familyId = req.user.familyId;
+
+	try {
+		await FamilyServices.quitFamily(userId, familyId);
+
+		const updatedUser = await UserAccountServices.getUserCredentialsByEmail(req.user.email);
+
+		const token = generateToken(updatedUser);
+
+		res.status(200).json({token});
+	} catch (err) {
+		return next(err);
+	}
+});
+
 router.delete('/my-family/image', verifyJWT, async (req, res, next) => {
 	try {
 		const family = await FamilyServices.getFamilyById(req.user.familyId);
