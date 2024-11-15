@@ -147,6 +147,10 @@ router.put('/quit', verifyJWT, async (req, res, next) => {
 	const familyId = req.user.familyId;
 
 	try {
+		const family = await FamilyServices.getFamilyById(familyId);
+		if (!family) {
+			return next(new HttpError(404, `Famille introuvable`));
+		}
 		await FamilyServices.quitFamily(userId, familyId);
 
 		const updatedUser = await UserAccountServices.getUserCredentialsByEmail(req.user.email);
@@ -173,6 +177,26 @@ router.delete('/my-family/image', verifyJWT, async (req, res, next) => {
 			next(new HttpError(500, `Erreur lors de la suppression de l'image`))
 		}
 	} catch (err) {
+		next(err);
+	}
+});
+
+router.delete('/my-family', verifyJWT, async (req, res, next) => {
+	const userId = req.user.userId;
+	const familyId = req.user.familyId;
+	try {
+		const family = await FamilyServices.getFamilyById(familyId);
+		if (!family) {
+			return next(new HttpError(404, `Famille introuvable`));
+		}
+		await FamilyServices.deleteFamily(userId, familyId);
+
+		const updatedUser = await UserAccountServices.getUserCredentialsByEmail(req.user.email);
+
+		const token = generateToken(updatedUser);
+
+		res.status(200).json({token});
+	}catch (err) {
 		next(err);
 	}
 });
