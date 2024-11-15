@@ -1,6 +1,7 @@
 const FamilyQueries = require("../queries/FamilyQueries");
 const crypto = require('crypto');
 const MemberQueries = require("../queries/MemberQueries");
+const MemberServices = require("./MemberServices");
 
 class FamilyServices {
 	static async createFamily(family, userId) {
@@ -27,9 +28,17 @@ class FamilyServices {
 
 	static async deleteFamilyIfNoAccountMembers(familyId) {
 		const accountMembersCount = parseInt(await FamilyQueries.getFamilyAccountMembersCount(familyId));
+		const guestMembers = await MemberQueries.getGuestMembersByFamilyId(familyId);
 
 		if (accountMembersCount === 0) {
+			if (guestMembers.length === 0) {
 			await FamilyQueries.deleteFamily(familyId);
+			} else {
+				for (const guestMember of guestMembers) {
+					await MemberQueries.deleteMember(guestMember.id_member);
+				}
+				await FamilyQueries.deleteFamily(familyId);
+			}
 		}
 	}
 
@@ -81,14 +90,12 @@ class FamilyServices {
 	}
 
 	static async quitFamily(userId, familyId) {
-		 await FamilyQueries.quitFamily(userId, familyId);
-		await this.deleteFamilyIfNoAccountMembers(familyId);
-		if (await MemberQueries.isMemberInFamily(userId, familyId)) {
-			throw new Error("Erreur lors de la suppression de la famille du membre");
+		await MemberQueries.updateMemberFamilyId(userId, null, null);
+		if (await MemberServices.isMemberInFamily(userId, familyId)) {
+			throw new Error("Erreur lors de la suppression de l'utilisateur");
 		}
-		return { message: "Le membre a quitté la famille avec succès" };
+		await FamilyServices.deleteFamilyIfNoAccountMembers(familyId);
 	}
-	
 }
 
 module.exports = FamilyServices;
