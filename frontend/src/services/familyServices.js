@@ -165,3 +165,18 @@ export async function deleteFamilyImage(familyId, token) {
 		throw new Error(error || `Erreur lors de la suppression de l'image de la famille`);
 	}
 }
+
+export async function deleteFamily(token) {
+		const response = await fetch(`/api/families/my-family`, {
+			method: 'DELETE',
+			headers: {
+				'Authorization': `Bearer ${token}`
+			}
+		});
+		const result = await response.json();
+		if (response.ok) {
+			return result;
+		} else {
+			throw new Error(result.message || "La famille n'a pas pu être supprimée");
+		}
+}
