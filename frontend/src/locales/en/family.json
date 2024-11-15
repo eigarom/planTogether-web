@@ -9,6 +9,7 @@
     "inviteCode": "Invitation code",
     "pasteCode": "Copy code",
     "confirmButton": "Confirm",
+    "quitFamilyConfirm": "Do you really want to quit the family?",
     "colorInvalid": "The color is invalid",
     "colorRequired": "The color is required",
     "accountMembers": "Core members",

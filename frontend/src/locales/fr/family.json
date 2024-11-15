@@ -9,6 +9,7 @@
     "inviteCode": "Code d'invitation",
     "pasteCode": "Copier le code",
     "confirmButton": "Confirmer",
+    "quitFamilyConfirm": "Voulez-vous vraiment quitter la famille ?",
     "colorInvalid": "La couleur n'est pas valide",
     "colorRequired": "La couleur est requise",
     "accountMembers": "Membres principaux",

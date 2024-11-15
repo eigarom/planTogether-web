@@ -12,6 +12,7 @@
     "submitButton": "Submit",
     "deleteButton": "Delete",
     "cancelButton": "Cancel",
+    "quitButton": "Quit",
     "deleteAccountConfirm": "Do you really want to delete your account?",
     "deleteMemberConfirm": "Do you really want to delete this member?",
     "toastSuccessTitle": "Success",
