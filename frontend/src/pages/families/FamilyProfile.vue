@@ -13,7 +13,8 @@
             <Button :disabled="isSubmitButtonDisabled" :label="$t('saveModifications')" raised type="submit" />
         </form>
 
-        <Button :label="$t('quitFamily')" raised severity="danger" @click="submitQuitFamily" />
+        <Button :label="$t('quitFamily')" raised severity="danger" @click="submitQuitFamily($event)" />
+        <ConfirmDialog></ConfirmDialog>
 
         <div class="flex items-center justify-between border p-3 rounded-lg">
             <div class="flex flex-col gap-3">
@@ -76,11 +77,12 @@ import { familySchema } from "@/schemas/familySchemas.js";
 import Dialog from 'primevue/dialog';
 import { getAllMembersByFamilyId, getMemberImage } from "@/services/memberServices.js";
 import Avatar from "primevue/avatar";
+import ConfirmDialog from 'primevue/confirmdialog';
 
 export default {
     inject: ['user', 'family', 'token'],
     components: {
-        InputText, Button, FloatLabel, ColorPicker, FileUpload, Toast, Dialog, Avatar
+        InputText, Button, FloatLabel, ColorPicker, FileUpload, Toast, Dialog, Avatar, ConfirmDialog
     },
     data: () => {
         return {
@@ -183,19 +185,35 @@ export default {
                 }
             }
         },
-        async submitQuitFamily() {
-            try {
-                const result = await quitFamily(this.token);
-                this.$cookies.set("jwtToken", result.token);
-                window.location.href = '/';
-            } catch {
-                this.$refs.toast.add({
-                    severity: 'error',
-                    summary: this.$t('toastErrorTitle'),
-                    detail: this.$t('errorUpdateMessage'),
-                    life: 5000
-                });
-            }
+        async submitQuitFamily(event) {
+            this.$confirm.require({
+                target: event.currentTarget,
+                message: this.$t('quitFamilyConfirm'),
+                icon: 'pi pi-info-circle',
+                rejectProps: {
+                    label: this.$t('cancelButton'),
+                    severity: 'secondary',
+                    outlined: true
+                },
+                acceptProps: {
+                    label: this.$t('quitButton'),
+                    severity: 'danger'
+                },
+                accept: async () => {
+                    try {
+                        const result = await quitFamily(this.token, this.id);
+                        this.$cookies.set("jwtToken", result.token);
+                        window.location.href = '/';
+                    } catch {
+                        this.$refs.toast.add({
+                            severity: 'error',
+                            summary: this.$t('toastErrorTitle'),
+                            detail: this.$t('errorDeleteMessage'),
+                            life: 5000
+                        });
+                    }
+                }
+            });
         },
         async createInvitation() {
             try {
