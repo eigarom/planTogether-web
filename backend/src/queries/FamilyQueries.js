@@ -127,17 +127,6 @@ class FamilyQueries {
 		);
 		return result.rowCount > 0;
 	}
-
-	static async quitFamily(userId, familyId) {
-		const result = await pool.query(
-			`UPDATE member
-			 SET id_family = NULL
-			 WHERE id_member = $1
-			   AND id_family = $2`,
-			[userId, familyId]
-		);
-		return result.rowCount > 0;
-	}
 }
 
 module.exports = FamilyQueries;
