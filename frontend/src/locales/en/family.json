@@ -9,11 +9,16 @@
     "inviteCode": "Invitation code",
     "pasteCode": "Copy code",
     "confirmButton": "Confirm",
+    "deleteFamilyButton": "Delete family",
+    "quitFamilyConfirm": "Do you really want to quit the family?",
+    "deleteFamilyConfirm": "Do you really want to delete the family?",
     "colorInvalid": "The color is invalid",
     "colorRequired": "The color is required",
     "accountMembers": "Core members",
     "guestMembers": "Guest members",
     "addMember": "Add a member",
+    "quitFamily": "Quit family",
+    "toastErrorQuitFamily": "Family could not be left",
     "toastCopiedMessage": "Code copied",
     "toastErrorCopyMessage": "Error copying"
 }

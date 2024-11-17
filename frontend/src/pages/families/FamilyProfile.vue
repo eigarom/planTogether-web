@@ -58,12 +58,16 @@
             </div>
         </Dialog>
 
+        <Button :label="$t('quitFamily')" raised severity="danger" @click="submitQuitFamily($event)" />
+        <Button :label="$t('deleteFamilyButton')" raised severity="danger" @click="submitDeleteFamily($event)" />
+        <ConfirmDialog></ConfirmDialog>
+
         <Toast ref="toast" position="bottom-right" />
     </div>
 </template>
 
 <script>
-import { createInvitationCode, deleteFamilyImage, updateFamily, uploadFamilyImage } from "@/services/familyServices.js";
+import { createInvitationCode, deleteFamilyImage, updateFamily, uploadFamilyImage, quitFamily, deleteFamily } from "@/services/familyServices.js";
 import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
 import FloatLabel from "primevue/floatlabel";
@@ -74,11 +78,12 @@ import { familySchema } from "@/schemas/familySchemas.js";
 import Dialog from 'primevue/dialog';
 import { getAllMembersByFamilyId, getMemberImage } from "@/services/memberServices.js";
 import Avatar from "primevue/avatar";
+import ConfirmDialog from 'primevue/confirmdialog';
 
 export default {
     inject: ['user', 'family', 'token'],
     components: {
-        InputText, Button, FloatLabel, ColorPicker, FileUpload, Toast, Dialog, Avatar
+        InputText, Button, FloatLabel, ColorPicker, FileUpload, Toast, Dialog, Avatar, ConfirmDialog
     },
     data: () => {
         return {
@@ -180,6 +185,66 @@ export default {
                     });
                 }
             }
+        },
+        async submitQuitFamily(event) {
+            this.$confirm.require({
+                target: event.currentTarget,
+                message: this.$t('quitFamilyConfirm'),
+                icon: 'pi pi-info-circle',
+                rejectProps: {
+                    label: this.$t('cancelButton'),
+                    severity: 'secondary',
+                    outlined: true
+                },
+                acceptProps: {
+                    label: this.$t('quitButton'),
+                    severity: 'danger'
+                },
+                accept: async () => {
+                    try {
+                        const result = await quitFamily(this.token, this.id);
+                        this.$cookies.set("jwtToken", result.token);
+                        window.location.href = '/';
+                    } catch {
+                        this.$refs.toast.add({
+                            severity: 'error',
+                            summary: this.$t('toastErrorTitle'),
+                            detail: this.$t('toastErrorQuitFamily'),
+                            life: 5000
+                        });
+                    }
+                }
+            });
+        },
+        async submitDeleteFamily(event) {
+            this.$confirm.require({
+                target: event.currentTarget,
+                message: this.$t('deleteFamilyConfirm'),
+                icon: 'pi pi-info-circle',
+                rejectProps: {
+                    label: this.$t('cancelButton'),
+                    severity: 'secondary',
+                    outlined: true
+                },
+                acceptProps: {
+                    label: this.$t('deleteFamilyButton'),
+                    severity: 'danger'
+                },
+                accept: async () => {
+                    try {
+                        const result = await deleteFamily(this.token, this.id);
+                        this.$cookies.set("jwtToken", result.token);
+                        window.location.href = '/';
+                    } catch {
+                        this.$refs.toast.add({
+                            severity: 'error',
+                            summary: this.$t('toastErrorTitle'),
+                            detail: this.$t('errorDeleteMessage'),
+                            life: 5000
+                        });
+                    }
+                }
+            });
         },
         async createInvitation() {
             try {

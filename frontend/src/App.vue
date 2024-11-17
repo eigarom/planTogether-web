@@ -1,18 +1,18 @@
 <template>
-	<AppHeader/>
-	<SidebarNavigation v-if="user && family"/>
+	<AppHeader />
+	<SidebarNavigation v-if="user && family" />
 	<main v-if="!isLoading" class="flex justify-center items-center">
 		<router-view></router-view>
 	</main>
-	<AppFooter/>
+	<AppFooter />
 </template>
 
 <script>
-import {computed} from 'vue';
+import { computed } from 'vue';
 import SidebarNavigation from './components/SidebarNavigation.vue';
-import {getUserFromToken} from "@/services/userServices.js";
-import {getFamilyFromToken, getFamilyImage} from "@/services/familyServices.js";
-import {getMemberImage} from "@/services/memberServices.js";
+import { getUserFromToken } from "@/services/userServices.js";
+import { getFamilyFromToken, getFamilyImage } from "@/services/familyServices.js";
+import { getMemberImage } from "@/services/memberServices.js";
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from "@/components/AppFooter.vue";
 
@@ -40,10 +40,11 @@ export default {
 			if (this.token) {
 				try {
 					this.user = await getUserFromToken(this.token);
-					if (!this.user) {
+					if (this.user) {
+						this.user.imageUrl = await getMemberImage(this.token, this.user.id);
+					} else {
 						this.logout();
 					}
-					this.user.imageUrl = await getMemberImage(this.token, this.user.id);
 				} catch (error) {
 					console.error('Erreur:', error);
 				}
@@ -53,10 +54,11 @@ export default {
 			if (this.token) {
 				try {
 					this.family = await getFamilyFromToken(this.token);
-					if (!this.family) {
+					if (this.family) {
+						this.family.imageUrl = await getFamilyImage(this.token, this.family.id);
+					} else {
 						this.$router.push('/families/add-or-join');
 					}
-					this.family.imageUrl = await getFamilyImage(this.token, this.family.id);
 				} catch (error) {
 					console.error('Erreur:', error);
 				}

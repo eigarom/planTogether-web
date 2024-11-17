@@ -10,8 +10,6 @@ DROP TABLE IF EXISTS shopping_list CASCADE;
 DROP TABLE IF EXISTS shopping_item;
 DROP TABLE IF EXISTS tasks_list CASCADE;
 DROP TABLE IF EXISTS task;
-DROP TYPE IF EXISTS account_member_theme CASCADE;
-DROP TYPE IF EXISTS account_member_lang CASCADE;
 
 CREATE TABLE family
 (
