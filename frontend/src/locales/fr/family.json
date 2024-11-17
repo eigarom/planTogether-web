@@ -9,11 +9,16 @@
     "inviteCode": "Code d'invitation",
     "pasteCode": "Copier le code",
     "confirmButton": "Confirmer",
+    "deleteFamilyButton": "Supprimer la famille",
+    "quitFamilyConfirm": "Voulez-vous vraiment quitter la famille ?",
+    "deleteFamilyConfirm": "Voulez-vous vraiment supprimer la famille ?",
     "colorInvalid": "La couleur n'est pas valide",
     "colorRequired": "La couleur est requise",
     "accountMembers": "Membres principaux",
     "guestMembers": "Membres secondaires",
     "addMember": "Ajouter un membre",
+    "quitFamily": "Quitter la famille",
+    "toastErrorQuitFamily": "La famille n'a pas pu être quittée",
     "toastCopiedMessage": "Code copié",
     "toastErrorCopyMessage": "Erreur lors de la copie"
 }

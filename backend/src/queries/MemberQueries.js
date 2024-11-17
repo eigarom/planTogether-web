@@ -133,6 +133,16 @@ class MemberQueries {
 		);
 		return result.rows;
 	}
+
+	static async deleteMembersFamilyId(familyId) {
+		const result = await pool.query(
+			`UPDATE member
+			 SET id_family = NULL
+			 WHERE id_family = $1`,
+			[familyId]
+		);
+		return result.rowCount > 0;
+	}
 }
 
 module.exports = MemberQueries;

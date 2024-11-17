@@ -97,7 +97,7 @@ describe('Test family services', () => {
 
 			await FamilyServices.deleteFamilyIfNoAccountMembers(familyId);
 
-			expect(mockFamilyQueries.deleteFamily).not.toHaveBeenCalled();
+			expect(mockFamilyQueries.deleteFamilyAndGuestMembers).not.toHaveBeenCalled();
 		});
 
 		it('should delete the family if there are no account members', async () => {
@@ -105,7 +105,7 @@ describe('Test family services', () => {
 
 			await FamilyServices.deleteFamilyIfNoAccountMembers(familyId);
 
-			expect(mockFamilyQueries.deleteFamily).toHaveBeenCalledWith(familyId);
+			expect(mockFamilyQueries.deleteFamilyAndGuestMembers).toHaveBeenCalledWith(familyId);
 		});
 	});
 });
