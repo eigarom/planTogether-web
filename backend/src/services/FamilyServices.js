@@ -26,6 +26,16 @@ class FamilyServices {
 		return code;
 	}
 
+	static async deleteFamily(userId, familyId) {
+		await FamilyQueries.deleteFamilyAndGuestMembers(familyId);
+		if (await MemberServices.isMemberInFamily(userId, familyId)) {
+			throw new Error("Erreur lors de la suppression de la famille de l'utilisateur");
+		}
+		if (await FamilyQueries.getFamilyById(familyId)) {
+			throw new Error("Erreur lors de la suppression de la famille");
+		}
+	}
+
 	static async deleteFamilyIfNoAccountMembers(familyId) {
 		const accountMembersCount = parseInt(await FamilyQueries.getFamilyAccountMembersCount(familyId));
 
@@ -66,9 +76,12 @@ class FamilyServices {
 		return undefined;
 	}
 
-	static async updateFamilyInformations(family) {
-		await FamilyQueries.updateFamilyInformations(family);
-		return this.getFamilyById(family.id);
+	static async quitFamily(userId, familyId) {
+		await MemberQueries.updateMemberFamilyId(userId, null, null);
+		if (await MemberServices.isMemberInFamily(userId, familyId)) {
+			throw new Error("Erreur lors de la suppression de la famille de l'utilisateur");
+		}
+		await FamilyServices.deleteFamilyIfNoAccountMembers(familyId);
 	}
 
 	static async updateFamilyImage(familyId, imageBuffer, imageContentType) {
@@ -81,19 +94,9 @@ class FamilyServices {
 		return await this.getFamilyImageContent(familyId);
 	}
 
-	static async quitFamily(userId, familyId) {
-		await MemberQueries.updateMemberFamilyId(userId, null, null);
-		if (await MemberServices.isMemberInFamily(userId, familyId)) {
-			throw new Error("Erreur lors de la suppression de la famille de l'utilisateur");
-		}
-		await FamilyServices.deleteFamilyIfNoAccountMembers(familyId);
-	}
-
-	static async deleteFamily(userId, familyId) {
-		await FamilyQueries.deleteFamilyAndGuestMembers(familyId);
-		if (await MemberServices.isMemberInFamily(userId, familyId)) {
-			throw new Error("Erreur lors de la suppression de la famille de l'utilisateur");
-		}
+	static async updateFamilyInformations(family) {
+		await FamilyQueries.updateFamilyInformations(family);
+		return this.getFamilyById(family.id);
 	}
 }
 
