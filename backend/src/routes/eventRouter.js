@@ -130,7 +130,7 @@ router.put('/:id', verifyJWT, verifyEventId, async (req, res, next) => {
 	}
 });
 
-router.put('/:id/:periodId', verifyJWT, verifyEventId, async (req, res, next) => {
+router.put('/:id/periods/:periodId', verifyJWT, verifyEventId, async (req, res, next) => {
 	//const { error } = eventSchema.validate(req.body);
 	// if (error) {
 	// 	return next(new HttpError(400, error.message));

@@ -59,6 +59,8 @@
 
 			<Button :disabled="isSubmitButtonDisabled" :label="$t('buttonUpdatePeriod')" raised type="submit" />
 		</form>
+		<Button :label="$t('deleteButton')" raised severity="danger" @click="confirm($event)"/>
+		<ConfirmDialog></ConfirmDialog>
 		<Toast ref="toast" position="bottom-right" />
 	</div>
 </template>
@@ -67,6 +69,7 @@
 import { getEvent, updateEventById } from '@/services/eventServices.js';
 import { getAllMembersByFamilyId } from "@/services/memberServices.js";
 import { getMemberImage } from "@/services/memberServices.js";
+//import { eventSchema } from "@/schemas/eventSchemas.js";
 import FloatLabel from "primevue/floatlabel";
 import Toast from 'primevue/toast';
 import InputText from 'primevue/inputtext';
@@ -75,11 +78,12 @@ import ToggleSwitch from 'primevue/toggleswitch';
 import Avatar from "primevue/avatar";
 import DatePicker from 'primevue/datepicker';
 import Button from "primevue/button";
+import ConfirmDialog from 'primevue/confirmdialog';
 
 export default {
 	inject: ['token', 'user'],
 	components: {
-		FloatLabel, Toast, InputText, Textarea, ToggleSwitch, Button, Avatar, DatePicker
+		FloatLabel, Toast, InputText, Textarea, ToggleSwitch, Button, Avatar, DatePicker, ConfirmDialog
 	},
 	props: {
 		id: String,
@@ -107,7 +111,7 @@ export default {
 	},
 	computed: {
 		isSubmitButtonDisabled() {
-			return this.name === this.event.name
+			return !this.name || !this.startDate || !this.endDate || this.selectedParticipants.length === 0;
 		}
 	},
 	methods: {
@@ -125,7 +129,6 @@ export default {
 					this.getAllFamilyMembers();
 					this.setDate();
 					this.setTime();
-					
 				} catch (error) {
 					this.event = null;
 					console.error('Erreur:', error);
@@ -141,21 +144,15 @@ export default {
 			}
 		},
 		async submitUpdateEvent() {
-			this.errorMessage = "";
-
 			const eventDetails = {
 				name: this.name,
 				description: this.description,
 				isVisible: this.isVisible,
-				periods: this.periods,
 				members: this.selectedParticipants
 			}
 			try {
 				//await eventSchema.validate(eventDetails);
 				await updateEventById(this.token, eventDetails, this.id);
-
-
-
 				this.$refs.toast.add({
 					severity: 'success',
 					summary: this.$t('toastSuccessTitle'),
@@ -270,7 +267,7 @@ export default {
 		},
 		setDate() {
 			this.startDate = new Date(this.period.startDateTime);
-			this.endDate = new Date(this.period.endDateTime);	
+			this.endDate = new Date(this.period.endDateTime);
 		},
 		setTime() {
 			this.startTime = new Date(this.period.startDateTime).toISOString().split('T')[1].substring(0, 5);
