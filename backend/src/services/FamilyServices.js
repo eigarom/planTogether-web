@@ -26,11 +26,8 @@ class FamilyServices {
 		return code;
 	}
 
-	static async deleteFamily(userId, familyId) {
+	static async deleteFamily(familyId) {
 		await FamilyQueries.deleteFamilyAndGuestMembers(familyId);
-		if (await MemberServices.isMemberInFamily(userId, familyId)) {
-			throw new Error("Erreur lors de la suppression de la famille de l'utilisateur");
-		}
 		if (await FamilyQueries.getFamilyById(familyId)) {
 			throw new Error("Erreur lors de la suppression de la famille");
 		}

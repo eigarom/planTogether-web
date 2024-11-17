@@ -185,7 +185,7 @@ router.delete('/my-family', verifyJWT, async (req, res, next) => {
 		if (!family) {
 			return next(new HttpError(404, `Famille introuvable`));
 		}
-		await FamilyServices.deleteFamily(userId, familyId);
+		await FamilyServices.deleteFamily(familyId);
 
 		const updatedUser = await UserAccountServices.getUserCredentialsByEmail(req.user.email);
 
