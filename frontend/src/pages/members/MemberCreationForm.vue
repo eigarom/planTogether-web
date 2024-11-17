@@ -42,7 +42,7 @@ export default {
 	},
 	computed: {
 		isSubmitButtonDisabled() {
-			return !this.name && !this.color;
+			return !this.name || !this.color;
 		}
 	},
 	methods: {

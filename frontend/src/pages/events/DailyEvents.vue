@@ -1,8 +1,8 @@
 <template>
-    <div>
-        <h2>{{ id }}</h2>
-        <div class="border m-3" v-for="event in events" :key="`${event.id}-${event.period.id}`"> 
-            <router-link :to="`events/${id}/periods/${event.period.id}`">
+    <div class="border m-3">
+        <h2 class="text-xl mb-4 text-center">{{ id }}</h2>
+        <div v-for="event in events" :key="event.id" class="text-l mb-4 text-center"> 
+            <router-link :to="`events/${event.id}/periods/${event.period.id}`">
                 <div>{{ event.name }}</div>
             </router-link>
         </div>

@@ -1,9 +1,12 @@
 <template>
-	<h1>{{ $t('eventsTitle') }}</h1>
-	<Button as="router-link" :label="$t('buttonCreateEvent')" to="/events/add" />
-	<div v-if="!loading">
-		<DailyEvents v-for="date in dates" :key="date.id" :id="date.id" :events="date.events" />
+	<div class="top-20 w-96 gap-3 flex flex-col pt-20 pb-16">
+		<h1 class="text-3xl mb-4 text-center">{{ $t('eventsTitle') }}</h1>
+		<Button as="router-link" :label="$t('buttonCreateEvent')" to="/events/add" />
+		<div v-if="!loading" class="flex flex-col border p-3 rounded-lg gap-3">
+			<DailyEvents v-for="date in dates" :key="date.id" :id="date.id" :events="date.events" />
+		</div>
 	</div>
+
 </template>
 
 <script>
@@ -34,7 +37,6 @@ export default {
 				}
 			}
 			this.generateDates();
-			console.log(this.dates);
 		},
 		generateDates() {
 			this.visibleEvents.forEach(event => {

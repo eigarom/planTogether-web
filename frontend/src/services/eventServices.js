@@ -89,3 +89,21 @@ export async function createEvent(eventDetails, token) {
         throw new Error(result.message || "L'événement n'a pas pu être créé:");
     }
 }
+
+export async function updateEventById(token, eventDetails, eventId) {
+    const response = await fetch(`/api/families/my-family/events/${eventId}`, {
+        method: "PUT",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(eventDetails),
+    });
+    const result = await response.json();
+
+    if (response.ok) {
+        return result;
+    } else {
+        throw new Error(result.message || "L'événement n'a pas pu être mis à jour:");
+    }
+}

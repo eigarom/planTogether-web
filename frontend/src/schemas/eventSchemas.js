@@ -4,26 +4,20 @@ import i18n from "../locales/i18n";
 export const eventSchema = Yup.object({
     name: Yup.string()
         .max(50, () => i18n.global.t('nameMax'))
-        .matches(/^[a-zA-Z0-9- \u00C0-\u00FF]+$/, {
-            message: () => i18n.global.t('nameInvalid')
-        })
         .required(() => i18n.global.t('nameRequired')),
-    isVisible: Yup.boolean()
-        .required(() => i18n.global.t('visibilityRequired')),
+    description: Yup.string()
+        .max(500, () => i18n.global.t('descriptionMax')),
     startDate: Yup.date()
-        .typeError(() => i18n.global.t('dateInvalid'))
-        .required(() => i18n.global.t('dateRequired')),
+        .required("Date début manquante"),
     endDate: Yup.date()
-        .typeError(() => i18n.global.t('dateInvalid'))
-        .required(() => i18n.global.t('dateRequired')),
+        .required("Date de fin manquante"),
     startTime: Yup.string()
-        .matches(/^([01]\d|2[0-3]):([0-5]\d)$/, { //L'heure doit être selon le format HH:mm
-            message: () => i18n.global.t('timeFormatInvalid')
-        })
-        .required(() => i18n.global.t('timeRequired')),
+        .required("Heure début manquante"),
     endTime: Yup.string()
-        .matches(/^([01]\d|2[0-3]):([0-5]\d)$/, { //L'heure doit être selon le format HH:mm
-            message: () => i18n.global.t('timeFormatInvalid')
-        })
-        .required(() => i18n.global.t('timeRequired')),
+        .required("Heure fin manquante"),
+    numberRepeats: Yup.number()
+        .min(0, "Le minimum de répétition est de 0.")
+        .max(365, "Le maximum de répétitions est de 365."),
+    selectedParticipants: Yup.array()
+        .min(1, "Minimum un participant doit être sélectionné")
 });

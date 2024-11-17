@@ -19,6 +19,19 @@
 					<p>Visible uniquement par moi</p>
 					<ToggleSwitch id="isVisible" v-model.trim="checked" />
 				</div>
+				<div class="flex flex-col border p-3 rounded-lg gap-3">
+					<p class="text-lg text-center">Participants</p>
+					<div v-for="member in allMembers" :key="member.id"
+						class="flex flex-inline items-center justify-between border p-3 rounded-lg"
+						:class="{ 'bg-blue-100': isSelected(member) }" @click="toggleMemberSelection(member)"
+						style="cursor: pointer;">
+						<p>{{ member.name }}</p>
+						<Avatar v-if="member.imageUrl" :image="member.imageUrl" shape="circle" size="small"
+							class="border-4" :style="{ borderColor: member.color }" />
+						<Avatar v-else :label="memberInitials(member)" :style="`background-color: ${member.color}`"
+							class="font-semibold text-white" shape="circle" size="small" />
+					</div>
+				</div>
 				<div class="flex items-center gap-3">
 					<FloatLabel variant="on">
 						<DatePicker v-model="startDate" inputId="startDate" showIcon iconDisplay="input" />
@@ -34,12 +47,12 @@
 					<ToggleSwitch id="allDay" v-model.trim="allDay" />
 				</div>
 				<div class="flex items-center gap-3" v-if="!allDay">
-					<DatePicker id="startTime" v-model="startTime" timeOnly fluid :placeholder="placeholderStartTime" />
-					<DatePicker id="endTime" v-model="endTime" timeOnly fluid :placeholder="placeholderEndTime" />
+					<DatePicker id="startTime" v-model="startTime" timeOnly fluid />
+					<DatePicker id="endTime" v-model="endTime" timeOnly fluid />
 				</div>
 				<div class="flex items-center gap-3">
 					<label>Répétition</label>
-					<Select v-model="selectedFrequency" :options="frequencies" optionLabel="name" default="none" />
+					<Select v-model="selectedFrequency" :options="frequencies" optionLabel="name" placeholder="Aucune" />
 				</div>
 				<div class="flex items-center gap-3"
 					v-if="selectedFrequency !== null && selectedFrequency.code !== 'none'">
@@ -51,19 +64,6 @@
 					<label>Alertes</label>
 					<MultiSelect v-model="selectedAlertTypes" :options="alertTypes" optionLabel="name"
 						placeholder="Aucune" :showSelectAll="false" />
-				</div>
-				<div class="flex flex-col border p-3 rounded-lg gap-3">
-					<p class="text-lg text-center">Participants</p>
-					<div v-for="member in allMembers" :key="member.id"
-						class="flex flex-inline items-center justify-between border p-3 rounded-lg"
-						:class="{ 'bg-blue-100': isSelected(member) }" @click="toggleMemberSelection(member)"
-						style="cursor: pointer;">
-						<p>{{ member.name }}</p>
-						<Avatar v-if="member.imageUrl" :image="member.imageUrl" shape="circle" size="small"
-							class="border-4" :style="{ borderColor: member.color }" />
-						<Avatar v-else :label="memberInitials(member)" :style="`background-color: ${member.color}`"
-							class="font-semibold text-white" shape="circle" size="small" />
-					</div>
 				</div>
 				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
@@ -87,7 +87,7 @@ import Button from "primevue/button";
 import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import Toast from 'primevue/toast';
-//import { eventSchema } from "@/schemas/eventSchemas.js";
+import { eventSchema } from "@/schemas/eventSchemas.js";
 import { createEvent } from "@/services/eventServices.js";
 import { getAllMembersByFamilyId } from "@/services/memberServices.js";
 import { getMemberImage } from "@/services/memberServices.js";
@@ -103,14 +103,12 @@ export default {
 			name: '',
 			description: '',
 			checked: false,
-			isVisible: "",
-			startDate: null,
-			endDate: null,
+			isVisible: true,
+			startDate: '',
+			endDate: '',
 			allDay: false,
-			startTime: null,
-			endTime: null,
-			placeholderStartTime: null,
-			placeholderEndTime: null,
+			startTime: '',
+			endTime: '',
 			selectedFrequency: { name: 'Aucune', code: 'none' },
 			frequencies: [
 				{ name: 'Aucune', code: 'none' },
@@ -137,12 +135,35 @@ export default {
 	},
 	computed: {
 		isSubmitButtonDisabled() {
-			return !this.name && !this.startDate;
+			return !this.name || !this.startDate || !this.endDate || this.selectedParticipants.length === 0;
 		}
 	},
 	methods: {
 		async submitCreateEvent() {
-			this.errorMessage = "";
+
+			this.setTimeForAllDay();
+
+			const dataValidation = {
+				name: this.name,
+				description: this.description,
+				startDate: this.startDate,
+				endDate: this.endDate,
+				startTime: this.startTime,
+				endTime: this.endTime,
+				numberRepeats: this.numberRepeats,
+				selectedParticipants: this.selectedParticipants
+			}
+
+			try {
+				await eventSchema.validate(dataValidation);
+			} catch (err) {
+				this.$refs.toast.add({
+					severity: 'error',
+					summary: this.$t('toastErrorTitle'),
+					detail: err.message,
+					life: 5000
+				});
+			}
 
 			this.setIsVisible();
 			this.setPeriods();
@@ -154,12 +175,6 @@ export default {
 				periods: this.periods,
 				members: this.selectedParticipants
 			}
-
-			// const { error } = eventSchema.validate({ name: this.name, isVisible: this.isVisible });
-			// if (error) {
-			// 	this.errorMessage = error.message;
-			// 	return
-			// }
 
 			try {
 				await createEvent(eventDetails, this.token);
@@ -176,14 +191,13 @@ export default {
 			}
 		},
 		setPeriods() {
-			this.setTimeForAllDay();
 
 			const initialStartDateTime = this.combineDateTime(this.startDate, this.startTime);
 			const initialEndDateTime = this.combineDateTime(this.endDate, this.endTime);
 
 			this.addToPeriods(initialStartDateTime, initialEndDateTime);
 
-			if (this.selectedFrequency.code !== 'none') {
+			if (this.selectedFrequency.code && this.selectedFrequency.code !== 'none') {
 				this.handleFrequency(this.selectedFrequency.code, initialStartDateTime, initialEndDateTime);
 			}
 
@@ -289,20 +303,6 @@ export default {
 		isSelected(member) {
 			return this.selectedParticipants.includes(member.id);
 		},
-		setPlaceholderStartTime() {
-			const now = new Date();
-
-			const hours = String(now.getHours()).padStart(2, '0');
-			const minutes = String(now.getMinutes()).padStart(2, '0');
-			this.placeholderStartTime = `${hours}:${minutes}`;
-		},
-		setPlaceholderEndTime() {
-			const now = new Date();
-
-			const hours = String(now.getHours() + 1).padStart(2, '0');
-			const minutes = String(now.getMinutes()).padStart(2, '0');
-			this.placeholderEndTime = `${hours}:${minutes}`;
-		},
 		async getAllFamilyMembers() {
 			try {
 				const familyMembers = await getAllMembersByFamilyId(this.token);
@@ -331,12 +331,19 @@ export default {
 			} catch (error) {
 				console.error('Erreur:', error);
 			}
+		},
+		initializeTime() {
+			this.startTime = new Date();
+
+			const now = new Date();
+			const hours = now.getHours();
+
+			this.startTime.setHours(hours);
 		}
 	},
 	mounted() {
-		this.setPlaceholderStartTime();
-		this.setPlaceholderEndTime();
 		this.getAllFamilyMembers();
+		this.initializeTime();
 	},
 	watch: {
 		startDate(newStartDate) {
@@ -350,7 +357,7 @@ export default {
 			this.endTime = endTime;
 		},
 		endTime(newEndTime) {
-			if (newEndTime < this.startTime) {
+			if (newEndTime < this.startTime && this.startDate === this.endDate) {
 				const startTime = new Date(newEndTime);
 				startTime.setHours(startTime.getHours() - 1);
 				this.startTime = startTime;
