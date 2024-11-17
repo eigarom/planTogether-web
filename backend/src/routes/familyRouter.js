@@ -147,10 +147,6 @@ router.put('/quit', verifyJWT, async (req, res, next) => {
 	const familyId = req.user.familyId;
 
 	try {
-		const family = await FamilyServices.getFamilyById(familyId);
-		if (!family) {
-			return next(new HttpError(404, `Famille introuvable`));
-		}
 		await FamilyServices.quitFamily(userId, familyId);
 
 		const updatedUser = await UserAccountServices.getUserCredentialsByEmail(req.user.email);

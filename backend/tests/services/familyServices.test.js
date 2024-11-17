@@ -1,9 +1,7 @@
 const FamilyServices = require('../../src/services/FamilyServices');
 
 jest.mock('../../src/queries/FamilyQueries');
-jest.mock('../../src/queries/MemberQueries');
 const mockFamilyQueries = require('../../src/queries/FamilyQueries');
-const mockMembersQueries = require('../../src/queries/MemberQueries');
 
 describe('Test family services', () => {
 	describe('getFamilyById', () => {
@@ -96,20 +94,18 @@ describe('Test family services', () => {
 
 		it('should not delete the family if there are account members', async () => {
 			mockFamilyQueries.getFamilyAccountMembersCount.mockResolvedValue('1');
-			mockMembersQueries.getGuestMembersByFamilyId.mockResolvedValue([]);
 
 			await FamilyServices.deleteFamilyIfNoAccountMembers(familyId);
 
-			expect(mockFamilyQueries.deleteFamily).not.toHaveBeenCalled();
+			expect(mockFamilyQueries.deleteFamilyAndGuestMembers).not.toHaveBeenCalled();
 		});
 
 		it('should delete the family if there are no account members', async () => {
 			mockFamilyQueries.getFamilyAccountMembersCount.mockResolvedValue('0');
-			mockMembersQueries.getGuestMembersByFamilyId.mockResolvedValue([]);
 
 			await FamilyServices.deleteFamilyIfNoAccountMembers(familyId);
 
-			expect(mockFamilyQueries.deleteFamily).toHaveBeenCalledWith(familyId);
+			expect(mockFamilyQueries.deleteFamilyAndGuestMembers).toHaveBeenCalledWith(familyId);
 		});
 	});
 });

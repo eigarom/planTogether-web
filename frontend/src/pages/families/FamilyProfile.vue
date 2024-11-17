@@ -13,10 +13,6 @@
             <Button :disabled="isSubmitButtonDisabled" :label="$t('saveModifications')" raised type="submit" />
         </form>
 
-        <Button :label="$t('quitFamily')" raised severity="danger" @click="submitQuitFamily($event)" />
-        <Button :label="$t('deleteFamilyButton')" raised severity="danger" @click="submitDeleteFamily($event)" />
-        <ConfirmDialog></ConfirmDialog>
-
         <div class="flex items-center justify-between border p-3 rounded-lg">
             <div class="flex flex-col gap-3">
                 <FileUpload auto :chooseLabel="$t('updateImageButton')" class="p-button-outlined" customUpload
@@ -61,6 +57,10 @@
                 <Button icon="pi pi-copy" :label="$t('pasteCode')" @click="copyInviteCode" />
             </div>
         </Dialog>
+
+        <Button :label="$t('quitFamily')" raised severity="danger" @click="submitQuitFamily($event)" />
+        <Button :label="$t('deleteFamilyButton')" raised severity="danger" @click="submitDeleteFamily($event)" />
+        <ConfirmDialog></ConfirmDialog>
 
         <Toast ref="toast" position="bottom-right" />
     </div>
@@ -209,7 +209,7 @@ export default {
                         this.$refs.toast.add({
                             severity: 'error',
                             summary: this.$t('toastErrorTitle'),
-                            detail: this.$t('errorDeleteMessage'),
+                            detail: this.$t('toastErrorQuitFamily'),
                             life: 5000
                         });
                     }

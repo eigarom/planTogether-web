@@ -114,7 +114,7 @@ export async function quitFamily(token) {
 	if (response.ok) {
 		return result;
 	} else {
-		throw new Error(result.message || "La famille n'a pas pu être supprimée");
+		throw new Error(result.message || "La famille n'a pas pu être quittée");
 	}
 }
 

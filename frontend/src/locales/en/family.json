@@ -18,6 +18,7 @@
     "guestMembers": "Guest members",
     "addMember": "Add a member",
     "quitFamily": "Quit family",
+    "toastErrorQuitFamily": "Family could not be left",
     "toastCopiedMessage": "Code copied",
     "toastErrorCopyMessage": "Error copying"
 }

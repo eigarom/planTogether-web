@@ -28,17 +28,9 @@ class FamilyServices {
 
 	static async deleteFamilyIfNoAccountMembers(familyId) {
 		const accountMembersCount = parseInt(await FamilyQueries.getFamilyAccountMembersCount(familyId));
-		const guestMembers = await MemberQueries.getGuestMembersByFamilyId(familyId);
 
 		if (accountMembersCount === 0) {
-			if (guestMembers.length === 0) {
-			await FamilyQueries.deleteFamily(familyId);
-			} else {
-				for (const guestMember of guestMembers) {
-					await MemberQueries.deleteMember(guestMember.id_member);
-				}
-				await FamilyQueries.deleteFamily(familyId);
-			}
+			await FamilyQueries.deleteFamilyAndGuestMembers(familyId);
 		}
 	}
 
@@ -98,23 +90,9 @@ class FamilyServices {
 	}
 
 	static async deleteFamily(userId, familyId) {
-		const accountMembers = await MemberQueries.getAccountMembersByFamilyId(familyId);
-		const guestMembers = await MemberQueries.getGuestMembersByFamilyId(familyId);
-
-		for (const accountMember of accountMembers) {
-			await MemberQueries.updateMemberFamilyId(accountMember.id_member, null, null);
-		}
+		await FamilyQueries.deleteFamilyAndGuestMembers(familyId);
 		if (await MemberServices.isMemberInFamily(userId, familyId)) {
-			throw new Error("Erreur lors de la suppression de la famille");
-		}
-
-		for (const guestMember of guestMembers) {
-			await MemberQueries.deleteMember(guestMember.id_member);
-		}
-		await FamilyQueries.deleteFamily(familyId);
-
-		if(await FamilyQueries.getFamilyById(familyId)) {
-			throw new Error("Erreur lors de la suppression de la famille");
+			throw new Error("Erreur lors de la suppression de la famille de l'utilisateur");
 		}
 	}
 }
