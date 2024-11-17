@@ -178,7 +178,6 @@ router.delete('/my-family/image', verifyJWT, async (req, res, next) => {
 });
 
 router.delete('/my-family', verifyJWT, async (req, res, next) => {
-	const userId = req.user.userId;
 	const familyId = req.user.familyId;
 	try {
 		const family = await FamilyServices.getFamilyById(familyId);
