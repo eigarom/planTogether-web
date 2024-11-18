@@ -107,3 +107,21 @@ export async function updateEventById(token, eventDetails, eventId) {
         throw new Error(result.message || "L'événement n'a pas pu être mis à jour:");
     }
 }
+
+export async function updatePeriodById(token, periodDetails, periodId, eventId) {
+    const response = await fetch(`/api/families/my-family/events/${eventId}/periods/${periodId}`, {
+        method: "PUT",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(periodDetails),
+    });
+    const result = await response.json();
+
+    if (response.ok) {
+        return result;
+    } else {
+        throw new Error(result.message || "L'événement n'a pas pu être mis à jour:");
+    }
+}

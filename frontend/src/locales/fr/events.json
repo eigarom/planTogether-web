@@ -16,5 +16,7 @@
 	"buttonUpdateEvent": "Mettre à jour l'événement",
 	"toastUpdateEventSuccessMessage": "L'événement a été mis à jour",
 	"descriptionMax": "La description ne doit pas dépasser 500 caractères",
-	"buttonUpdatePeriod": "Mettre à jour la période"
+	"buttonUpdatePeriod": "Mettre à jour la période",
+	"toastUpdatePeriodSuccessMessage": "La période a été mise à jour",
+	"eventDetailTitle": "Détails de l'événement"
 }

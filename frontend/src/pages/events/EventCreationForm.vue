@@ -52,7 +52,8 @@
 				</div>
 				<div class="flex items-center gap-3">
 					<label>Répétition</label>
-					<Select v-model="selectedFrequency" :options="frequencies" optionLabel="name" placeholder="Aucune" />
+					<Select v-model="selectedFrequency" :options="frequencies" optionLabel="name"
+						placeholder="Aucune" />
 				</div>
 				<div class="flex items-center gap-3"
 					v-if="selectedFrequency !== null && selectedFrequency.code !== 'none'">
@@ -332,6 +333,14 @@ export default {
 				console.error('Erreur:', error);
 			}
 		},
+		initializeDate() {
+			this.startDate = new Date();
+
+			const now = new Date();
+			const date = now.getDate();
+
+			this.startDate.setDate(date);
+		},
 		initializeTime() {
 			this.startTime = new Date();
 
@@ -343,12 +352,18 @@ export default {
 	},
 	mounted() {
 		this.getAllFamilyMembers();
+		this.initializeDate();
 		this.initializeTime();
 	},
 	watch: {
 		startDate(newStartDate) {
-			if (!this.endDate) {
+			if (!this.endDate || this.endDate < this.startDate) {
 				this.endDate = newStartDate;
+			}
+		},
+		endDate(newEndDate) {
+			if (this.endDate < this.startDate) {
+				this.startDate = newEndDate;
 			}
 		},
 		startTime(newStartTime) {

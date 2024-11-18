@@ -1,5 +1,6 @@
 <template>
 	<div v-if="event" class="top-20 w-96 gap-3 flex flex-col pt-20 pb-16">
+		<h1 class="text-3xl mb-4 text-center">{{ $t('eventDetailTitle') }}</h1>
 		<form id="eventForm" class="flex flex-col gap-5 border p-3 rounded-lg" @submit.prevent="submitUpdateEvent">
 			<div class="flex items-center justify-between">
 				<FloatLabel variant="on" class="w-full">
@@ -59,14 +60,14 @@
 
 			<Button :disabled="isSubmitButtonDisabled" :label="$t('buttonUpdatePeriod')" raised type="submit" />
 		</form>
-		<Button :label="$t('deleteButton')" raised severity="danger" @click="confirm($event)"/>
+		<Button :label="$t('deleteButton')" raised severity="danger" @click="submitDeletePeriod($event)" />
 		<ConfirmDialog></ConfirmDialog>
 		<Toast ref="toast" position="bottom-right" />
 	</div>
 </template>
 
 <script>
-import { getEvent, updateEventById } from '@/services/eventServices.js';
+import { getEvent, updateEventById, updatePeriodById } from '@/services/eventServices.js';
 import { getAllMembersByFamilyId } from "@/services/memberServices.js";
 import { getMemberImage } from "@/services/memberServices.js";
 //import { eventSchema } from "@/schemas/eventSchemas.js";
@@ -105,7 +106,8 @@ export default {
 			endTime: "",
 			selectedParticipants: [],
 			allMembers: [],
-
+			startDateTime: "",
+			endDateTime: "",
 			loading: false
 		}
 	},
@@ -126,6 +128,7 @@ export default {
 					this.period = this.event.period;
 					this.members = this.event.members;
 
+					this.setIsChecked();
 					this.getAllFamilyMembers();
 					this.setDate();
 					this.setTime();
@@ -144,6 +147,8 @@ export default {
 			}
 		},
 		async submitUpdateEvent() {
+			this.setIsVisible();
+
 			const eventDetails = {
 				name: this.name,
 				description: this.description,
@@ -177,26 +182,29 @@ export default {
 				}
 			}
 		},
+		setIsVisible() {
+			if (this.checked) {
+				this.isVisible = false;
+			} else {
+				this.isVisible = true;
+			}
+		},
 		async submitUpdatePeriod() {
+			this.setTimeForAllDay();
 
+			this.setPeriod();
 
-			const eventDetails = {
-				name: this.name,
-				description: this.description,
-				isVisible: this.isVisible,
-				periods: this.periods,
-				members: this.selectedParticipants
+			const periodDetails = {
+				startDateTime: this.startDateTime,
+				endDateTime: this.endDateTime,
+				alerts: []
 			}
 			try {
-				//await eventSchema.validate(eventDetails);
-				await updateEventById(this.token, eventDetails, this.id);
-
-
-
+				await updatePeriodById(this.token, periodDetails, this.periodId, this.id);
 				this.$refs.toast.add({
 					severity: 'success',
 					summary: this.$t('toastSuccessTitle'),
-					detail: this.$t('toastUpdateEventSuccessMessage'),
+					detail: this.$t('toastUpdatePeriodSuccessMessage'),
 					life: 3000
 				});
 			} catch (err) {
@@ -216,6 +224,29 @@ export default {
 					});
 				}
 			}
+		},
+		setPeriod() {
+			this.startDateTime = this.combineDateTime(this.startDate, this.startTime);
+			this.endDateTime = this.combineDateTime(this.endDate, this.endTime);
+		},
+		setTimeForAllDay() {
+			if (this.allDay) { // Si toute la journée a été sélectionnée, régler startTime à minuit et endTime à 23h59
+				if (!this.startTime) this.startTime = new Date();
+				if (!this.endTime) this.endTime = new Date();
+				this.startTime.setHours(0, 0, 0, 0);
+				this.endTime.setHours(23, 59, 0, 0);
+			}
+		},
+		combineDateTime(date, time) {
+			if (!date || !time) return null; // Vérifie si les deux valeurs existent
+
+			// Convertit startDate et startTime en chaînes pour obtenir les parties de date et d'heure
+			const datePart = date.toISOString().split('T')[0]; // YYYY-MM-DD
+
+			const [hours, minutes] = time.split(':');
+
+			// Combine les parties de date et d'heure dans un format ISO
+			return new Date(`${datePart}T${hours}:${minutes}:00.000Z`).toISOString();
 		},
 		memberInitials(member) {
 			return member.name.charAt(0).toUpperCase();
@@ -276,6 +307,32 @@ export default {
 	},
 	mounted() {
 		this.getEventWithToken();
+	},
+	watch: {
+		startDate(newStartDate) {
+			if (!this.endDate || this.endDate < this.startDate) {
+				this.endDate = newStartDate;
+			}
+		},
+		endDate(newEndDate) {
+			if (this.endDate < this.startDate) {
+				this.startDate = newEndDate;
+			}
+		},
+		startTime(newStartTime) {
+			if (this.startTime > this.endTime) {
+				const endTime = new Date(newStartTime);
+				endTime.setHours(endTime.getHours() + 1);
+				this.endTime = endTime;
+			}
+		},
+		endTime(newEndTime) {
+			if (newEndTime < this.startTime && this.startDate === this.endDate) {
+				const startTime = new Date(newEndTime);
+				startTime.setHours(startTime.getHours() - 1);
+				this.startTime = startTime;
+			}
+		}
 	}
 
 }

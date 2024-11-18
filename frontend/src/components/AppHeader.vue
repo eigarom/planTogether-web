@@ -1,5 +1,5 @@
 <template>
-	<div class="relative top-0 left-0 flex items-center justify-between bg-white w-full px-8 py-3 border-b">
+	<div class="fixed top-0 left-0 flex items-center justify-between bg-white w-full px-8 py-3 border-b z-50">
 		<span class="text-xl font-semibold">PLAN<span class="text-blue-300">TOGETHER</span></span>
 		<div class="card flex justify-center">
 			<Button aria-controls="overlay_menu"
