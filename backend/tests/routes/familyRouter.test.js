@@ -57,52 +57,6 @@ describe("Family Routes", () => {
         });
     });
 
-    describe("GET /families/my-family/image", () => {
-        it("should return family image with code 200", async () => {
-            const onePixelTransparentPngImage = Buffer.from(
-                "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=",
-                "base64"
-            );
-            const mockFamilyImageDetails = {
-                imageContent: onePixelTransparentPngImage,
-                imageContentType: "image/jpeg",
-            };
-
-            mockFamilyServices.getFamilyImageContent.mockResolvedValue(
-                mockFamilyImageDetails
-            );
-
-            const response = await request(app)
-                .get("/families/my-family/image")
-                .expect("Content-Type", "image/jpeg")
-                .expect(200);
-
-            expect(response.body).toEqual(mockFamilyImageDetails.imageContent);
-        });
-
-        it("throws return code 404 if user image not found", async () => {
-            mockFamilyServices.getFamilyImageContent.mockResolvedValue(
-                undefined
-            );
-
-            const response = await request(app)
-                .get("/families/my-family/image")
-                .expect(404);
-
-            expect(response.body.message).toEqual(
-                `Image de la famille introuvable`
-            );
-        });
-
-        it("should return 500 if service fails", async () => {
-            mockFamilyServices.getFamilyImageContent.mockRejectedValue(
-                new Error()
-            );
-
-            await request(app).get("/families/my-family/image").expect(500);
-        });
-    });
-
     describe("POST /families", () => {
         it("should return 400 for invalid family name", async () => {
             const response = await request(app)
@@ -282,11 +236,237 @@ describe("Family Routes", () => {
         });
     });
 
-    // describe("PUT /families/my-family/image", () => {}
+    describe("PUT /families/my-family/quit", () => {
+        it("should allow the user to quit the family and return a new token with status 200", async () => {
+            const mockUpdatedUser = {
+                email: "email@example.com",
+                userId: "userId123",
+                familyId: null,
+            };
+            const mockToken = "newMockToken";
 
-    // describe("PUT /families/my-family/quit", () => {}
+            mockFamilyServices.quitFamily.mockResolvedValue();
+            mockUserAccountServices.getUserCredentialsByEmail.mockResolvedValue(
+                mockUpdatedUser
+            );
+            authUtils.generateToken.mockReturnValue(mockToken);
 
-    // describe("DELETE /families/my-family/image", () => {}
+            const response = await request(app)
+                .put("/families/my-family/quit")
+                .expect("Content-Type", /json/)
+                .expect(200);
 
-    // describe("DELETE /families/my-family", () => {}
+            expect(response.body.token).toEqual(mockToken);
+        });
+
+        it("should return 500 if the service fails", async () => {
+            mockFamilyServices.quitFamily.mockRejectedValue(new Error());
+
+            await request(app)
+                .put("/families/my-family/quit")
+                .expect("Content-Type", /json/)
+                .expect(500);
+        });
+    });
+
+    describe("DELETE /families/my-family", () => {
+        it("should allow the user to delete the family and return a new token with status 200", async () => {
+            const mockUpdatedUser = {
+                email: "email@example.com",
+                userId: "userId123",
+                familyId: null,
+            };
+            const mockToken = "newMockToken";
+
+            mockFamilyServices.getFamilyById.mockResolvedValue({});
+            mockFamilyServices.deleteFamily.mockResolvedValue();
+            mockUserAccountServices.getUserCredentialsByEmail.mockResolvedValue(
+                mockUpdatedUser
+            );
+            authUtils.generateToken.mockReturnValue(mockToken);
+
+            const response = await request(app)
+                .delete("/families/my-family")
+                .expect("Content-Type", /json/)
+                .expect(200);
+
+            expect(response.body.token).toEqual(mockToken);
+        });
+
+        it("should return 404 if the family does not exist", async () => {
+            mockFamilyServices.getFamilyById.mockResolvedValue(null);
+
+            const response = await request(app)
+                .delete("/families/my-family")
+                .expect("Content-Type", /json/)
+                .expect(404);
+
+            expect(response.body.message).toEqual("Famille introuvable");
+        });
+
+        it("should return 500 if the service fails", async () => {
+            mockFamilyServices.getFamilyById.mockRejectedValue(new Error());
+
+            await request(app)
+                .delete("/families/my-family")
+                .expect("Content-Type", /json/)
+                .expect(500);
+        });
+    });
+
+    describe("Tests image", () => {
+        describe("GET /families/my-family/image", () => {
+            it("should return family image with code 200", async () => {
+                const onePixelTransparentPngImage = Buffer.from(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=",
+                    "base64"
+                );
+                const mockFamilyImageDetails = {
+                    imageContent: onePixelTransparentPngImage,
+                    imageContentType: "image/jpeg",
+                };
+
+                mockFamilyServices.getFamilyImageContent.mockResolvedValue(
+                    mockFamilyImageDetails
+                );
+
+                const response = await request(app)
+                    .get("/families/my-family/image")
+                    .expect("Content-Type", "image/jpeg")
+                    .expect(200);
+
+                expect(response.body).toEqual(
+                    mockFamilyImageDetails.imageContent
+                );
+            });
+
+            it("throws return code 404 if user image not found", async () => {
+                mockFamilyServices.getFamilyImageContent.mockResolvedValue(
+                    undefined
+                );
+
+                const response = await request(app)
+                    .get("/families/my-family/image")
+                    .expect(404);
+
+                expect(response.body.message).toEqual(
+                    `Image de la famille introuvable`
+                );
+            });
+
+            it("should return 500 if service fails", async () => {
+                mockFamilyServices.getFamilyImageContent.mockRejectedValue(
+                    new Error()
+                );
+
+                await request(app).get("/families/my-family/image").expect(500);
+            });
+        });
+
+        describe("PUT /families/my-family/image", () => {
+            const onePixelTransparentPngImage = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdj+P///38ACfsD/QVDRcoAAAAASUVORK5CYII=", "base64");
+
+            it('should update the family image and return the updated image', async () => {
+                const mockImageInfo = {
+                    imageContent: onePixelTransparentPngImage,
+                    imageContentType: 'image/jpeg'
+                };
+    
+                mockFamilyServices.getFamilyById.mockResolvedValue({});
+                mockFamilyServices.updateFamilyImage.mockResolvedValue(mockImageInfo);
+    
+                const response = await request(app)
+                    .put('/families/my-family/image')
+                    .attach('family-image', onePixelTransparentPngImage, 'image.jpeg')
+                    .expect('Content-Type', /image\/jpeg/)
+                    .expect(200);
+    
+                expect(response.body).toEqual(mockImageInfo.imageContent);
+            });
+    
+            it('should return 400 if validation fails', async () => {
+    
+                const response = await request(app)
+                    .put('/families/my-family/image')
+                    .attach('family-image', onePixelTransparentPngImage, 'invalid.txt')
+                    .expect(400);
+    
+                expect(response.body.message).toBeDefined();
+            });
+    
+            it('should return 404 if family not found', async () => {
+                mockFamilyServices.getFamilyById.mockResolvedValue(null);
+    
+                const response = await request(app)
+                    .put('/families/my-family/image')
+                    .attach('family-image', Buffer.from('new image data'), 'image.png')
+                    .expect(404);
+    
+                expect(response.body.message).toEqual(`L'id familyId ne correspond à aucune famille existante`);
+            });
+    
+            it('should return 500 if new image not found', async () => {
+                mockFamilyServices.getFamilyById.mockResolvedValue({});
+                mockFamilyServices.updateFamilyImage.mockResolvedValue(null);
+    
+                const response = await request(app)
+                    .put('/families/my-family/image')
+                    .attach('family-image', onePixelTransparentPngImage, 'image.jpeg')
+                    .expect(200);
+    
+                expect(response.body).toEqual('');
+            });
+    
+            it('should return 500 if service fails', async () => {
+                mockFamilyServices.getFamilyById.mockRejectedValue(new Error());
+    
+                await request(app)
+                    .put('/families/my-family/image')
+                    .attach('family-image', Buffer.from('new image data'), 'image.png')
+                    .expect(500);
+            });
+        });
+
+        describe("DELETE /families/my-family/image", () => {
+            it('should delete the family image and return an empty object', async () => {
+                mockFamilyServices.getFamilyById.mockResolvedValue({});
+                mockFamilyServices.updateFamilyImage.mockResolvedValue({imageContent: null, imageContentType: null});
+    
+                const response = await request(app)
+                    .delete('/families/my-family/image')
+                    .expect(200);
+    
+                expect(response.body).toEqual({});
+            });
+    
+            it('should return 404 if family not found', async () => {
+                mockFamilyServices.getFamilyById.mockResolvedValue(null);
+    
+                const response = await request(app)
+                    .delete('/families/my-family/image')
+                    .expect(404);
+    
+                expect(response.body.message).toEqual('Famille introuvable');
+            });
+    
+            it('should return 500 if image exists', async () => {
+                mockFamilyServices.getFamilyById.mockResolvedValue({});
+                mockFamilyServices.updateFamilyImage.mockResolvedValue({imageContent: 'image', imageContentType: 'type'});
+    
+                const response = await request(app)
+                    .delete('/families/my-family/image')
+                    .expect(500);
+    
+                expect(response.body.message).toEqual('Erreur lors de la suppression de l\'image');
+            });
+    
+            it('should return 500 if service fails', async () => {
+                mockFamilyServices.getFamilyById.mockRejectedValue(new Error());
+    
+                await request(app)
+                    .delete('/families/my-family/image')
+                    .expect(500);
+            });
+        });  
+    });
 });

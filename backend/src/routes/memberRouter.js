@@ -93,11 +93,6 @@ router.put('/:id/image', verifyJWT, verifyMemberId,
 		}
 
 		try {
-			const member = await MemberServices.getMemberById(req.params.id);
-			if (!member) {
-				return next(new HttpError(404, `Membre introuvable`));
-			}
-
 			const imageInfo = await MemberServices.updateMemberImage(req.params.id, req.file.buffer, req.file.mimetype);
 
 			if (imageInfo) {
@@ -113,11 +108,6 @@ router.put('/:id/image', verifyJWT, verifyMemberId,
 
 router.delete('/:id/image', verifyJWT, verifyMemberId, async (req, res, next) => {
 	try {
-		const member = await MemberServices.getMemberById(req.params.id);
-		if (!member) {
-			return next(new HttpError(404, `Membre introuvable`));
-		}
-
 		const imageInfo = await MemberServices.updateMemberImage(req.params.id, null, null);
 		if (!imageInfo.imageContent && !imageInfo.imageContentType) {
 			res.json({});
@@ -137,11 +127,6 @@ router.put('/:id', verifyJWT, verifyMemberId,
 		}
 		const memberId = req.params.id;
 		try {
-			const member = await MemberServices.getMemberById(memberId);
-			if (!member) {
-				return next(new HttpError(404, `Membre introuvable`));
-			}
-
 			const memberInformations = {
 				id: "" + memberId,
 				name: "" + req.body.name,
@@ -158,13 +143,8 @@ router.put('/:id', verifyJWT, verifyMemberId,
 
 	router.delete('/:id', verifyJWT, verifyMemberId, async (req, res, next) => {
 		try {
-			const member = await MemberServices.getMemberById(req.params.id);
-			if (!member) {
-				return next(new HttpError(404, `Utilisateur introuvable`));
-			}
-	
-			await MemberServices.deleteMember(member.id);
-	
+			await MemberServices.deleteMember(req.params.id);
+
 			res.json({});
 		} catch (err) {
 			next(err);
