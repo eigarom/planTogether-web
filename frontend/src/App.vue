@@ -1,47 +1,95 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+	<AppHeader />
+	<SidebarNavigation v-if="user && family" />
+	<main v-if="!isLoading" class="flex justify-center items-center">
+		<router-view></router-view>
+	</main>
+	<AppFooter />
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
+<script>
+import { computed } from 'vue';
+import SidebarNavigation from './components/SidebarNavigation.vue';
+import { getUserFromToken } from "@/services/userServices.js";
+import { getFamilyFromToken, getFamilyImage } from "@/services/familyServices.js";
+import { getMemberImage } from "@/services/memberServices.js";
+import AppHeader from './components/AppHeader.vue';
+import AppFooter from "@/components/AppFooter.vue";
+
+export default {
+	components: {
+		AppFooter,
+		AppHeader, SidebarNavigation
+	},
+	data() {
+		return {
+			token: '',
+			user: null,
+			family: '',
+			isLoading: true,
+		};
+	},
+	methods: {
+		initializeLanguage() {
+			this.$i18n.locale = this.$cookies.get('lang') || 'fr';
+		},
+		getToken() {
+			this.token = this.$cookies.get('jwtToken');
+		},
+		async getUserDetails() {
+			if (this.token) {
+				try {
+					this.user = await getUserFromToken(this.token);
+					if (this.user) {
+						this.user.imageUrl = await getMemberImage(this.token, this.user.id);
+					} else {
+						this.logout();
+					}
+				} catch (error) {
+					console.error('Erreur:', error);
+				}
+			}
+		},
+		async getFamilyDetails() {
+			if (this.token) {
+				try {
+					this.family = await getFamilyFromToken(this.token);
+					if (this.family) {
+						this.family.imageUrl = await getFamilyImage(this.token, this.family.id);
+					} else {
+						this.$router.push('/families/add-or-join');
+					}
+				} catch (error) {
+					console.error('Erreur:', error);
+				}
+			}
+		},
+		logout() {
+			this.$cookies.remove("jwtToken");
+			window.location.href = "/";
+		},
+		chargeLanguage() {
+			const savedLanguage = this.$cookies.get('language');
+			if (savedLanguage) {
+				this.$i18n.locale = savedLanguage;
+			}
+		}
+	},
+	async created() {
+		this.initializeLanguage();
+		this.getToken();
+		await this.getUserDetails();
+		await this.getFamilyDetails();
+		this.chargeLanguage();
+		this.isLoading = false;
+	},
+	provide() {
+		return {
+			token: computed(() => this.token),
+			user: computed(() => this.user),
+			family: computed(() => this.family),
+			logout: this.logout
+		}
+	}
 }
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
+</script>

@@ -1,11 +1,17 @@
 # planTogether-web
 
-**planTogether** est une application conçue pour simplifier la planification des activités familiales. Face aux emplois du temps souvent chargés des membres d'une famille, coordonner les horaires et les tâches devient un véritable défi. Cette application agit comme un assistant centralisé en regroupant toutes les informations relatives aux événements, aux listes de tâches et aux listes de courses. Elle optimise ainsi l'organisation quotidienne et facilite la communication entre les membres de la famille.
+**planTogether** est une application conçue pour simplifier la planification des activités familiales. Face aux emplois
+du temps souvent chargés des membres d'une famille, coordonner les horaires et les tâches devient un véritable défi.
+Cette application agit comme un assistant centralisé en regroupant toutes les informations relatives aux événements, aux
+listes de tâches et aux listes de courses. Elle optimise ainsi l'organisation quotidienne et facilite la communication
+entre les membres de la famille.
 
 ## Fonctionnalités principales
 
-- **Gestion des événements** : Ajoutez et suivez les événements familiaux avec la possibilité d'attribuer une couleur distincte à chaque membre pour une visualisation plus claire.
-- **Listes de tâches et de courses** : Créez, modifiez et gérez des listes partagées de tâches ou de courses accessibles à tous les membres de la famille, assurant une meilleure collaboration et un suivi simplifié.
+- **Gestion des événements** : Ajoutez et suivez les événements familiaux avec la possibilité d'attribuer une couleur
+  distincte à chaque membre pour une visualisation plus claire.
+- **Listes de tâches et de courses** : Créez, modifiez et gérez des listes partagées de tâches ou de courses accessibles
+  à tous les membres de la famille, assurant une meilleure collaboration et un suivi simplifié.
 
 ## Installation
 
@@ -15,10 +21,12 @@ Depuis le répertoire `database` :
 
 1. Exécutez le script SQL `01_create_database.sql` (par exemple dans pgAdmin) pour créer la base de données.
 2. Choisissez un **nom d'utilisateur** et un **mot de passe** pour l'accès à cette nouvelle base de données.
-3. Exécutez le script `02_create_user.sql` après avoir remplacé `{{DB_USER}}` par le nom d'utilisateur choisi et `{{DB_PASSWORD}}` par le mot de passe.
+3. Exécutez le script `02_create_user.sql` après avoir remplacé `{{DB_USER}}` par le nom d'utilisateur choisi et
+   `{{DB_PASSWORD}}` par le mot de passe.
 4. Exécutez le script `03_create_tables.sql` pour créer les tables nécessaires à l'application.
 5. (Optionnel - pour les tests) Exécutez le script `04_insert_data.sql` pour insérer des données de test.
-6. Exécutez le script `05_grant_backend_user.sql` après avoir remplacé `{{DB_USER}}` par le nom d'utilisateur choisi pour accorder les permissions nécessaires à l'utilisateur de la base de données.
+6. Exécutez le script `05_grant_backend_user.sql` après avoir remplacé `{{DB_USER}}` par le nom d'utilisateur choisi
+   pour accorder les permissions nécessaires à l'utilisateur de la base de données.
 
 ### Back-end (Node.js Express)
 
@@ -29,8 +37,11 @@ Depuis le répertoire `database` :
     DB_DATABASE=plantogether
     DB_USER={{DB_USER}}
     DB_PASSWORD={{DB_PASSWORD}}
+    JWT_SECRET={{Secret}}
     ```
-   Remplacez `{{DB_USER}}` et `{{DB_PASSWORD}}` par les informations choisies lors de la configuration de la base de données.
+   Remplacez `{{DB_USER}}` et `{{DB_PASSWORD}}` par les informations choisies lors de la configuration de la base de
+   données.
+   Remplacer `{{Secret}}`par le code de votre choix.
 
 2. Dans un terminal, placez-vous dans le répertoire `backend`.
 
@@ -57,9 +68,15 @@ Depuis le répertoire `database` :
 
 ## Tests
 
-Pour tester l'application avec un jeu de données préexistant (une famille et un utilisateur), assurez-vous d'avoir exécuté l'étape 5 de l'installation de la base de données.
+Pour tester l'application avec un jeu de données préexistant (une famille et un utilisateur), assurez-vous d'avoir
+exécuté l'étape 5 de l'installation de la base de données.
 
 Utilisez les identifiants suivants pour vous connecter à l'application :
 
 - **Courriel** : diddy_kong@banana.com
-- **Mot de passe** : 12345
+- **Mot de passe** : Motdepasse12345*
+
+## Documentation API
+
+Pour accéder à toutes les informations concernant les endpoints, les méthodes HTTP, et les paramètres associés,
+veuillez consulter la [documentation api](backend/docs/api/RESTapi.md).

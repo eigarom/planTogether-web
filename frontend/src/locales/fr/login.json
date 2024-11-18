@@ -1,0 +1,9 @@
+{
+	"welcome": "Bienvenue",
+	"mail": "Courriel",
+	"password": "Mot de passe",
+	"login": "Se connecter",
+	"noAccount": "Pas encore de compte ?",
+	"subscribe": "Inscrivez-vous",
+	"loginFailed": "Échec de l'authentification"
+}
