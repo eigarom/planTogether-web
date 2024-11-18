@@ -53,7 +53,7 @@ export default {
 				if (err.message === "Code d'invitation invalide ou expiré") {
 					this.errorMessage = this.$t('invalidInviteCode');
 				} else {
-					this.errorMessage = "Échec lors de l'association à la famille.";
+					this.errorMessage = this.$t('joinErrorMessage');
 				}
 			}
 		}
