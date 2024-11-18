@@ -9,6 +9,7 @@
     "inviteCode": "Code d'invitation",
     "pasteCode": "Copier le code",
     "confirmButton": "Confirmer",
+    "invalidInviteCode": "Code d'invitation invalide",
     "deleteFamilyButton": "Supprimer la famille",
     "quitFamilyConfirm": "Voulez-vous vraiment quitter la famille ?",
     "deleteFamilyConfirm": "Voulez-vous vraiment supprimer la famille ?",

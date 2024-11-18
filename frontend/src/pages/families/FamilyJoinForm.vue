@@ -23,7 +23,7 @@ import Button from "primevue/button";
 import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import FloatingTitle from "@/components/AppHeader.vue";
-import { joinFamily } from "@/services/familyServices.js";
+import {joinFamily} from "@/services/familyServices.js";
 
 export default {
 	components: {
@@ -51,7 +51,7 @@ export default {
 				window.location.href = '/';
 			} catch (err) {
 				if (err.message === "Code d'invitation invalide ou expiré") {
-					this.errorMessage = "Code d'invitation invalide ou expiré";
+					this.errorMessage = this.$t('invalidInviteCode');
 				} else {
 					this.errorMessage = "Échec lors de l'association à la famille.";
 				}
