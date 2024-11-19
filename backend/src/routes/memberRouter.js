@@ -119,37 +119,36 @@ router.delete('/:id/image', verifyJWT, verifyMemberId, async (req, res, next) =>
 	}
 });
 
-router.put('/:id', verifyJWT, verifyMemberId,
-	async (req, res, next) => {
-		const {error} = memberSchema.validate(req.body);
-		if (error) {
-			return next(new HttpError(400, error.message));
-		}
-		const memberId = req.params.id;
-		try {
-			const memberInformations = {
-				id: "" + memberId,
-				name: "" + req.body.name,
-				color: "" + req.body.color
-			};
+router.put('/:id', verifyJWT, verifyMemberId, async (req, res, next) => {
+	const {error} = memberSchema.validate(req.body);
+	if (error) {
+		return next(new HttpError(400, error.message));
+	}
+	const memberId = req.params.id;
+	try {
+		const memberInformations = {
+			id: "" + memberId,
+			name: "" + req.body.name,
+			color: "" + req.body.color
+		};
 
-			const memberInfo = await MemberServices.updateMemberInformations(memberInformations);
+		const memberInfo = await MemberServices.updateMemberInformations(memberInformations);
 
-			res.json(memberInfo);
-		} catch (err) {
-			next(err);
-		}
-	});
+		res.json(memberInfo);
+	} catch (err) {
+		next(err);
+	}
+});
 
-	router.delete('/:id', verifyJWT, verifyMemberId, async (req, res, next) => {
-		try {
-			await MemberServices.deleteMember(req.params.id);
+router.delete('/:id', verifyJWT, verifyMemberId, async (req, res, next) => {
+	try {
+		await MemberServices.deleteMember(req.params.id);
 
-			res.json({});
-		} catch (err) {
-			next(err);
-		}
-	});
+		res.json({});
+	} catch (err) {
+		next(err);
+	}
+});
 
 
 module.exports = router;
