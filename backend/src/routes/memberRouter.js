@@ -156,5 +156,20 @@ router.put('/:id', verifyJWT, verifyMemberId,
 		}
 	});
 
+	router.delete('/:id', verifyJWT, verifyMemberId, async (req, res, next) => {
+		try {
+			const member = await MemberServices.getMemberById(req.params.id);
+			if (!member) {
+				return next(new HttpError(404, `Utilisateur introuvable`));
+			}
+	
+			await MemberServices.deleteMember(member.id);
+	
+			res.json({});
+		} catch (err) {
+			next(err);
+		}
+	});
+
 
 module.exports = router;

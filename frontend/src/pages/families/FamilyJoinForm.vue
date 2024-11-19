@@ -1,18 +1,18 @@
 <template>
-	<FloatingTitle/>
+	<FloatingTitle />
 
-	<div class="w-80">
+	<div class="w-80 pt-20">
 		<h1 class="text-3xl mb-8 text-center font-medium">{{ $t('joinFamily') }}</h1>
 		<form id="familyJoinForm" class="flex flex-col gap-5" @submit.prevent="submitJoinFamily">
 
 			<FloatLabel variant="on">
-				<InputText id="inviteCode" v-model.trim="inviteCode" class="w-full"/>
+				<InputText id="inviteCode" v-model.trim="inviteCode" class="w-full" />
 				<label for="inviteCode">{{ $t('inviteCode') }}</label>
 			</FloatLabel>
 
 			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-			<Button :disabled="isButtonDisabled" :label=" $t('confirmButton')" raised type="submit"/>
+			<Button :disabled="isButtonDisabled" :label="$t('confirmButton')" raised type="submit" />
 		</form>
 	</div>
 </template>
@@ -51,13 +51,13 @@ export default {
 				window.location.href = '/';
 			} catch (err) {
 				if (err.message === "Code d'invitation invalide ou expiré") {
-					this.errorMessage = "Code d'invitation invalide ou expiré";
+					this.errorMessage = this.$t('invalidInviteCode');
 				} else {
-					this.errorMessage = "Échec lors de l'association à la famille.";
+					this.errorMessage = this.$t('joinErrorMessage');
 				}
 			}
 		}
 	}
 }
-;
+	;
 </script>

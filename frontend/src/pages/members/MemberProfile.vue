@@ -23,6 +23,8 @@
             </div>
             <img v-if="member.imageUrl" :src="member.imageUrl" alt="Image" class="shadow-md rounded-xl h-24" />
         </div>
+
+        <Button v-if="isGuestMember" :label="$t('deleteButton')" raised severity="danger" @click="confirm($event)" />
         <ConfirmDialog></ConfirmDialog>
         <Toast ref="toast" position="bottom-right" />
     </div>
@@ -37,7 +39,7 @@ import FileUpload from 'primevue/fileupload';
 import Toast from 'primevue/toast';
 import ConfirmDialog from 'primevue/confirmdialog';
 import { memberSchema } from "@/schemas/memberSchemas.js";
-import { getMemberById, getMemberImage, updateMemberById, deleteMemberImage, uploadMemberImage } from "@/services/memberServices.js";
+import { getMemberById, getMemberImage, updateMemberById, deleteMemberImage, uploadMemberImage, getAllMembersByFamilyId, deleteMember } from "@/services/memberServices.js";
 
 export default {
     inject: ['token'],
@@ -52,7 +54,8 @@ export default {
             name: '',
             color: '',
             imageUrl: '',
-            member: null
+            member: null,
+            isGuestMember: false
         };
     },
     computed: {
@@ -122,7 +125,6 @@ export default {
             }
         },
         async submitUpdateMember() {
-            this.errorMessage = "";
 
             if (!this.color.startsWith('#')) {
                 this.color = '#' + this.color;
@@ -162,9 +164,52 @@ export default {
                 }
             }
         },
+        async checkIfGuestMember() {
+            try {
+                const familyMembers = await getAllMembersByFamilyId(this.token);
+                for (const guestMember of familyMembers.guestMembers) {
+                    if (guestMember.id === parseInt(this.id)) {
+                        this.isGuestMember = true;
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        },
+        async confirm(event) {
+            this.$confirm.require({
+                target: event.currentTarget,
+                message: this.$t('deleteMemberConfirm'),
+                icon: 'pi pi-info-circle',
+                rejectProps: {
+                    label: this.$t('cancelButton'),
+                    severity: 'secondary',
+                    outlined: true
+                },
+                acceptProps: {
+                    label: this.$t('deleteButton'),
+                    severity: 'danger'
+                },
+                accept: async () => {
+                    try {
+                        await deleteMember(this.token, this.id);
+                        window.location.href = '/my-family';
+                    } catch {
+                        this.$refs.toast.add({
+                            severity: 'error',
+                            summary: this.$t('toastErrorTitle'),
+                            detail: this.$t('errorDeleteMessage'),
+                            life: 5000
+                        });
+                    }
+                }
+            });
+        }
     },
     created() {
         this.getMemberInformations(this.id);
+        this.checkIfGuestMember();
     }
 };
 </script>

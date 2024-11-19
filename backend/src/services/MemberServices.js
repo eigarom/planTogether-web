@@ -71,6 +71,13 @@ class MemberServices {
 
 		return await this.getMemberImageContent(memberId);
 	}
+
+	static async deleteMember(memberId) {
+		await MemberQueries.deleteMember(memberId);
+		if (await this.getMemberById(memberId)) {
+			throw new Error("Erreur lors de la suppression de l'utilisateur");
+		}
+	}
 }
 
 module.exports = MemberServices;

@@ -125,3 +125,17 @@ export async function updateMemberById(token, memberInformations, memberId) {
 		throw new Error(result.message || "L'utilisateur n'a pas pu être mis à jour:");
 	}
 }
+
+export async function deleteMember(token, memberId) {
+	const response = await fetch(`/api/families/my-family/members/${memberId}`, {
+		method: "DELETE",
+		headers: {
+			'Authorization': `Bearer ${token}`
+		}
+	});
+	const result = await response.json();
+
+	if (!response.ok) {
+		throw new Error(result.message || "Le membre n'a pas pu être supprimé:");
+	}
+}

@@ -96,7 +96,25 @@ export async function joinFamily(inviteCode, token) {
 	if (response.ok) {
 		return result;
 	} else {
-		throw new Error(result.message || "La famille n'a pas pu être rejointe:");
+		throw new Error(result.message || "La famille n'a pas pu être rejointe");
+	}
+}
+
+export async function quitFamily(token) {
+	const response = await fetch("/api/families/my-family/quit", {
+		method: "PUT",
+		headers: {
+			'Authorization': `Bearer ${token}`,
+			"Content-Type": "application/json"
+		},
+		
+	});
+	const result = await response.json();
+
+	if (response.ok) {
+		return result;
+	} else {
+		throw new Error(result.message || "La famille n'a pas pu être quittée");
 	}
 }
 
@@ -113,7 +131,7 @@ export async function createInvitationCode(token) {
 	if (response.ok) {
 		return result;
 	} else {
-		throw new Error(result.message || "Le code d'invitation n,a pas été créé:");
+		throw new Error(result.message || "Le code d'invitation n'a pas été créé");
 	}
 }
 
@@ -144,6 +162,21 @@ export async function deleteFamilyImage(familyId, token) {
 			}
 		});
 	} catch (error) {
-		throw new Error(error || `Erreur lors du chargement de l'image de la famille`);
+		throw new Error(error || `Erreur lors de la suppression de l'image de la famille`);
 	}
+}
+
+export async function deleteFamily(token) {
+		const response = await fetch(`/api/families/my-family`, {
+			method: 'DELETE',
+			headers: {
+				'Authorization': `Bearer ${token}`
+			}
+		});
+		const result = await response.json();
+		if (response.ok) {
+			return result;
+		} else {
+			throw new Error(result.message || "La famille n'a pas pu être supprimée");
+		}
 }
