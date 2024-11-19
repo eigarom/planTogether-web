@@ -68,5 +68,5 @@ jobs:
         with:
           app-name: 'plantogether'
           slot-name: 'Production'
-          package: .
+          package: './backend'
           
