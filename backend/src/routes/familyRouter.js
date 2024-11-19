@@ -142,7 +142,7 @@ router.put('/join', verifyJWT, async (req, res, next) => {
 	}
 });
 
-router.put('/quit', verifyJWT, async (req, res, next) => {
+router.put('/my-family/quit', verifyJWT, async (req, res, next) => {
 	const userId = req.user.userId;
 	const familyId = req.user.familyId;
 

@@ -101,7 +101,7 @@ export async function joinFamily(inviteCode, token) {
 }
 
 export async function quitFamily(token) {
-	const response = await fetch("/api/families/quit", {
+	const response = await fetch("/api/families/my-family/quit", {
 		method: "PUT",
 		headers: {
 			'Authorization': `Bearer ${token}`,

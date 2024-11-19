@@ -1,12 +1,14 @@
 <template>
-	<h1>{{ $t('eventsTitle') }}</h1>
-	<div v-if="!loading">
-		<div v-for="(events, date) in sortedEventsByTime" :key="date">
-			<h2> {{ formatPrettyDate(date) }} </h2>
-			<div>
-				<DailyEvents v-for="event in events" :id="event.id" :key="event.id" :color="event.color"
-							 :name="event.name"
-							 :periods="event.periods"/>
+	<div class="top-20 w-96 gap-3 flex flex-col pt-20 pb-16">
+		<h1 class="text-3xl mb-4 text-center">{{ $t('eventsTitle') }}</h1>
+		<div v-if="!loading">
+			<div v-for="(events, date) in sortedEventsByTime" :key="date">
+				<h2> {{ formatPrettyDate(date) }} </h2>
+				<div>
+					<DailyEvents v-for="event in events" :id="event.id" :key="event.id" :color="event.color"
+								 :name="event.name"
+								 :periods="event.periods"/>
+				</div>
 			</div>
 		</div>
 	</div>

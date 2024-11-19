@@ -1,5 +1,5 @@
 <template>
-	<div v-if="event">
+	<div v-if="event" class="top-20 w-96 gap-3 flex flex-col pt-20 pb-16">
 		<div :style="{ fontSize: '24px' }"> {{ event.name }}</div>
 		<div>{{ $t('description') }} : {{ event.description }}</div>
 		<div>{{ $t('eventColor') }}:
