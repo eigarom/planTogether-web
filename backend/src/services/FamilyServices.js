@@ -6,9 +6,13 @@ const MemberServices = require("./MemberServices");
 class FamilyServices {
 	static async createFamily(family, userId) {
 		const newFamilyId = await FamilyQueries.createFamily(family, userId);
+        const newFamily = await this.getFamilyById(newFamilyId);
 
-		return this.getFamilyById(newFamilyId);
-	}
+        if (!newFamily) {
+            throw new Error('Famille introuvable');
+        }
+        return newFamily;
+    }
 
 	static async createInvitationCode(familyId) {
 		let code;

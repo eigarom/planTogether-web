@@ -9,6 +9,7 @@ const upload = multer({storage: storage});
 const {generateToken} = require('../utils/authUtils');
 const FamilyServices = require("../services/FamilyServices");
 const UserAccountServices = require('../services/UserAccountServices');
+const {imageSchema} = require("../schemas/imageSchemas");
 
 router.get('/my-family', verifyJWT, async (req, res, next) => {
 	try {
@@ -83,7 +84,10 @@ router.put('/my-family/image', verifyJWT,
 	// Cet appel de middleware doit venir après celui de l'authentification.
 	upload.single('family-image'), // Doit correspondre à l'id du champ dans le formulaire html
 	async (req, res, next) => {
-		// const familyId = req.user.familyId;
+		const {error} = imageSchema.validate({file: req.file});
+		if (error) {
+			return next(new HttpError(400, error.message));
+		}
 
 		try {
 			const family = await FamilyServices.getFamilyById(req.user.familyId);
@@ -142,7 +146,7 @@ router.put('/join', verifyJWT, async (req, res, next) => {
 	}
 });
 
-router.put('/quit', verifyJWT, async (req, res, next) => {
+router.put('/my-family/quit', verifyJWT, async (req, res, next) => {
 	const userId = req.user.userId;
 	const familyId = req.user.familyId;
 
