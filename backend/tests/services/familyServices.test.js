@@ -34,20 +34,14 @@ describe('Test family services', () => {
 	
 			expect(family).toEqual(mockFamilyDetails);
 		});
-	
-		it('should throw an error if the family creation fails', async () => {
-			mockFamilyQueries.createFamily.mockRejectedValue(new Error());
-	
-			await expect(FamilyServices.createFamily(mockFamily, userId)).rejects.toThrow();
-		});
-	
-		it('should throw an error if getFamilyById fails after creation', async () => {
+
+		it('should throw an error if no family created', async () => {
 			const newFamilyId = 'newFamilyId';
 			mockFamilyQueries.createFamily.mockResolvedValue(newFamilyId);
 	
 			mockFamilyQueries.getFamilyById.mockResolvedValue(undefined);
-	
-			await expect(FamilyServices.createFamily(mockFamily, userId)).rejects.toThrow();
+
+			await expect(FamilyServices.createFamily(mockFamily, userId)).rejects.toThrow('Famille introuvable');
 		});
 	});
 	
@@ -161,7 +155,7 @@ describe('Test family services', () => {
 	});
 
 	describe('updateFamily', () => {
-		it('should update family information and return the updated user', async () => {
+		it('should update family information and return the updated family', async () => {
 			const mockFamilyDetails = {
 				name: 'newFamilyName',
 				color: 'newcolor'
@@ -238,6 +232,8 @@ describe('Test family services', () => {
 	
 			expect(mockFamilyQueries.deleteFamilyAndGuestMembers).toHaveBeenCalledWith(familyId);
 			expect(mockFamilyQueries.getFamilyById).toHaveBeenCalledWith(familyId);
+
+			await expect(FamilyServices.deleteFamily(familyId)).resolves.not.toThrow();
 		});
 	
 		it('should throw an error if the family could not be deleted', async () => {

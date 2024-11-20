@@ -106,7 +106,6 @@ describe('GET /members/:id', () => {
     });
 });
 
-
 describe('PUT /members/:id', () => {
     it('should update the member details and return the updated member', async () => {
         const mockUpdatedMember = {
@@ -161,7 +160,6 @@ describe('PUT /members/:id', () => {
             .expect(500);
     });
 });
-
 
 describe('DELETE /members/:id', () => {
     it('should delete the member and return an empty object', async () => {

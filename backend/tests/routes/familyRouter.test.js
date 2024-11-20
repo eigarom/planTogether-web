@@ -39,7 +39,7 @@ describe("Family Routes", () => {
             expect(response.body).toEqual(mockFamilyDetails);
         });
 
-        it("should return null if family not found", async () => {
+        it("should return 404 if family not found", async () => {
             mockFamilyServices.getFamilyById.mockResolvedValue(null);
 
             const response = await request(app)
