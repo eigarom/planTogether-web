@@ -9,6 +9,8 @@
     "inviteCode": "Invitation code",
     "pasteCode": "Copy code",
     "confirmButton": "Confirm",
+    "invalidInviteCode": "Invalid invitation code",
+    "joinErrorMessage": "Failed to join the family.",
     "deleteFamilyButton": "Delete family",
     "quitFamilyConfirm": "Do you really want to quit the family?",
     "deleteFamilyConfirm": "Do you really want to delete the family?",
