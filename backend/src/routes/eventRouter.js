@@ -192,7 +192,7 @@ router.delete('/:id', verifyJWT, verifyEventId, async (req, res, next) => {
 	}
 });
 
-router.delete('/:id/:periodId', verifyJWT, verifyEventId, async (req, res, next) => {
+router.delete('/:id/periods/:periodId', verifyJWT, verifyEventId, async (req, res, next) => {
 	const userId = req.user.userId;
 	const eventId = req.params.id;
 	const periodId = req.params.periodId;

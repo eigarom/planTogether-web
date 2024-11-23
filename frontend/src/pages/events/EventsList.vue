@@ -77,49 +77,6 @@ export default {
 				return event.isVisible || isParticipant;
 			});
 		},
-
-		// groupedEventsByDate() {
-		// 	const eventsByDate = {};
-
-		// 	this.visibleEvents.forEach(event => {
-		// 		event.periods.forEach(period => {
-		// 			const date = new Date(period.startDateTime).toLocaleDateString();
-
-		// 			if (!eventsByDate[date]) {
-		// 				eventsByDate[date] = [];
-		// 			}
-
-		// 			eventsByDate[date].push(event);
-		// 		});
-		// 	});
-
-		// 	return eventsByDate;
-		// },
-		// sortedEventsByTime() {
-		// 	const uniqueEvents = new Map();
-
-		// 	this.visibleEvents.forEach(event => {
-		// 		event.periods.forEach(period => {
-		// 			const periodKey = `${event.id}-${period.startDateTime}-${period.endDateTime}`;
-		// 			if (!uniqueEvents.has(periodKey)) {
-		// 				uniqueEvents.set(periodKey, { ...event, periods: [period] });
-		// 			}
-		// 		});
-		// 	});
-
-		// 	const sortedEvents = {};
-
-		// 	uniqueEvents.forEach((event) => {
-		// 		const date = new Date(event.periods[0].startDateTime).toLocaleDateString("fr-FR");
-
-		// 		if (!sortedEvents[date]) {
-		// 			sortedEvents[date] = [];
-		// 		}
-		// 		sortedEvents[date].push(event);
-		// 	});
-
-		// 	return sortedEvents;
-		// }
 	},
 	mounted() {
 		this.getEventsWithToken();
