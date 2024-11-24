@@ -5,21 +5,21 @@
 			<div class="flex items-center justify-between">
 				<FloatLabel variant="on" class="w-full">
 					<InputText id="name" v-model.trim="name" class="w-full" />
-					<label for="name">Nom</label>
+					<label for="name">{{ $t('eventName') }}</label>
 				</FloatLabel>
 			</div>
 			<div>
 				<FloatLabel variant="on">
 					<Textarea id="description" v-model.trim="description" rows="2" class="w-full" />
-					<label for="description">Description</label>
+					<label for="description">{{ $t('description') }}</label>
 				</FloatLabel>
 			</div>
 			<div class="flex items-center gap-3">
-				<p>Visible uniquement par moi</p>
+				<p>{{ $t('visibility') }}</p>
 				<ToggleSwitch id="isVisible" v-model.trim="checked" />
 			</div>
 			<div class="flex flex-col border p-3 rounded-lg gap-3">
-				<p class="text-lg text-center">Participants</p>
+				<p class="text-lg text-center">{{ $t('participants') }}</p>
 				<div v-for="member in allMembers" :key="member.id"
 					class="flex flex-inline items-center justify-between border p-3 rounded-lg"
 					:class="{ 'bg-blue-100': isSelected(member) }" @click="toggleMemberSelection(member)"
@@ -40,15 +40,15 @@
 			<div class="flex items-center gap-3">
 				<FloatLabel variant="on">
 					<DatePicker v-model="startDate" inputId="startDate" showIcon iconDisplay="input" />
-					<label for="startDate">Début</label>
+					<label for="startDate">{{ $t('startDate') }}</label>
 				</FloatLabel>
 				<FloatLabel variant="on">
 					<DatePicker v-model="endDate" inputId="endDate" showIcon iconDisplay="input" />
-					<label for="endDate">Fin</label>
+					<label for="endDate">{{ $t('endDate') }}</label>
 				</FloatLabel>
 			</div>
 			<div class="flex items-center gap-3">
-				<p>Journée entière</p>
+				<p>{{ $t('wholeDay') }}</p>
 				<ToggleSwitch id="allDay" v-model.trim="allDay" />
 			</div>
 			<div class="flex items-center gap-3" v-if="!allDay">

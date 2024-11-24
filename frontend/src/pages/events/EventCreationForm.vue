@@ -1,78 +1,74 @@
 <template>
-	<div class="flex h-full justify-center items-center">
-		<div class="w-96">
-			<h1 class="text-3xl mb-8 text-center">Nouvel événement</h1>
-			<form id="eventForm" class="flex flex-col gap-5" @submit.prevent="submitCreateEvent">
-				<div class="flex items-center justify-between">
-					<FloatLabel variant="on" class="w-full">
-						<InputText id="name" v-model.trim="name" class="w-full" />
-						<label for="name">Nom</label>
-					</FloatLabel>
+	<div class="top-20 w-96 gap-3 flex flex-col pt-20 pb-16">
+		<h1 class="text-3xl mb-4 text-center">{{ $t('newEvent') }}</h1>
+		<form id="eventForm" class="flex flex-col gap-5" @submit.prevent="submitCreateEvent">
+			<div class="flex items-center justify-between">
+				<FloatLabel variant="on" class="w-full">
+					<InputText id="name" v-model.trim="name" class="w-full" />
+					<label for="name">{{ $t('eventName') }}</label>
+				</FloatLabel>
+			</div>
+			<div>
+				<FloatLabel variant="on">
+					<Textarea id="description" v-model.trim="description" rows="2" class="w-full" />
+					<label for="description">{{ $t('description') }}</label>
+				</FloatLabel>
+			</div>
+			<div class="flex items-center gap-3">
+				<p>{{ $t('visibility') }}</p>
+				<ToggleSwitch id="isVisible" v-model.trim="checked" />
+			</div>
+			<div class="flex flex-col border p-3 rounded-lg gap-3">
+				<p class="text-lg text-center">{{ $t('participants') }}</p>
+				<div v-for="member in allMembers" :key="member.id"
+					class="flex flex-inline items-center justify-between border p-3 rounded-lg"
+					:class="{ 'bg-blue-100': isSelected(member) }" @click="toggleMemberSelection(member)"
+					style="cursor: pointer;">
+					<p>{{ member.name }}</p>
+					<Avatar v-if="member.imageUrl" :image="member.imageUrl" shape="circle" size="small" class="border-4"
+						:style="{ borderColor: member.color }" />
+					<Avatar v-else :label="memberInitials(member)" :style="`background-color: ${member.color}`"
+						class="font-semibold text-white" shape="circle" size="small" />
 				</div>
-				<div>
-					<FloatLabel variant="on">
-						<Textarea id="description" v-model.trim="description" rows="2" class="w-full" />
-						<label for="description">Description</label>
-					</FloatLabel>
-				</div>
-				<div class="flex items-center gap-3">
-					<p>Visible uniquement par moi</p>
-					<ToggleSwitch id="isVisible" v-model.trim="checked" />
-				</div>
-				<div class="flex flex-col border p-3 rounded-lg gap-3">
-					<p class="text-lg text-center">Participants</p>
-					<div v-for="member in allMembers" :key="member.id"
-						class="flex flex-inline items-center justify-between border p-3 rounded-lg"
-						:class="{ 'bg-blue-100': isSelected(member) }" @click="toggleMemberSelection(member)"
-						style="cursor: pointer;">
-						<p>{{ member.name }}</p>
-						<Avatar v-if="member.imageUrl" :image="member.imageUrl" shape="circle" size="small"
-							class="border-4" :style="{ borderColor: member.color }" />
-						<Avatar v-else :label="memberInitials(member)" :style="`background-color: ${member.color}`"
-							class="font-semibold text-white" shape="circle" size="small" />
-					</div>
-				</div>
-				<div class="flex items-center gap-3">
-					<FloatLabel variant="on">
-						<DatePicker v-model="startDate" inputId="startDate" showIcon iconDisplay="input" />
-						<label for="startDate">Début</label>
-					</FloatLabel>
-					<FloatLabel variant="on">
-						<DatePicker v-model="endDate" inputId="endDate" showIcon iconDisplay="input" />
-						<label for="endDate">Fin</label>
-					</FloatLabel>
-				</div>
-				<div class="flex items-center gap-3">
-					<p>Journée entière</p>
-					<ToggleSwitch id="allDay" v-model.trim="allDay" />
-				</div>
-				<div class="flex items-center gap-3" v-if="!allDay">
-					<DatePicker id="startTime" v-model="startTime" timeOnly fluid />
-					<DatePicker id="endTime" v-model="endTime" timeOnly fluid />
-				</div>
-				<div class="flex items-center gap-3">
-					<label>Répétition</label>
-					<Select v-model="selectedFrequency" :options="frequencies" optionLabel="name"
-						placeholder="Aucune" />
-				</div>
-				<div class="flex items-center gap-3"
-					v-if="selectedFrequency !== null && selectedFrequency.code !== 'none'">
-					<label for="numberRepeats">Nombre de répétitions</label>
-					<InputNumber v-model="numberRepeats" inputId="numberRepeats" showButtons buttonLayout="vertical"
-						style="width: 10rem" :min="0" :max="365" fluid />
-				</div>
-				<div class="flex items-center gap-3">
-					<label>Alertes</label>
-					<MultiSelect v-model="selectedAlertTypes" :options="alertTypes" optionLabel="name"
-						placeholder="Aucune" :showSelectAll="false" />
-				</div>
-				<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
+			</div>
+			<div class="flex items-center gap-3">
+				<FloatLabel variant="on">
+					<DatePicker v-model="startDate" inputId="startDate" showIcon iconDisplay="input" />
+					<label for="startDate">{{ $t('startDate') }}</label>
+				</FloatLabel>
+				<FloatLabel variant="on">
+					<DatePicker v-model="endDate" inputId="endDate" showIcon iconDisplay="input" />
+					<label for="endDate">{{ $t('endDate') }}</label>
+				</FloatLabel>
+			</div>
+			<div class="flex items-center gap-3">
+				<p>{{ $t('wholeDay') }}</p>
+				<ToggleSwitch id="allDay" v-model.trim="allDay" />
+			</div>
+			<div class="flex items-center gap-3" v-if="!allDay">
+				<DatePicker id="startTime" v-model="startTime" timeOnly fluid />
+				<DatePicker id="endTime" v-model="endTime" timeOnly fluid />
+			</div>
+			<div class="flex items-center gap-3">
+				<label>{{ $t('repeat') }}</label>
+				<Select v-model="selectedFrequency" :options="translatedFrequencies" optionLabel="name" :placeholder="$t('nonePlaceholder')" />
+			</div>
+			<div class="flex items-center gap-3" v-if="selectedFrequency !== null && selectedFrequency.code !== 'none'">
+				<label for="numberRepeats">{{ $t('numberRepeats') }}</label>
+				<InputNumber v-model="numberRepeats" inputId="numberRepeats" showButtons buttonLayout="vertical"
+					style="width: 10rem" :min="0" :max="365" fluid />
+			</div>
+			<div class="flex items-center gap-3">
+				<label>{{ $t('alerts') }}</label>
+				<MultiSelect v-model="selectedAlertTypes" :options="translatedAlertTypes" optionLabel="name" :placeholder="$t('nonePlaceholder')"
+					:showSelectAll="false" />
+			</div>
+			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-				<Button :disabled="isSubmitButtonDisabled" :label="$t('buttonCreateEvent')" raised type="submit" />
-			</form>
+			<Button :disabled="isSubmitButtonDisabled" :label="$t('buttonCreateEvent')" raised type="submit" />
+		</form>
 
-			<Toast ref="toast" position="bottom-right" />
-		</div>
+		<Toast ref="toast" position="bottom-right" />
 	</div>
 </template>
 
@@ -112,20 +108,20 @@ export default {
 			endTime: '',
 			selectedFrequency: { name: 'Aucune', code: 'none' },
 			frequencies: [
-				{ name: 'Aucune', code: 'none' },
-				{ name: 'Quotidienne', code: 'daily' },
-				{ name: 'Hebdomadaire', code: 'weekly' },
-				{ name: 'Mensuelle', code: 'monthly' },
-				{ name: 'Annuelle', code: 'annual' }
+				{ labelKey: 'frequencies.none', code: 'none' },
+				{ labelKey: 'frequencies.daily', code: 'daily' },
+				{ labelKey: 'frequencies.weekly', code: 'weekly' },
+				{ labelKey: 'frequencies.monthly', code: 'monthly' },
+				{ labelKey: 'frequencies.annual', code: 'annual' }
 			],
 			numberRepeats: '',
 			selectedAlertTypes: [],
 			alertTypes: [
-				{ name: '10 minutes avant', code: '10min' },
-				{ name: '30 minutes avant', code: '30min' },
-				{ name: '1 heure avant', code: '1Hour' },
-				{ name: '4 heures avant', code: '4Hour' },
-				{ name: '24 heures avant', code: '24hours' },
+				{ labelKey: 'alertTypes.10min', code: '10min' },
+				{ labelKey: 'alertTypes.30min', code: '30min' },
+				{ labelKey: 'alertTypes.1hour', code: '1hour' },
+				{ labelKey: 'alertTypes.4hours', code: '4hours' },
+				{ labelKey: 'alertTypes.24hours', code: '24hours' },
 			],
 			selectedParticipants: [],
 			allMembers: [],
@@ -137,6 +133,18 @@ export default {
 	computed: {
 		isSubmitButtonDisabled() {
 			return !this.name || !this.startDate || !this.endDate || this.selectedParticipants.length === 0;
+		},
+		translatedFrequencies() {
+			return this.frequencies.map(frequency => ({
+				...alert,
+				name: this.$t(frequency.labelKey) // Traduction dynamique
+			}));
+		},
+		translatedAlertTypes() {
+			return this.alertTypes.map(alert => ({
+				...alert,
+				name: this.$t(alert.labelKey) // Traduction dynamique
+			}));
 		}
 	},
 	methods: {
@@ -272,8 +280,8 @@ export default {
 			const alertCalculation = {
 				'10min': 10 * 60 * 1000,
 				'30min': 30 * 60 * 1000,
-				'1Hour': 60 * 60 * 1000,
-				'4Hour': 4 * 60 * 60 * 1000,
+				'1hour': 60 * 60 * 1000,
+				'4hours': 4 * 60 * 60 * 1000,
 				'24hours': 24 * 60 * 60 * 1000
 			};
 
