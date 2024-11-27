@@ -33,25 +33,30 @@
 			</div>
 			<div class="flex items-center gap-3">
 				<FloatLabel variant="on">
-					<DatePicker v-model="startDate" inputId="startDate" showIcon iconDisplay="input" />
+					<DatePicker v-model="startDate" inputId="startDate" showIcon iconDisplay="input"
+						@update:modelValue="onDateChange" />
 					<label for="startDate">{{ $t('startDate') }}</label>
 				</FloatLabel>
 				<FloatLabel variant="on">
-					<DatePicker v-model="endDate" inputId="endDate" showIcon iconDisplay="input" />
+					<DatePicker v-model="endDate" inputId="endDate" showIcon iconDisplay="input"
+						@update:modelValue="onDateChange" />
 					<label for="endDate">{{ $t('endDate') }}</label>
 				</FloatLabel>
 			</div>
 			<div class="flex items-center gap-3">
 				<p>{{ $t('wholeDay') }}</p>
-				<ToggleSwitch id="allDay" v-model.trim="allDay" />
+				<ToggleSwitch id="allDay" v-model.trim="allDay" @update:modelValue="onDateChange" />
 			</div>
 			<div class="flex items-center gap-3" v-if="!allDay">
-				<DatePicker id="startTime" v-model="startTime" timeOnly fluid />
-				<DatePicker id="endTime" v-model="endTime" timeOnly fluid />
+				<DatePicker id="startTime" v-model="startTime" timeOnly fluid @update:modelValue="onDateChange" />
+				<DatePicker id="endTime" v-model="endTime" timeOnly fluid @update:modelValue="onDateChange" />
 			</div>
+			<Message v-if="!areValidDates" severity="error" icon="pi pi-times-circle" class="mb-2">La date/heure de fin
+				de l'événement doit être après le début!</Message>
 			<div class="flex items-center gap-3">
 				<label>{{ $t('repeat') }}</label>
-				<Select v-model="selectedFrequency" :options="translatedFrequencies" optionLabel="name" :placeholder="$t('nonePlaceholder')" />
+				<Select v-model="selectedFrequency" :options="translatedFrequencies" optionLabel="name"
+					:placeholder="$t('nonePlaceholder')" />
 			</div>
 			<div class="flex items-center gap-3" v-if="selectedFrequency !== null && selectedFrequency.code !== 'none'">
 				<label for="numberRepeats">{{ $t('numberRepeats') }}</label>
@@ -60,8 +65,8 @@
 			</div>
 			<div class="flex items-center gap-3">
 				<label>{{ $t('alerts') }}</label>
-				<MultiSelect v-model="selectedAlertTypes" :options="translatedAlertTypes" optionLabel="name" :placeholder="$t('nonePlaceholder')"
-					:showSelectAll="false" />
+				<MultiSelect v-model="selectedAlertTypes" :options="translatedAlertTypes" optionLabel="name"
+					:placeholder="$t('nonePlaceholder')" :showSelectAll="false" />
 			</div>
 			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
@@ -127,16 +132,17 @@ export default {
 			allMembers: [],
 			periods: [],
 			members: [],
-			errorMessage: "",
+			areValidDates: true,
+			errorMessage: ""
 		};
 	},
 	computed: {
 		isSubmitButtonDisabled() {
-			return !this.name || !this.startDate || !this.endDate || this.selectedParticipants.length === 0;
+			return (!this.name || !this.startDate || !this.endDate || this.selectedParticipants.length === 0 || !this.areValidDates);
 		},
 		translatedFrequencies() {
 			return this.frequencies.map(frequency => ({
-				...alert,
+				...frequency,
 				name: this.$t(frequency.labelKey) // Traduction dynamique
 			}));
 		},
@@ -150,7 +156,16 @@ export default {
 	methods: {
 		async submitCreateEvent() {
 
-			this.setTimeForAllDay();
+			// Empêcher l'envoi si le formulaire n'est pas valide
+			if (this.isSubmitButtonDisabled) {
+				this.$refs.toast.add({
+					severity: 'error',
+					summary: this.$t('toastErrorTitle'),
+					detail: "Le formulaire contient des erreurs. Veuillez vérifier les champs.",
+					life: 5000
+				});
+				return;
+			}
 
 			const dataValidation = {
 				name: this.name,
@@ -356,7 +371,24 @@ export default {
 			const hours = now.getHours();
 
 			this.startTime.setHours(hours);
+		},
+		onDateChange() {
+			this.setTimeForAllDay();
+
+			const initialStartDateTime = this.combineDateTime(this.startDate, this.startTime);
+			const initialEndDateTime = this.combineDateTime(this.endDate, this.endTime);
+
+			this.validateDates(initialStartDateTime, initialEndDateTime)
+		},
+		validateDates(startDateTime, endDateTime) {
+			if (!startDateTime || !endDateTime) {
+				this.areValidDates = true; // Laissez passer tant que l'utilisateur n'a pas rempli toutes les valeurs
+				return;
+			}
+
+			this.areValidDates = endDateTime >= startDateTime;
 		}
+
 	},
 	mounted() {
 		this.getAllFamilyMembers();
@@ -367,23 +399,27 @@ export default {
 		startDate(newStartDate) {
 			if (!this.endDate || this.endDate < this.startDate) {
 				this.endDate = newStartDate;
+				this.onDateChange();
 			}
 		},
 		endDate(newEndDate) {
 			if (this.endDate < this.startDate) {
 				this.startDate = newEndDate;
+				this.onDateChange();
 			}
 		},
 		startTime(newStartTime) {
 			const endTime = new Date(newStartTime);
 			endTime.setHours(endTime.getHours() + 1);
 			this.endTime = endTime;
+			this.onDateChange();
 		},
 		endTime(newEndTime) {
 			if (newEndTime < this.startTime && this.startDate === this.endDate) {
 				const startTime = new Date(newEndTime);
 				startTime.setHours(startTime.getHours() - 1);
 				this.startTime = startTime;
+				this.onDateChange();
 			}
 		}
 	}

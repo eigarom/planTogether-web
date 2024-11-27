@@ -21,3 +21,24 @@ export const eventSchema = Yup.object({
     selectedParticipants: Yup.array()
         .min(1, "Minimum un participant doit être sélectionné")
 });
+
+export const eventOnlySchema = Yup.object({
+    name: Yup.string()
+        .max(50, () => i18n.global.t('nameMax'))
+        .required(() => i18n.global.t('nameRequired')),
+    description: Yup.string()
+        .max(500, () => i18n.global.t('descriptionMax')),
+    selectedParticipants: Yup.array()
+        .min(1, "Minimum un participant doit être sélectionné")
+});
+
+export const eventPeriodSchema = Yup.object({
+    startDate: Yup.date()
+        .required("Date début manquante"),
+    endDate: Yup.date()
+        .required("Date de fin manquante"),
+    startTime: Yup.string()
+        .required("Heure début manquante"),
+    endTime: Yup.string()
+        .required("Heure fin manquante")
+});

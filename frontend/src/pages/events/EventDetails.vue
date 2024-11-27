@@ -33,32 +33,36 @@
 			</div>
 			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-			<Button :disabled="isSubmitButtonDisabled" :label="$t('buttonUpdateEvent')" raised type="submit" />
+			<Button :disabled="isSubmitEventButtonDisabled" :label="$t('buttonUpdateEvent')" raised type="submit" />
 		</form>
 
 		<form id="periodForm" class="flex flex-col gap-5 border p-3 rounded-lg" @submit.prevent="submitUpdatePeriod">
 			<div class="flex items-center gap-3">
 				<FloatLabel variant="on">
-					<DatePicker v-model="startDate" inputId="startDate" showIcon iconDisplay="input" />
+					<DatePicker v-model="startDate" inputId="startDate" showIcon iconDisplay="input"
+						@update:modelValue="onDateChange" />
 					<label for="startDate">{{ $t('startDate') }}</label>
 				</FloatLabel>
 				<FloatLabel variant="on">
-					<DatePicker v-model="endDate" inputId="endDate" showIcon iconDisplay="input" />
+					<DatePicker v-model="endDate" inputId="endDate" showIcon iconDisplay="input"
+						@update:modelValue="onDateChange" />
 					<label for="endDate">{{ $t('endDate') }}</label>
 				</FloatLabel>
 			</div>
 			<div class="flex items-center gap-3">
 				<p>{{ $t('wholeDay') }}</p>
-				<ToggleSwitch id="allDay" v-model.trim="allDay" />
+				<ToggleSwitch id="allDay" v-model.trim="allDay" @update:modelValue="onDateChange" />
 			</div>
 			<div class="flex items-center gap-3" v-if="!allDay">
-				<DatePicker id="startTime" v-model="startTime" timeOnly fluid />
-				<DatePicker id="endTime" v-model="endTime" timeOnly fluid />
+				<DatePicker id="startTime" v-model="startTime" timeOnly fluid @update:modelValue="onDateChange" />
+				<DatePicker id="endTime" v-model="endTime" timeOnly fluid @update:modelValue="onDateChange" />
 			</div>
+			<Message v-if="!areValidDates" severity="error" icon="pi pi-times-circle" class="mb-2">La date/heure de fin
+				de l'événement doit être après le début!</Message>
 
 			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-			<Button :disabled="isSubmitButtonDisabled" :label="$t('buttonUpdatePeriod')" raised type="submit" />
+			<Button :disabled="isSubmitPeriodButtonDisabled" :label="$t('buttonUpdatePeriod')" raised type="submit" />
 		</form>
 		<Button :label="$t('deleteButton')" raised severity="danger" @click="submitDeletePeriod($event)" />
 		<ConfirmDialog></ConfirmDialog>
@@ -70,7 +74,7 @@
 import { getEvent, updateEventById, updatePeriodById } from '@/services/eventServices.js';
 import { getAllMembersByFamilyId } from "@/services/memberServices.js";
 import { getMemberImage } from "@/services/memberServices.js";
-//import { eventSchema } from "@/schemas/eventSchemas.js";
+import { eventOnlySchema, eventPeriodSchema } from "@/schemas/eventSchemas.js";
 import FloatLabel from "primevue/floatlabel";
 import Toast from 'primevue/toast';
 import InputText from 'primevue/inputtext';
@@ -108,12 +112,17 @@ export default {
 			allMembers: [],
 			startDateTime: "",
 			endDateTime: "",
-			loading: false
+			loading: false,
+			areValidDates: true,
+			errorMessage: ""
 		}
 	},
 	computed: {
-		isSubmitButtonDisabled() {
-			return !this.name || !this.startDate || !this.endDate || this.selectedParticipants.length === 0;
+		isSubmitEventButtonDisabled() {
+			return (!this.name || this.selectedParticipants.length === 0);
+		},
+		isSubmitPeriodButtonDisabled() {
+			return (!this.startDate || !this.endDate || !this.areValidDates);
 		}
 	},
 	methods: {
@@ -147,6 +156,17 @@ export default {
 			}
 		},
 		async submitUpdateEvent() {
+			// Empêcher l'envoi si le formulaire n'est pas valide
+			if (this.isSubmitEventButtonDisabled) {
+				this.$refs.toast.add({
+					severity: 'error',
+					summary: this.$t('toastErrorTitle'),
+					detail: "Le formulaire contient des erreurs. Veuillez vérifier les champs.",
+					life: 5000
+				});
+				return;
+			}
+
 			this.setIsVisible();
 
 			const eventDetails = {
@@ -156,7 +176,7 @@ export default {
 				members: this.selectedParticipants
 			}
 			try {
-				//await eventSchema.validate(eventDetails);
+				await eventOnlySchema.validate(eventDetails);
 				await updateEventById(this.token, eventDetails, this.id);
 				this.$refs.toast.add({
 					severity: 'success',
@@ -190,7 +210,34 @@ export default {
 			}
 		},
 		async submitUpdatePeriod() {
-			this.setTimeForAllDay();
+			// Empêcher l'envoi si le formulaire n'est pas valide
+			if (this.isSubmitPeriodButtonDisabled) {
+				this.$refs.toast.add({
+					severity: 'error',
+					summary: this.$t('toastErrorTitle'),
+					detail: "Le formulaire contient des erreurs. Veuillez vérifier les champs.",
+					life: 5000
+				});
+				return;
+			}
+
+			const periodValidation = {
+				startDate: this.startDate,
+				endDate: this.endDate,
+				startTime: this.startTime,
+				endTime: this.endTime
+			}
+
+			try {
+				await eventPeriodSchema.validate(periodValidation);
+			} catch (err) {
+				this.$refs.toast.add({
+					severity: 'error',
+					summary: this.$t('toastErrorTitle'),
+					detail: err.message,
+					life: 5000
+				});
+			}
 
 			this.setPeriod();
 
@@ -304,6 +351,22 @@ export default {
 			this.startTime = new Date(this.period.startDateTime).toISOString().split('T')[1].substring(0, 5);
 			this.endTime = new Date(this.period.endDateTime).toISOString().split('T')[1].substring(0, 5);
 		},
+		onDateChange() {
+			this.setTimeForAllDay();
+
+			const initialStartDateTime = this.combineDateTime(this.startDate, this.startTime);
+			const initialEndDateTime = this.combineDateTime(this.endDate, this.endTime);
+
+			this.validateDates(initialStartDateTime, initialEndDateTime)
+		},
+		validateDates(startDateTime, endDateTime) {
+			if (!startDateTime || !endDateTime) {
+				this.areValidDates = true; // Laissez passer tant que l'utilisateur n'a pas rempli toutes les valeurs
+				return;
+			}
+
+			this.areValidDates = endDateTime >= startDateTime;
+		}
 	},
 	mounted() {
 		this.getEventWithToken();
@@ -312,11 +375,13 @@ export default {
 		startDate(newStartDate) {
 			if (!this.endDate || this.endDate < this.startDate) {
 				this.endDate = newStartDate;
+				this.onDateChange();
 			}
 		},
 		endDate(newEndDate) {
 			if (this.endDate < this.startDate) {
 				this.startDate = newEndDate;
+				this.onDateChange();
 			}
 		},
 		startTime(newStartTime) {
@@ -324,6 +389,7 @@ export default {
 				const endTime = new Date(newStartTime);
 				endTime.setHours(endTime.getHours() + 1);
 				this.endTime = endTime;
+				this.onDateChange();
 			}
 		},
 		endTime(newEndTime) {
@@ -331,6 +397,7 @@ export default {
 				const startTime = new Date(newEndTime);
 				startTime.setHours(startTime.getHours() - 1);
 				this.startTime = startTime;
+				this.onDateChange();
 			}
 		}
 	}
