@@ -34,5 +34,6 @@
 		"4hours": "4 hours before",
 		"24hours": "24 hours before"
 	},
-	"nonePlaceholder": "None"
+	"nonePlaceholder": "None",
+	"datesErrorMessage": "The end of the event must be after the start."
 }

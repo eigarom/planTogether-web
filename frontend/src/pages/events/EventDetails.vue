@@ -57,8 +57,8 @@
 				<DatePicker id="startTime" v-model="startTime" timeOnly fluid @update:modelValue="onDateChange" />
 				<DatePicker id="endTime" v-model="endTime" timeOnly fluid @update:modelValue="onDateChange" />
 			</div>
-			<Message v-if="!areValidDates" severity="error" icon="pi pi-times-circle" class="mb-2">La date/heure de fin
-				de l'événement doit être après le début!</Message>
+			<Message v-if="!areValidDates" severity="error" icon="pi pi-times-circle" class="mb-2"> {{
+				$t('datesErrorMessage') }}</Message>
 
 			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
@@ -84,11 +84,12 @@ import Avatar from "primevue/avatar";
 import DatePicker from 'primevue/datepicker';
 import Button from "primevue/button";
 import ConfirmDialog from 'primevue/confirmdialog';
+import Message from 'primevue/message';
 
 export default {
 	inject: ['token', 'user'],
 	components: {
-		FloatLabel, Toast, InputText, Textarea, ToggleSwitch, Button, Avatar, DatePicker, ConfirmDialog
+		FloatLabel, Toast, InputText, Textarea, ToggleSwitch, Button, Avatar, DatePicker, ConfirmDialog, Message
 	},
 	props: {
 		id: String,
@@ -285,15 +286,40 @@ export default {
 			}
 		},
 		combineDateTime(date, time) {
-			if (!date || !time) return null; // Vérifie si les deux valeurs existent
+			// Vérification que `date` est un objet Date valide
+			if (!(date instanceof Date) || isNaN(date)) {
+				console.error('Date invalide:', date);
+				return null;
+			}
 
-			// Convertit startDate et startTime en chaînes pour obtenir les parties de date et d'heure
-			const datePart = date.toISOString().split('T')[0]; // YYYY-MM-DD
+			let hours, minutes;
 
-			const [hours, minutes] = time.split(':');
+			// Gestion de `time` selon son type
+			if (typeof time === 'string') {
+				// Si `time` est une chaîne au format "HH:mm"
+				const timeParts = time.split(':');
+				if (timeParts.length !== 2 || isNaN(timeParts[0]) || isNaN(timeParts[1])) {
+					console.error('Heure invalide (chaîne) :', time);
+					return null;
+				}
+				hours = parseInt(timeParts[0], 10);
+				minutes = parseInt(timeParts[1], 10);
+			} else if (time instanceof Date && !isNaN(time)) {
+				// Si `time` est un objet `Date`
+				hours = time.getHours();
+				minutes = time.getMinutes();
+			} else {
+				console.error('Heure invalide :', time);
+				return null;
+			}
 
-			// Combine les parties de date et d'heure dans un format ISO
-			return new Date(`${datePart}T${hours}:${minutes}:00.000Z`).toISOString();
+			// Formatage de la partie date
+			const datePart = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; // YYYY-MM-DD
+
+			// Combinaison de la date et de l'heure
+			const combinedDate = new Date(`${datePart}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`);
+
+			return combinedDate; // Retourne un objet Date
 		},
 		memberInitials(member) {
 			return member.name.charAt(0).toUpperCase();
@@ -348,8 +374,12 @@ export default {
 			this.endDate = new Date(this.period.endDateTime);
 		},
 		setTime() {
-			this.startTime = new Date(this.period.startDateTime).toISOString().split('T')[1].substring(0, 5);
-			this.endTime = new Date(this.period.endDateTime).toISOString().split('T')[1].substring(0, 5);
+			const startDate = new Date(this.period.startDateTime);
+			const endDate = new Date(this.period.endDateTime);
+
+			// Formate l'heure en HH:mm
+			this.startTime = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+			this.endTime = endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
 		},
 		onDateChange() {
 			this.setTimeForAllDay();
@@ -370,36 +400,6 @@ export default {
 	},
 	mounted() {
 		this.getEventWithToken();
-	},
-	watch: {
-		startDate(newStartDate) {
-			if (!this.endDate || this.endDate < this.startDate) {
-				this.endDate = newStartDate;
-				this.onDateChange();
-			}
-		},
-		endDate(newEndDate) {
-			if (this.endDate < this.startDate) {
-				this.startDate = newEndDate;
-				this.onDateChange();
-			}
-		},
-		startTime(newStartTime) {
-			if (this.startTime > this.endTime) {
-				const endTime = new Date(newStartTime);
-				endTime.setHours(endTime.getHours() + 1);
-				this.endTime = endTime;
-				this.onDateChange();
-			}
-		},
-		endTime(newEndTime) {
-			if (newEndTime < this.startTime && this.startDate === this.endDate) {
-				const startTime = new Date(newEndTime);
-				startTime.setHours(startTime.getHours() - 1);
-				this.startTime = startTime;
-				this.onDateChange();
-			}
-		}
 	}
 
 }

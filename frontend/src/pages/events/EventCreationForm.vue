@@ -242,14 +242,14 @@ export default {
 		combineDateTime(date, time) {
 			if (!date || !time) return null; // Vérifie si les deux valeurs existent
 
-			// Convertit startDate et startTime en chaînes pour obtenir les parties de date et d'heure
+			// Convertit date et time en chaînes pour obtenir les parties de date et d'heure
 			const datePart = date.toISOString().split('T')[0]; // YYYY-MM-DD
 
 			const hours = String(time.getHours()).padStart(2, '0');
 			const minutes = String(time.getMinutes()).padStart(2, '0');
 
 			// Combine les parties de date et d'heure dans un format ISO
-			return new Date(`${datePart}T${hours}:${minutes}:00.000Z`).toISOString();
+			return new Date(`${datePart}T${hours}:${minutes}:00`);
 		},
 		addToPeriods(startDateTime, endDateTime) {
 			const newPeriod = { "startDateTime": startDateTime, "endDateTime": endDateTime, alerts: [] };

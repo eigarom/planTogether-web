@@ -36,7 +36,7 @@ fourth_insert AS (
 -- Insertion de la période pour l'événement de 'Diddy'
 fifth_insert AS (
     INSERT INTO period (start_date_time, end_date_time, id_event)
-    SELECT '2024-10-23 18:00:00', '2024-10-23 18:15:00', id_event
+    SELECT '2024-10-23 22:00:00', '2024-10-23 22:15:00', id_event
     FROM fourth_insert
     RETURNING id_event
 ),
@@ -58,7 +58,7 @@ biblio_event AS (
 -- Insertion de la période pour l'événement "Biblio"
 biblio_period AS (
     INSERT INTO period (start_date_time, end_date_time, id_event)
-    SELECT '2024-11-05 17:00:00', '2024-11-05 17:15:00', id_event
+    SELECT '2024-11-05 22:00:00', '2024-11-05 22:15:00', id_event
     FROM biblio_event
     RETURNING id_event
 ),
@@ -80,7 +80,7 @@ garage_event AS (
 -- Insertion de la période pour l'événement "Garage"
 garage_period AS (
     INSERT INTO period (start_date_time, end_date_time, id_event)
-    SELECT '2024-11-05 08:30:00', '2024-11-05 10:00:00', id_event
+    SELECT '2024-11-05 13:30:00', '2024-11-05 15:00:00', id_event
     FROM garage_event
     RETURNING id_period
 ),
@@ -94,7 +94,7 @@ participation_garage AS (
 
 alert_garage AS (
     INSERT INTO alert (date_time, id_period)
-    SELECT '2024-11-05 07:30:00', id_period
+    SELECT '2024-11-05 12:30:00', id_period
     FROM garage_period
 ),
 
@@ -124,7 +124,7 @@ dixie_event AS (
 -- Insertion de la période pour l'événement de 'Dixie'
 dixie_period AS (
     INSERT INTO period (start_date_time, end_date_time, id_event)
-    SELECT '2024-11-16 20:00:00', '2024-11-16 22:00:00', id_event
+    SELECT '2024-11-17 01:00:00', '2024-11-17 03:00:00', id_event
     FROM dixie_event
     RETURNING id_event
 )
