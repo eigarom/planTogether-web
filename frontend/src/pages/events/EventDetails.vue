@@ -60,6 +60,12 @@
 			<Message v-if="!areValidDates" severity="error" icon="pi pi-times-circle" class="mb-2"> {{
 				$t('datesErrorMessage') }}</Message>
 
+			<div class="flex items-center gap-3">
+				<label>{{ $t('alerts') }}</label>
+				<MultiSelect v-model="translatedSelectedAlertTypes" :options="translatedAlertTypes" optionLabel="name"
+					:showSelectAll="false" />
+			</div>
+
 			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
 			<Button :disabled="isSubmitPeriodButtonDisabled" :label="$t('buttonUpdatePeriod')" raised type="submit" />
@@ -85,11 +91,12 @@ import DatePicker from 'primevue/datepicker';
 import Button from "primevue/button";
 import ConfirmDialog from 'primevue/confirmdialog';
 import Message from 'primevue/message';
+import MultiSelect from 'primevue/multiselect';
 
 export default {
 	inject: ['token', 'user'],
 	components: {
-		FloatLabel, Toast, InputText, Textarea, ToggleSwitch, Button, Avatar, DatePicker, ConfirmDialog, Message
+		FloatLabel, Toast, InputText, Textarea, ToggleSwitch, Button, Avatar, DatePicker, ConfirmDialog, Message, MultiSelect
 	},
 	props: {
 		id: String,
@@ -113,7 +120,16 @@ export default {
 			allMembers: [],
 			startDateTime: "",
 			endDateTime: "",
-			loading: false,
+			alerts: [],
+			selectedAlertTypes: [],
+			alertTypes: [
+				{ labelKey: 'alertTypes.10min', code: '10min' },
+				{ labelKey: 'alertTypes.30min', code: '30min' },
+				{ labelKey: 'alertTypes.1hour', code: '1hour' },
+				{ labelKey: 'alertTypes.4hours', code: '4hours' },
+				{ labelKey: 'alertTypes.24hours', code: '24hours' },
+			],
+			translatedAlertTypes: [],
 			areValidDates: true,
 			errorMessage: ""
 		}
@@ -124,7 +140,22 @@ export default {
 		},
 		isSubmitPeriodButtonDisabled() {
 			return (!this.startDate || !this.endDate || !this.areValidDates);
-		}
+		},
+		translatedSelectedAlertTypes: {
+			get() {
+				return this.selectedAlertTypes.map((alertType) => ({
+					...alertType,
+					name: this.$t(alertType.labelKey),
+				}));
+			},
+			set(updatedSelection) {
+				this.selectedAlertTypes = updatedSelection.map((alertType) => ({
+					labelKey: alertType.labelKey,
+					code: alertType.code,
+					// On ne met pas à jour `name` ici, car il sera recalculé dynamiquement
+				}));
+			},
+		},
 	},
 	methods: {
 		async getEventWithToken() {
@@ -140,14 +171,13 @@ export default {
 
 					this.setIsChecked();
 					this.getAllFamilyMembers();
-					this.setDate();
-					this.setTime();
+					this.setDateTime();
+					this.setAlerts();
 				} catch (error) {
 					this.event = null;
 					console.error('Erreur:', error);
 				}
 			}
-			this.loading = false;
 		},
 		setIsChecked() {
 			if (this.isVisible) {
@@ -369,17 +399,54 @@ export default {
 				console.error('Erreur:', error);
 			}
 		},
-		setDate() {
+		setDateTime() {
 			this.startDate = new Date(this.period.startDateTime);
 			this.endDate = new Date(this.period.endDateTime);
-		},
-		setTime() {
-			const startDate = new Date(this.period.startDateTime);
-			const endDate = new Date(this.period.endDateTime);
 
 			// Formate l'heure en HH:mm
-			this.startTime = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-			this.endTime = endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+			this.startTime = this.startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+			this.endTime = this.endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+		},
+		setAlerts() {
+			this.alerts = this.period.alerts;
+			this.selectedAlertTypes = [];
+
+			// Parcours des alertes existantes
+			this.alerts.forEach(alert => {
+				const alertDateTime = new Date(alert.dateTime);
+				const startDateTime = new Date(this.startDate);
+
+				// Calcul de la différence en minutes entre l'alerte et le début
+				const diffInMinutes = Math.round((startDateTime - alertDateTime) / (1000 * 60));
+
+				// Vérifie à quel type d'alerte cette différence correspond
+				const matchingAlertType = this.alertTypes.find(type => {
+					switch (type.code) {
+						case '10min': return diffInMinutes === 10;
+						case '30min': return diffInMinutes === 30;
+						case '1hour': return diffInMinutes === 60;
+						case '4hours': return diffInMinutes === 240;
+						case '24hours': return diffInMinutes === 1440;
+						default: return false;
+					}
+				});
+
+				// Ajoute l'alerte correspondante à la sélection si elle existe
+				if (matchingAlertType) {
+					this.selectedAlertTypes.push({
+						labelKey: matchingAlertType.labelKey,
+						code: matchingAlertType.code,
+						name: this.$t(matchingAlertType.labelKey) // Traduction dynamique du `name`
+					});
+				}
+			});
+		},
+		updateTranslatedAlertTypes() {
+			// Recrée les objets avec les traductions dynamiques
+			this.translatedAlertTypes = this.alertTypes.map(type => ({
+				...type,
+				name: this.$t(type.labelKey) // Utilise le $t pour traduire le champ `name`
+			}));
 		},
 		onDateChange() {
 			this.setTimeForAllDay();
@@ -400,7 +467,15 @@ export default {
 	},
 	mounted() {
 		this.getEventWithToken();
-	}
+	},
+	watch: {
+		'$i18n.locale': {
+			handler() {
+				this.updateTranslatedAlertTypes(); // Mettre à jour la liste des types d'alertes
+			},
+			immediate: true // Met à jour dès que le composant est monté
+		}
+	},
 
 }
 
