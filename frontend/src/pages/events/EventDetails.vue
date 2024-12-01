@@ -130,6 +130,7 @@ export default {
 				{ labelKey: 'alertTypes.24hours', code: '24hours' },
 			],
 			translatedAlertTypes: [],
+			updatedAlerts: [],
 			areValidDates: true,
 			errorMessage: ""
 		}
@@ -256,7 +257,8 @@ export default {
 				startDate: this.startDate,
 				endDate: this.endDate,
 				startTime: this.startTime,
-				endTime: this.endTime
+				endTime: this.endTime,
+				alerts: this.updatedAlerts
 			}
 
 			try {
@@ -275,7 +277,7 @@ export default {
 			const periodDetails = {
 				startDateTime: this.startDateTime,
 				endDateTime: this.endDateTime,
-				alerts: []
+				alerts: this.updatedAlerts
 			}
 			try {
 				await updatePeriodById(this.token, periodDetails, this.periodId, this.id);
@@ -306,6 +308,11 @@ export default {
 		setPeriod() {
 			this.startDateTime = this.combineDateTime(this.startDate, this.startTime);
 			this.endDateTime = this.combineDateTime(this.endDate, this.endTime);
+			if (this.selectedAlertTypes.length > 0) {
+				for (let alert of this.selectedAlertTypes) {
+					this.handleAlerts(alert.code);
+				}
+			}
 		},
 		setTimeForAllDay() {
 			if (this.allDay) { // Si toute la journée a été sélectionnée, régler startTime à minuit et endTime à 23h59
@@ -463,7 +470,26 @@ export default {
 			}
 
 			this.areValidDates = endDateTime >= startDateTime;
-		}
+		},
+		handleAlerts(alertCode) {
+			// Dictionnaire associant les codes d'alerte à la durée en millisecondes
+			const alertCalculation = {
+				'10min': 10 * 60 * 1000,
+				'30min': 30 * 60 * 1000,
+				'1hour': 60 * 60 * 1000,
+				'4hours': 4 * 60 * 60 * 1000,
+				'24hours': 24 * 60 * 60 * 1000
+			};
+
+			// Vérifie si le code d'alerte est valide
+			if (alertCalculation[alertCode] !== undefined) {
+				const startDateTime = new Date(this.startDateTime);
+				const alertTime = new Date(startDateTime.getTime() - alertCalculation[alertCode]);
+				this.updatedAlerts.push(alertTime);
+			} else {
+				console.log("Alerte non reconnue");
+			}
+		},
 	},
 	mounted() {
 		this.getEventWithToken();
