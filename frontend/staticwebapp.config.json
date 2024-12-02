@@ -1,0 +1,11 @@
+{
+	"routes": [
+		{
+			"route": "/api/{*rest}",
+			"rewrite": "/{rest}",
+			"allowedRoles": [
+				"anonymous"
+			]
+		}
+	]
+}
