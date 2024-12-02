@@ -71,6 +71,23 @@ router.get('/:id/periods/:periodId', verifyJWT, verifyEventId, async (req, res, 
 	}
 });
 
+router.get('/:id/periods', verifyJWT, verifyEventId, async (req, res, next) => {
+	const eventId = req.params.id;
+
+	try {
+		const numberOfPeriods = await EventServices.getNumberOfPeriodsByEventId(eventId);
+
+		if (!numberOfPeriods) {
+			return next(new HttpError(404, `Événement ${eventId} introuvable`));
+		}
+
+		res.json(numberOfPeriods);
+
+	} catch (error) {
+		return next(error);
+	}
+});
+
 router.post('/', verifyJWT, async (req, res, next) => {
 	//const { error } = eventSchema.validate(req.body);
 	// if (error) {

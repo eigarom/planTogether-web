@@ -70,14 +70,14 @@
 
 			<Button :disabled="isSubmitPeriodButtonDisabled" :label="$t('buttonUpdatePeriod')" raised type="submit" />
 		</form>
-		<Button :label="$t('deleteButton')" raised severity="danger" @click="submitDeletePeriod($event)" />
+		<Button :label="$t('deleteButton')" raised severity="danger" @click="promptDeleteOption($event)" />
 		<ConfirmDialog></ConfirmDialog>
 		<Toast ref="toast" position="bottom-right" />
 	</div>
 </template>
 
 <script>
-import { getEvent, updateEventById, updatePeriodById } from '@/services/eventServices.js';
+import { getEvent, updateEventById, updatePeriodById, deleteEvent, deletePeriod, getNumberOfPeriodsByEventId } from '@/services/eventServices.js';
 import { getAllMembersByFamilyId } from "@/services/memberServices.js";
 import { getMemberImage } from "@/services/memberServices.js";
 import { eventOnlySchema, eventPeriodSchema } from "@/schemas/eventSchemas.js";
@@ -488,6 +488,93 @@ export default {
 				this.updatedAlerts.push(alertTime);
 			} else {
 				console.log("Alerte non reconnue");
+			}
+		},
+		async getNumberOfPeriods() {
+			try {
+				return await getNumberOfPeriodsByEventId(this.token, this.id);
+			} catch (error) {
+				console.error('Erreur:', error);
+			}
+		},
+		async promptDeleteOption(event) {
+			try {
+				const numberOfPeriods = await this.getNumberOfPeriods();
+				if (numberOfPeriods > 1) {
+					this.$confirm.require({
+						target: event.currentTarget,
+						message: this.$t('deleteChooseOption'),
+						icon: 'pi pi-question-circle',
+						acceptProps: {
+							label: this.$t('deleteEventOption'),
+							severity: 'danger',
+						},
+						rejectProps: {
+							label: this.$t('deletePeriodOption'),
+							severity: 'danger',
+						},
+						accept: async () => {
+							// Suppression de l'événement
+							try {
+								await deleteEvent(this.token, this.id);
+								window.location.href = '/events'; // Redirection
+							} catch (error) {
+								console.error('Erreur lors de la suppression de l\'événement :', error);
+								this.$refs.toast.add({
+									severity: 'error',
+									summary: this.$t('toastErrorTitle'),
+									detail: this.$t('errorDeleteMessage'),
+									life: 5000,
+								});
+							}
+						},
+						reject: async () => {
+							// Suppression de la période
+							try {
+								await deletePeriod(this.token, this.id, this.periodId);
+								window.location.href = '/events';
+							} catch (error) {
+								console.error('Erreur lors de la suppression de la période :', error);
+								this.$refs.toast.add({
+									severity: 'error',
+									summary: this.$t('toastErrorTitle'),
+									detail: this.$t('errorDeleteMessage'),
+									life: 5000,
+								});
+							}
+						},
+					});
+				} else {
+					this.$confirm.require({
+						target: event.currentTarget,
+						message: this.$t('deleteEventConfirm'),
+						icon: 'pi pi-info-circle',
+						rejectProps: {
+							label: this.$t('cancelButton'),
+							severity: 'secondary',
+							outlined: true
+						},
+						acceptProps: {
+							label: this.$t('deleteEventOption'),
+							severity: 'danger'
+						},
+						accept: async () => {
+							try {
+								await deleteEvent(this.token, this.id);
+								window.location.href = '/events';
+							} catch {
+								this.$refs.toast.add({
+									severity: 'error',
+									summary: this.$t('toastErrorTitle'),
+									detail: this.$t('errorDeleteMessage'),
+									life: 5000
+								});
+							}
+						}
+					});
+				}
+			} catch (error) {
+				console.error('Erreur:', error);
 			}
 		},
 	},

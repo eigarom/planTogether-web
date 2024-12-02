@@ -122,6 +122,49 @@ export async function updatePeriodById(token, periodDetails, periodId, eventId) 
     if (response.ok) {
         return result;
     } else {
-        throw new Error(result.message || "L'événement n'a pas pu être mis à jour:");
+        throw new Error(result.message || "La période n'a pas pu être mise à jour:");
+    }
+}
+
+export async function deleteEvent(token, eventId) {
+    const response = await fetch(`/api/families/my-family/events/${eventId}`, {
+        method: "DELETE",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(result.message || "L'événement n'a pas pu être supprimé");
+    }
+}
+
+export async function deletePeriod(token, eventId, periodId) {
+    const response = await fetch(`/api/families/my-family/events/${eventId}/periods/${periodId}`, {
+        method: "DELETE",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(result.message || "La période de l'événement n'a pas pu être supprimée");
+    }
+}
+
+export async function getNumberOfPeriodsByEventId(token, eventId) {
+    const response = await fetch(`/api/families/my-family/events/${eventId}/periods`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    const result = await response.json();
+
+    if (response.ok) {
+        return result.numberOfPeriods;
+    } else {
+        throw new Error(result.message || `Erreur lors de l'obtention du nombre de périodes de l'événement ${eventId}`);
     }
 }

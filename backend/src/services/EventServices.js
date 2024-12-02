@@ -125,6 +125,17 @@ class EventServices {
         return undefined;
     }
 
+    static async getNumberOfPeriodsByEventId(eventId) {
+        const result = await EventQueries.getNumberOfPeriodsByEventId(eventId);
+
+        if (result) {
+            return {
+                numberOfPeriods: result.count
+            }
+        }
+        return undefined;
+    }
+
     static async isEventInFamily(eventId, familyId) {
         return await EventQueries.isEventInFamily(eventId, familyId);
     }

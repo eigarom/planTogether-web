@@ -35,5 +35,10 @@
 		"24hours": "24 hours before"
 	},
 	"nonePlaceholder": "None",
-	"datesErrorMessage": "The end of the event must be after the start."
+	"datesErrorMessage": "The end of the event must be after the start.",
+	"deleteChooseOption": "Do you want to delete the entire event or just the occurrence for this date?",
+	"deleteEventOption": "Delete the event",
+	"deletePeriodOption": "Delete occurrence only",
+	"deleteEventConfirm": "Do you really want to delete the event?",
+	"periodDeletedMessage": "The occurrence has been deleted"
 }

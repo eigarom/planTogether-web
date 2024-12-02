@@ -62,6 +62,16 @@ class EventQueries {
         return result.rows[0];
     }
 
+    static async getNumberOfPeriodsByEventId(eventId) {
+        const result = await pool.query(
+            `SELECT COUNT(id_period)
+            FROM period
+            WHERE id_event = $1`,
+            [eventId]
+        );
+        return result.rows[0];
+    }
+
     static async isEventInFamily(eventId, familyId) {
         const result = await pool.query(
             `SELECT *
