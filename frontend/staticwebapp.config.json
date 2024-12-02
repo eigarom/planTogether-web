@@ -1,16 +1,5 @@
 {
-	"routes": [
-		{
-			"route": "/{*all}",
-			"rewrite": "/api/{all}"
-		}
-	],
 	"navigationFallback": {
-		"rewrite": "/index.html",
-		"exclude": [
-			"/api/*",
-			"/assets/*",
-			"/favicon.ico"
-		]
+		"rewrite": "/index.html"
 	}
 }
