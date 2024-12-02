@@ -1,11 +1,8 @@
 {
 	"routes": [
 		{
-			"route": "/api/",
-			"rewrite": "/",
-			"allowedRoles": [
-				"anonymous"
-			]
+			"route": "/{*all}",
+			"rewrite": "/api/{all}"
 		}
 	],
 	"navigationFallback": {
