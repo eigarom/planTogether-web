@@ -100,4 +100,21 @@ describe('Test user account services', () => {
 				' de l\'utilisateur');
 		});
 	});
+
+	describe('updateUserFamilyId', () => {
+		const userId = 'userId';
+		const familyId = 'familyId';
+
+		beforeEach(() => {
+			mockMemberQueries.updateMemberFamilyId = jest.fn();
+		});
+
+		it('should update the user family ID', async () => {
+			mockMemberQueries.updateMemberFamilyId.mockResolvedValue();
+
+			await UserAccountServices.updateUserFamilyId(userId, familyId);
+
+			expect(mockMemberQueries.updateMemberFamilyId).toHaveBeenCalledWith(userId, familyId, null);
+		});
+	});
 });
