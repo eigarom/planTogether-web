@@ -1,13 +1,4 @@
 {
-	"routes": [
-		{
-			"route": "/api/{*path}",
-			"rewrite": "/{path}",
-			"allowedRoles": [
-				"anonymous"
-			]
-		}
-	],
 	"navigationFallback": {
 		"rewrite": "/index.html"
 	}

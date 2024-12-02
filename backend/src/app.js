@@ -15,6 +15,14 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan("dev"));
 
+// Supprime /api pour Azure
+app.use((req, res, next) => {
+	if (req.path.startsWith('/api/')) {
+		req.url = req.url.replace('/api', '');
+	}
+	next();
+});
+
 app.use('/auth', authRouter);
 app.use('/families', familyRouter);
 app.use('/families/my-family/members', memberRouter);
