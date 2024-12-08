@@ -262,6 +262,16 @@ class EventQueries {
         }
     }
 
+    static async deleteParticipations(eventId, client) {
+        const result = await (client || pool).query(
+            `DELETE
+             FROM participation
+             WHERE id_event = $1`,
+            [eventId]
+        );
+        return result.rowCount > 0;
+    }
+
     static async deleteEvent(eventId) {
         const client = await pool.connect();
 

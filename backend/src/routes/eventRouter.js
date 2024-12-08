@@ -3,7 +3,7 @@ const router = express.Router();
 const HttpError = require("../middlewares/error/HttpError");
 const EventServices = require("../services/EventServices");
 const verifyJWT = require("../middlewares/auth/authMiddleware");
-//const {eventSchema} = require("../schemas/eventSchemas");
+const { eventSchema, eventOnlySchema, periodSchema } = require("../schemas/eventSchemas");
 
 const verifyEventId = async (req, res, next) => {
 	const eventId = req.params.id;
@@ -89,10 +89,10 @@ router.get('/:id/periods', verifyJWT, verifyEventId, async (req, res, next) => {
 });
 
 router.post('/', verifyJWT, async (req, res, next) => {
-	//const { error } = eventSchema.validate(req.body);
-	// if (error) {
-	// 	return next(new HttpError(400, error.message));
-	// }
+	const { error } = eventSchema.validate(req.body);
+	if (error) {
+		return next(new HttpError(400, error.message));
+	}
 	try {
 		const eventDetails = {
 			familyId: req.user.familyId,
@@ -115,10 +115,10 @@ router.post('/', verifyJWT, async (req, res, next) => {
 });
 
 router.put('/:id', verifyJWT, verifyEventId, async (req, res, next) => {
-	//const { error } = eventSchema.validate(req.body);
-	// if (error) {
-	// 	return next(new HttpError(400, error.message));
-	// }
+	const { error } = eventOnlySchema.validate(req.body);
+	if (error) {
+		return next(new HttpError(400, error.message));
+	}
 	const userId = req.user.userId;
 	const eventId = req.params.id;
 
@@ -148,10 +148,10 @@ router.put('/:id', verifyJWT, verifyEventId, async (req, res, next) => {
 });
 
 router.put('/:id/periods/:periodId', verifyJWT, verifyEventId, async (req, res, next) => {
-	//const { error } = eventSchema.validate(req.body);
-	// if (error) {
-	// 	return next(new HttpError(400, error.message));
-	// }
+	const { error } = periodSchema.validate(req.body);
+	if (error) {
+		return next(new HttpError(400, error.message));
+	}
 	const userId = req.user.userId;
 	const eventId = req.params.id;
 	const periodId = req.params.periodId;
