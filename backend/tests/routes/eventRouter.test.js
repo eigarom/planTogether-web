@@ -99,85 +99,6 @@ describe("Event Routes", () => {
         });
     })
 
-    describe("GET /families/my-family/events/:id", () => {
-        it("should return event in json with code 200", async () => {
-            const mockEventDetails =
-            {
-                "id": 3,
-                "name": "Concert",
-                "description": "Aller au concert du soir.",
-                "isVisible": true,
-                "periods": [
-                    {
-                        "id": 3,
-                        "startDateTime": "2024-10-27T20:00:00.000Z",
-                        "endDateTime": "2024-10-27T22:00:00.000Z",
-                        "alerts": []
-                    },
-                    {
-                        "id": 5,
-                        "startDateTime": "2024-10-28T20:00:00.000Z",
-                        "endDateTime": "2024-10-28T22:00:00.000Z",
-                        "alerts": []
-                    }
-                ],
-                "members": [
-                    {
-                        "id": 3,
-                        "name": "Dixie",
-                        "color": "#E677C6"
-                    },
-                    {
-                        "id": 4,
-                        "name": "Diddy",
-                        "color": "#E60514"
-                    }
-                ]
-            }
-
-            mockEventServices.isEventInFamily.mockResolvedValue(true);
-            mockEventServices.getEventById.mockResolvedValue(
-                mockEventDetails
-            );
-
-            const response = await request(app)
-                .get("/families/my-family/events/3")
-                .expect("Content-Type", /json/)
-                .expect(200);
-
-            expect(response.body).toEqual(mockEventDetails);
-        });
-
-        it('should return 403 if event is not in family', async () => {
-            mockEventServices.isEventInFamily.mockResolvedValue(false);
-
-            const response = await request(app)
-                .get("/families/my-family/events/3")
-                .expect(403);
-
-            expect(response.body.message).toEqual('Accès non autorisé aux données de cet événement');
-        });
-
-        it("should return 404 if event not found", async () => {
-            mockEventServices.isEventInFamily.mockResolvedValue(true);
-            mockEventServices.getEventById.mockResolvedValue(null);
-
-            const response = await request(app)
-                .get("/families/my-family/events/3")
-                .expect("Content-Type", /json/)
-                .expect(404);
-
-            expect(response.body.message).toEqual("Événement 3 introuvable");
-        });
-
-        it("should return 500 if service fails", async () => {
-            mockEventServices.isEventInFamily.mockResolvedValue(true);
-            mockEventServices.getEventById.mockRejectedValue(new Error());
-
-            await request(app).get("/families/my-family/events/3").expect(500);
-        });
-    })
-
     describe("GET /families/my-family/events/:id/periods/:periodId", () => {
         it("should return event in json with code 200", async () => {
             const mockEventDetails =
@@ -227,18 +148,6 @@ describe("Event Routes", () => {
             expect(response.body.message).toEqual('Accès non autorisé aux données de cet événement');
         });
 
-        it("should return 404 if event not found", async () => {
-            mockEventServices.isEventInFamily.mockResolvedValue(true);
-            mockEventServices.getEventWithPeriodId.mockResolvedValue(null);
-
-            const response = await request(app)
-                .get("/families/my-family/events/2/periods/2")
-                .expect("Content-Type", /json/)
-                .expect(404);
-
-            expect(response.body.message).toEqual("Événement 2 introuvable");
-        });
-
         it("should return 500 if service fails", async () => {
             mockEventServices.isEventInFamily.mockResolvedValue(true);
             mockEventServices.getEventWithPeriodId.mockRejectedValue(new Error());
@@ -284,7 +193,7 @@ describe("Event Routes", () => {
                 .expect("Content-Type", /json/)
                 .expect(404);
 
-            expect(response.body.message).toEqual("Événement 7 introuvable");
+            expect(response.body.message).toEqual("L'événement 7 ne contient pas de périodes");
         });
 
         it("should return 500 if service fails", async () => {

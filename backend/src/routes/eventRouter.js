@@ -30,26 +30,6 @@ router.get('/', verifyJWT, async (req, res, next) => {
 	}
 });
 
-router.get('/:id', verifyJWT, verifyEventId, async (req, res, next) => {
-	const userId = req.user.userId;
-	const eventId = req.params.id;
-
-	try {
-		const event = await EventServices.getEventById(eventId);
-
-		if (!event) {
-			return next(new HttpError(404, `Événement ${eventId} introuvable`));
-		}
-		if (event.isVisible || event.members.some(member => member.id === userId)) {
-			res.json(event);
-		} else {
-			return next(new HttpError(403, `L'utilisateur ${userId} n'a pas les droits requis`));
-		}
-	} catch (error) {
-		return next(error);
-	}
-});
-
 router.get('/:id/periods/:periodId', verifyJWT, verifyEventId, async (req, res, next) => {
 	const userId = req.user.userId;
 	const eventId = req.params.id;
@@ -58,9 +38,6 @@ router.get('/:id/periods/:periodId', verifyJWT, verifyEventId, async (req, res, 
 	try {
 		const event = await EventServices.getEventWithPeriodId(eventId, periodId);
 
-		if (!event) {
-			return next(new HttpError(404, `Événement ${eventId} introuvable`));
-		}
 		if (event.isVisible || event.members.some(member => member.id === userId)) {
 			res.json(event);
 		} else {
@@ -78,7 +55,7 @@ router.get('/:id/periods', verifyJWT, verifyEventId, async (req, res, next) => {
 		const numberOfPeriods = await EventServices.getNumberOfPeriodsByEventId(eventId);
 
 		if (!numberOfPeriods) {
-			return next(new HttpError(404, `Événement ${eventId} introuvable`));
+			return next(new HttpError(404, `L'événement ${eventId} ne contient pas de périodes`));
 		}
 
 		res.json(numberOfPeriods);
@@ -124,9 +101,6 @@ router.put('/:id', verifyJWT, verifyEventId, async (req, res, next) => {
 
 	try {
 		const event = await EventServices.getEventById(eventId);
-		if (!event) {
-			return next(new HttpError(404, `Événement introuvable`));
-		}
 
 		if (!event.isVisible && !event.members.some(member => member.id === userId)) {
 			return next(new HttpError(403, `L'utilisateur ${userId} n'a pas les droits requis`));
@@ -159,10 +133,7 @@ router.put('/:id/periods/:periodId', verifyJWT, verifyEventId, async (req, res, 
 	try {
 
 		const event = await EventServices.getEventById(eventId);
-		if (!event) {
-			return next(new HttpError(404, `Événement introuvable`));
-		}
-
+		
 		if (!event.isVisible && !event.members.some(member => member.id === userId)) {
 			return next(new HttpError(403, `L'utilisateur ${userId} n'a pas les droits requis`));
 		}
@@ -193,9 +164,6 @@ router.delete('/:id', verifyJWT, verifyEventId, async (req, res, next) => {
 
 	try {
 		const event = await EventServices.getEventById(eventId);
-		if (!event) {
-			return next(new HttpError(404, `Événement introuvable`));
-		}
 
 		if (!event.isVisible && !event.members.some(member => member.id === userId)) {
 			return next(new HttpError(403, `L'utilisateur ${userId} n'a pas les droits requis`));
@@ -216,9 +184,6 @@ router.delete('/:id/periods/:periodId', verifyJWT, verifyEventId, async (req, re
 
 	try {
 		const event = await EventServices.getEventById(eventId);
-		if (!event) {
-			return next(new HttpError(404, `Événement introuvable`));
-		}
 
 		if (!event.isVisible && !event.members.some(member => member.id === userId)) {
 			return next(new HttpError(403, `L'utilisateur ${userId} n'a pas les droits requis`));
