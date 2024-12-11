@@ -161,7 +161,7 @@ export default {
 				this.$refs.toast.add({
 					severity: 'error',
 					summary: this.$t('toastErrorTitle'),
-					detail: "Le formulaire contient des erreurs. Veuillez vérifier les champs.",
+					detail: this.$t('formContainsErrors'),
 					life: 5000
 				});
 				return;
@@ -204,7 +204,7 @@ export default {
 				await createEvent(eventDetails, this.token);
 				this.$router.push('/events');
 			} catch {
-				this.errorMessage = "Échec lors de la création.";
+				this.errorMessage = this.$t('eventCreationFailure');
 			}
 		},
 		setIsVisible() {

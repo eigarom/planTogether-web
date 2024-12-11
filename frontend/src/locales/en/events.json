@@ -40,5 +40,7 @@
 	"deleteEventOption": "Delete the event",
 	"deletePeriodOption": "Delete occurrence only",
 	"deleteEventConfirm": "Do you really want to delete the event?",
-	"periodDeletedMessage": "The occurrence has been deleted"
+	"periodDeletedMessage": "The occurrence has been deleted",
+	"eventCreationFailure": "Failed to create event.",
+	"formContainsErrors": "The form contains errors. Please check the fields."
 }

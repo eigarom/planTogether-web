@@ -5,7 +5,9 @@ const eventSchema = Joi.object({
         .max(50)
         .required(),
     description: Joi.string()
-        .max(500),
+        .max(500)
+        .allow('')
+        .optional(),
     isVisible: Joi.boolean()
         .required(),
     periods: Joi.array()
@@ -17,8 +19,8 @@ const eventSchema = Joi.object({
                     .items(
                         Joi.date()
                             .less(Joi.ref('...startDateTime'))
-                            .required()
                     )
+                    .min(0)
                     .optional()
             })
         )
@@ -32,7 +34,9 @@ const eventOnlySchema = Joi.object({
         .max(50)
         .required(),
     description: Joi.string()
-        .max(500),
+        .max(500)
+        .allow('')
+        .optional(),
     isVisible: Joi.boolean()
         .required(),
     members: Joi.array()
@@ -46,8 +50,8 @@ const periodSchema = Joi.object({
         .items(
             Joi.date()
                 .less(Joi.ref('...startDateTime'))
-                .required()
         )
+        .min(0)
         .optional()
 });
 

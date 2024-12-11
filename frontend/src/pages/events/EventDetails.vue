@@ -193,7 +193,7 @@ export default {
 				this.$refs.toast.add({
 					severity: 'error',
 					summary: this.$t('toastErrorTitle'),
-					detail: "Le formulaire contient des erreurs. Veuillez vérifier les champs.",
+					detail: this.$t('formContainsErrors'),
 					life: 5000
 				});
 				return;
@@ -247,7 +247,7 @@ export default {
 				this.$refs.toast.add({
 					severity: 'error',
 					summary: this.$t('toastErrorTitle'),
-					detail: "Le formulaire contient des erreurs. Veuillez vérifier les champs.",
+					detail: this.$t('formContainsErrors'),
 					life: 5000
 				});
 				return;

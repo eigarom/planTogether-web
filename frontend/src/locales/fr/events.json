@@ -40,5 +40,7 @@
 	"deleteEventOption": "Supprimer l'événement",
 	"deletePeriodOption": "Supprimer l'occurrence seulement",
 	"deleteEventConfirm": "Voulez-vous vraiment supprimer l'événement?",
-	"periodDeletedMessage": "L'occurrence a bien été supprimée"
+	"periodDeletedMessage": "L'occurrence a bien été supprimée",
+	"eventCreationFailure": "Échec lors de la création de l'événement.",
+	"formContainsErrors": "Le formulaire contient des erreurs. Veuillez vérifier les champs."
 }

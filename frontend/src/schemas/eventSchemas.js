@@ -17,7 +17,11 @@ export const eventSchema = Yup.object({
         .required("Heure fin manquante"),
     numberRepeats: Yup.number()
         .min(0, "Le minimum de répétition est de 0.")
-        .max(365, "Le maximum de répétitions est de 365."),
+        .max(365, "Le maximum de répétitions est de 365.")
+        .transform((value, originalValue) =>
+            originalValue === "" ? 0 : value
+        )
+        .default(0),
     selectedParticipants: Yup.array()
         .min(1, "Minimum un participant doit être sélectionné")
 });
