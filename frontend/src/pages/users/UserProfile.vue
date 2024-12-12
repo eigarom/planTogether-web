@@ -3,16 +3,14 @@
 		<h1 class="text-3xl mb-10">{{ $t('userTitle') }}</h1>
 		<div class="flex flex-col gap-8">
 			<!--Image de l'utilisateur-->
-			<div class="flex gap-8">
+			<div class="flex gap-8 items-center">
 				<Avatar v-if="user.imageUrl" :image="user.imageUrl" alt="Image" class="custom-avatar" shape="circle"/>
 				<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
 						class="custom-avatar font-semibold text-white" shape="circle" size=""/>
-				<div class="flex gap-8 items-center">
-					<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
-								mode="basic" severity="secondary" @select="onImageSelect"/>
-					<Button :label="$t('deleteImageButton')" icon="pi pi-minus" outlined
-							severity="warn" @click="deleteUserImage"/>
-				</div>
+				<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
+							mode="basic" severity="secondary" @select="onImageSelect"/>
+				<Button :label="$t('deleteImageButton')" icon="pi pi-minus" outlined
+						severity="warn" @click="deleteUserImage"/>
 			</div>
 
 			<!--Informations de l'utilisateur-->
