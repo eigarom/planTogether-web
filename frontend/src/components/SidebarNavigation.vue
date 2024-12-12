@@ -14,8 +14,8 @@
 				</div>
 
 				<!--Image de la famille-->
-				<div class="flex flex-col items-cente pb-4">
-					<Image v-if="family.imageUrl" :src="family.imageUrl" alt="Image famille" image-class="rounded-xl"/>
+				<div v-if="family.imageUrl" class="flex flex-col items-cente pb-4">
+					<Image :src="family.imageUrl" alt="Image famille" image-class="rounded-xl"/>
 				</div>
 			</div>
 		</template>
