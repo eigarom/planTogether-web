@@ -1,7 +1,7 @@
 <template>
 	<AppHeader />
 	<SidebarNavigation v-if="user && family"/>
-	<main v-if="!isLoading" class="flex bg-white border rounded-lg p-8">
+	<main v-if="!isLoading" class="flex bg-white border rounded-lg p-8 w-full">
 		<router-view></router-view>
 	</main>
 	<AppFooter />

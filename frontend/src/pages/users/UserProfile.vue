@@ -1,40 +1,40 @@
 <template>
-	<div v-if="user" class="flex flex-col gap-3">
-		<h1 class="text-3xl mb-4">{{ $t('userTitle') }}</h1>
+	<div v-if="user" class="flex flex-col w-full">
+		<h1 class="text-3xl mb-10">{{ $t('userTitle') }}</h1>
 		<div class="flex flex-col gap-8">
 			<div class="flex gap-8">
 				<Avatar v-if="user.imageUrl" :image="user.imageUrl" alt="Image" class="custom-avatar" shape="circle"/>
 				<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
 						class="custom-avatar font-semibold text-white" shape="circle" size=""/>
-
-				<div class="flex flex-col gap-3 justify-center">
-					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
-					<div class="flex gap-5">
-						<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
-									mode="basic" severity="secondary" @select="onImageSelect"/>
-						<Button :label="$t('deleteImageButton')" icon="pi pi-minus" outlined
-								severity="warn" @click="deleteUserImage"/>
-					</div>
+				<div class="flex gap-5 items-center">
+					<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
+								mode="basic" severity="secondary" @select="onImageSelect"/>
+					<Button :label="$t('deleteImageButton')" icon="pi pi-minus" outlined
+							severity="warn" @click="deleteUserImage"/>
 				</div>
 			</div>
 
-			<form id="userProfileForm" class="flex flex-col gap-8 rounded-lg pt-8"
+			<form id="userProfileForm" class="flex flex-col gap-8"
 				  @submit.prevent="submitUpdateUser">
+				<div class="flex gap-8 w-full">
+					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
+					<FloatLabel class="w-full" variant="on">
+						<InputText id="name" v-model.trim="name" class="w-full"/>
+						<label for="name">{{ $t('memberName') }}</label>
+					</FloatLabel>
 
-				<FloatLabel variant="on">
-					<InputText id="name" v-model.trim="name" class="w-full"/>
-					<label for="name">{{ $t('memberName') }}</label>
-				</FloatLabel>
-
-				<FloatLabel class="pb-8" variant="on">
-					<InputText id="email" v-model.trim="email" class="w-full"/>
-					<label for="email">{{ $t('email') }}</label>
-				</FloatLabel>
-
-				<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" raised type="submit"/>
+					<FloatLabel class="w-full" variant="on">
+						<InputText id="email" v-model.trim="email" class="w-full"/>
+						<label for="email">{{ $t('email') }}</label>
+					</FloatLabel>
+				</div>
+				<div class="flex gap-5 justify-end">
+					<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" class="w-32" raised
+							type="submit"/>
+					<Button :label="$t('deleteButton')" class="w-32" raised severity="danger"
+							@click="confirm($event)"/>
+				</div>
 			</form>
-
-			<Button :label="$t('deleteButton')" class="w-full" raised severity="danger" @click="confirm($event)"/>
 		</div>
 
 		<ConfirmDialog></ConfirmDialog>
