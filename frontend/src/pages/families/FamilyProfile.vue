@@ -20,8 +20,10 @@
 							<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined w-48"
 										customUpload
 										mode="basic" severity="secondary" @select="onImageSelect"/>
-							<Button :label="$t('deleteImageButton')" class="w-48" icon="pi pi-minus"
-									outlined severity="warn" @click="deleteFamilyImage"/>
+							<Button :disabled="isDeleteImageButtonDisabled" :label="$t('deleteImageButton')"
+									class="w-48"
+									icon="pi pi-minus" outlined severity="warn"
+									@click="deleteFamilyImage"/>
 						</div>
 					</div>
 
@@ -46,36 +48,48 @@
 					<!--Membres principaux-->
 					<div class="flex flex-col gap-8 bg-white p-5 border rounded-lg w-[310px]">
 						<h2 class="text-2xl text-center">{{ $t('accountMembers') }}</h2>
-						<router-link v-for="accountMember in accountMembers" :key="accountMember.id"
-									 :to="accountMember.id === user.id ? '/profile' : `/members/${accountMember.id}`"
-									 class="flex flex-inline items-center justify-between border p-3 rounded-lg">
-							<p>{{ accountMember.name }}</p>
-							<Avatar v-if="accountMember.imageUrl" :image="accountMember.imageUrl"
-									:style="{ borderColor: accountMember.color }" class="border-4"
-									shape="circle" size="small"/>
-							<Avatar v-else :label="accountMember.name[0].toUpperCase()"
-									:style="`background-color: ${accountMember.color}`" class="font-semibold text-white"
-									shape="circle"
-									size="small"/>
-						</router-link>
+
+						<div>
+							<router-link v-for="accountMember in accountMembers" :key="accountMember.id"
+										 :to="accountMember.id === user.id ? '/profile' : `/members/${accountMember.id}`"
+										 class="flex flex-inline items-center justify-between  p-3 rounded-lg
+									 hover:bg-gray-100">
+								<p>{{ accountMember.name }}</p>
+
+								<Avatar v-if="accountMember.imageUrl" :image="accountMember.imageUrl"
+										:style="{ borderColor: accountMember.color }" class="border-4"
+										shape="circle" size="small"/>
+								<Avatar v-else :label="accountMember.name[0].toUpperCase()"
+										:style="`background-color: ${accountMember.color}`"
+										class="font-semibold text-white"
+										shape="circle"
+										size="small"/>
+							</router-link>
+						</div>
+
 						<Button :label="$t('inviteCode')" icon="pi pi-user-plus" @click="createInvitation"/>
 					</div>
 
 					<!--Membres secondaires-->
 					<div class="flex flex-col p-5 gap-8 bg-white border rounded-lg w-[310px]">
 						<h2 class="text-2xl text-center">{{ $t('guestMembers') }}</h2>
-						<router-link v-for="guestMember in guestMembers" :key="guestMember.id"
-									 :to="`/members/${guestMember.id}`"
-									 class="flex flex-inline items-center justify-between border p-3 rounded-lg">
-							<p>{{ guestMember.name }}</p>
-							<Avatar v-if="guestMember.imageUrl" :image="guestMember.imageUrl"
-									:style="{ borderColor: guestMember.color }" class="border-4"
-									shape="circle" size="small"/>
-							<Avatar v-else :label="guestMember.name[0].toUpperCase()"
-									:style="`background-color: ${guestMember.color}`" class="font-semibold text-white"
-									shape="circle"
-									size="small"/>
-						</router-link>
+
+						<div>
+							<router-link v-for="guestMember in guestMembers" :key="guestMember.id"
+										 :to="`/members/${guestMember.id}`"
+										 class="flex flex-inline items-center justify-between p-3 rounded-lg hover:bg-gray-100">
+								<p>{{ guestMember.name }}</p>
+								<Avatar v-if="guestMember.imageUrl" :image="guestMember.imageUrl"
+										:style="{ borderColor: guestMember.color }" class="border-4"
+										shape="circle" size="small"/>
+								<Avatar v-else :label="guestMember.name[0].toUpperCase()"
+										:style="`background-color: ${guestMember.color}`"
+										class="font-semibold text-white"
+										shape="circle"
+										size="small"/>
+							</router-link>
+						</div>
+
 						<Button :label="$t('addMember')" icon="pi pi-user-plus" @click="navigateToAddMember"/>
 					</div>
 				</div>
@@ -141,6 +155,9 @@ export default {
 	computed: {
 		isSubmitButtonDisabled() {
 			return this.name === this.family.name && this.color === this.family.color;
+		},
+		isDeleteImageButtonDisabled() {
+			return !this.family.imageUrl;
 		}
 	},
 	methods: {
