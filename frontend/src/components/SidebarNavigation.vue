@@ -1,19 +1,22 @@
 <template>
-	<Menu id="sidebar" :model="items" class="fixed left-8 p-1 h-[calc(100%-165px)] z-40 w-60">
+	<Menu id="sidebar" :model="items" class="fixed left-8 z-40 p-4 h-[calc(100%-165px)] w-60">
 		<template #start>
-			<div class="flex flex-col gap-3">
+			<div class="flex flex-col gap-5 p-1">
+				<!--Informations de l'utilisateur-->
 				<div class="inline-flex items-center justify-between">
-					<router-link class="inline-flex items-center px-3 py-2 gap-3 " to="/profile">
+					<router-link class="inline-flex items-center gap-3 " to="/profile">
 						<Avatar v-if="user.imageUrl" :image="user.imageUrl" shape="circle" size="small"/>
 						<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
 								class="font-semibold text-white" shape="circle" size="small"/>
-						<span class="font-black">{{ user.name }}</span>
+						<span class=" text-xl">{{ user.name }}</span>
 					</router-link>
-					<span class="pi pi-sign-out pr-3" @click="logout"></span>
+					<span class="pi pi-sign-out" @click="logout"></span>
 				</div>
-			</div>
-			<div class="flex flex-col items-center pb-2 px-3">
-				<Image v-if="family.imageUrl" :src="family.imageUrl" alt="Image famille" image-class="rounded-xl"/>
+
+				<!--Image de la famille-->
+				<div class="flex flex-col items-cente pb-4">
+					<Image v-if="family.imageUrl" :src="family.imageUrl" alt="Image famille" image-class="rounded-xl"/>
+				</div>
 			</div>
 		</template>
 
