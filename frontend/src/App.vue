@@ -1,18 +1,18 @@
 <template>
 	<AppHeader />
-	<SidebarNavigation v-if="user && family" />
-	<main v-if="!isLoading" class="flex justify-center items-center">
+	<SidebarNavigation v-if="user && family"/>
+	<main v-if="!isLoading" class="flex bg-white border rounded-lg p-8">
 		<router-view></router-view>
 	</main>
 	<AppFooter />
 </template>
 
 <script>
-import { computed } from 'vue';
+import {computed} from 'vue';
 import SidebarNavigation from './components/SidebarNavigation.vue';
-import { getUserFromToken } from "@/services/userServices.js";
-import { getFamilyFromToken, getFamilyImage } from "@/services/familyServices.js";
-import { getMemberImage } from "@/services/memberServices.js";
+import {getUserFromToken} from "@/services/userServices.js";
+import {getFamilyFromToken, getFamilyImage} from "@/services/familyServices.js";
+import {getMemberImage} from "@/services/memberServices.js";
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from "@/components/AppFooter.vue";
 

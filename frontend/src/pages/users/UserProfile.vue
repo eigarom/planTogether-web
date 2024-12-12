@@ -1,15 +1,18 @@
 <template>
-	<div v-if="user" class="flex flex-col gap-3 pt-20 ">
-		<h1 class="text-3xl mb-4 text-center">{{ $t('userTitle') }}</h1>
-		<div class="w-[500px] border p-3 flex flex-col gap-8">
-			<div class="flex gap-8 rounded-lg">
-				<img v-if="user.imageUrl" :src="user.imageUrl" alt="Image" class="shadow-md rounded-xl h-24"/>
-				<div class="flex flex-col gap-3">
+	<div v-if="user" class="flex flex-col gap-3">
+		<h1 class="text-3xl mb-4">{{ $t('userTitle') }}</h1>
+		<div class="flex flex-col gap-8">
+			<div class="flex gap-8">
+				<Avatar v-if="user.imageUrl" :image="user.imageUrl" alt="Image" class="custom-avatar" shape="circle"/>
+				<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
+						class="custom-avatar font-semibold text-white" shape="circle" size=""/>
+
+				<div class="flex flex-col gap-3 justify-center">
 					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
 					<div class="flex gap-5">
 						<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
 									mode="basic" severity="secondary" @select="onImageSelect"/>
-						<Button v-if="user.imageUrl" :label="$t('deleteImageButton')" icon="pi pi-minus" outlined
+						<Button :label="$t('deleteImageButton')" icon="pi pi-minus" outlined
 								severity="warn" @click="deleteUserImage"/>
 					</div>
 				</div>
@@ -50,11 +53,12 @@ import Toast from 'primevue/toast';
 import ConfirmDialog from 'primevue/confirmdialog';
 import {userSchema} from "@/schemas/userSchemas.js";
 import {deleteMemberImage, uploadMemberImage} from "@/services/memberServices.js";
+import Avatar from "primevue/avatar";
 
 export default {
 	inject: ['user', 'token'],
 	components: {
-		InputText, Button, FloatLabel, ColorPicker, FileUpload, Toast, ConfirmDialog
+		Avatar, InputText, Button, FloatLabel, ColorPicker, FileUpload, Toast, ConfirmDialog
 	},
 	data: () => {
 		return {
@@ -66,6 +70,9 @@ export default {
 	computed: {
 		isSubmitButtonDisabled() {
 			return this.name === this.user.name && this.email === this.user.email && this.color === this.user.color;
+		},
+		userInitial() {
+			return this.user.name.charAt(0).toUpperCase();
 		}
 	},
 	methods: {
@@ -197,5 +204,11 @@ export default {
 .custom-color-picker {
 	--p-colorpicker-preview-width: 42px;
 	--p-colorpicker-preview-height: 42px;
+}
+
+.custom-avatar {
+	--p-avatar-width: 100px;
+	--p-avatar-height: 100px;
+	--p-avatar-font-size: 2rem;
 }
 </style>
