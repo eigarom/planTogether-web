@@ -6,7 +6,7 @@
 				<Avatar v-if="user.imageUrl" :image="user.imageUrl" alt="Image" class="custom-avatar" shape="circle"/>
 				<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
 						class="custom-avatar font-semibold text-white" shape="circle" size=""/>
-				<div class="flex gap-5 items-center">
+				<div class="flex gap-8 items-center">
 					<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
 								mode="basic" severity="secondary" @select="onImageSelect"/>
 					<Button :label="$t('deleteImageButton')" icon="pi pi-minus" outlined
@@ -28,7 +28,7 @@
 						<label for="email">{{ $t('email') }}</label>
 					</FloatLabel>
 				</div>
-				<div class="flex gap-5 justify-end">
+				<div class="flex gap-8 justify-end">
 					<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" class="w-32" raised
 							type="submit"/>
 					<Button :label="$t('deleteButton')" class="w-32" raised severity="danger"
