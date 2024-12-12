@@ -2,6 +2,7 @@
 	<div v-if="user" class="flex flex-col w-full">
 		<h1 class="text-3xl mb-10">{{ $t('userTitle') }}</h1>
 		<div class="flex flex-col gap-8">
+			<!--Image de l'utilisateur-->
 			<div class="flex gap-8">
 				<Avatar v-if="user.imageUrl" :image="user.imageUrl" alt="Image" class="custom-avatar" shape="circle"/>
 				<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
@@ -14,8 +15,9 @@
 				</div>
 			</div>
 
-			<form id="userProfileForm" class="flex flex-col gap-8"
-				  @submit.prevent="submitUpdateUser">
+			<!--Informations de l'utilisateur-->
+			<form id="userProfileForm" class="flex flex-col gap-8" @submit.prevent="submitUpdateUser">
+				<!--Inputs-->
 				<div class="flex gap-8 w-full">
 					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
 					<FloatLabel class="w-full" variant="on">
@@ -28,6 +30,8 @@
 						<label for="email">{{ $t('email') }}</label>
 					</FloatLabel>
 				</div>
+
+				<!--Boutons de modification et suppression du compte-->
 				<div class="flex gap-8 justify-end">
 					<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" class="w-32" raised
 							type="submit"/>
