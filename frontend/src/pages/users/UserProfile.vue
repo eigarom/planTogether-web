@@ -1,41 +1,46 @@
 <template>
-	<div v-if="user" class="flex flex-col gap-3 w-80 pt-20">
+	<div v-if="user" class="flex flex-col gap-3 pt-20 ">
 		<h1 class="text-3xl mb-4 text-center">{{ $t('userTitle') }}</h1>
-		<form id="userProfileForm" class="flex flex-col gap-5 border p-3 rounded-lg" @submit.prevent="submitUpdateUser">
-			<div class="flex items-center justify-between">
+		<div class="w-[500px] border p-3 flex flex-col gap-8">
+			<div class="flex gap-8 rounded-lg">
+				<img v-if="user.imageUrl" :src="user.imageUrl" alt="Image" class="shadow-md rounded-xl h-24"/>
+				<div class="flex flex-col gap-3">
+					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
+					<div class="flex gap-5">
+						<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
+									mode="basic" severity="secondary" @select="onImageSelect"/>
+						<Button v-if="user.imageUrl" :label="$t('deleteImageButton')" icon="pi pi-minus" outlined
+								severity="warn" @click="deleteUserImage"/>
+					</div>
+				</div>
+			</div>
+
+			<form id="userProfileForm" class="flex flex-col gap-8 rounded-lg pt-8"
+				  @submit.prevent="submitUpdateUser">
+
 				<FloatLabel variant="on">
-					<InputText id="name" v-model.trim="name" class="w-60" />
+					<InputText id="name" v-model.trim="name" class="w-full"/>
 					<label for="name">{{ $t('memberName') }}</label>
 				</FloatLabel>
-				<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color" />
-			</div>
 
-			<FloatLabel variant="on">
-				<InputText id="email" v-model.trim="email" class="w-full" />
-				<label for="email">{{ $t('email') }}</label>
-			</FloatLabel>
+				<FloatLabel class="pb-8" variant="on">
+					<InputText id="email" v-model.trim="email" class="w-full"/>
+					<label for="email">{{ $t('email') }}</label>
+				</FloatLabel>
 
-			<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" raised type="submit" />
-		</form>
+				<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" raised type="submit"/>
+			</form>
 
-		<div class="flex items-center justify-between border p-3 rounded-lg">
-			<div class="flex flex-col gap-3">
-				<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
-					mode="basic" severity="secondary" @select="onImageSelect" />
-				<Button v-if="user.imageUrl" :label="$t('deleteImageButton')" icon="pi pi-minus" outlined
-					severity="warn" @click="deleteUserImage" />
-			</div>
-			<img v-if="user.imageUrl" :src="user.imageUrl" alt="Image" class="shadow-md rounded-xl h-24" />
+			<Button :label="$t('deleteButton')" class="w-full" raised severity="danger" @click="confirm($event)"/>
 		</div>
 
-		<Button :label="$t('deleteButton')" raised severity="danger" @click="confirm($event)" />
 		<ConfirmDialog></ConfirmDialog>
-		<Toast ref="toast" position="bottom-right" />
+		<Toast ref="toast" position="bottom-right"/>
 	</div>
 </template>
 
 <script>
-import { deleteUser, updateUser } from "@/services/userServices.js";
+import {deleteUser, updateUser} from "@/services/userServices.js";
 import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
 import FloatLabel from "primevue/floatlabel";
@@ -43,8 +48,8 @@ import ColorPicker from 'primevue/colorpicker';
 import FileUpload from 'primevue/fileupload';
 import Toast from 'primevue/toast';
 import ConfirmDialog from 'primevue/confirmdialog';
-import { userSchema } from "@/schemas/userSchemas.js";
-import { deleteMemberImage, uploadMemberImage } from "@/services/memberServices.js";
+import {userSchema} from "@/schemas/userSchemas.js";
+import {deleteMemberImage, uploadMemberImage} from "@/services/memberServices.js";
 
 export default {
 	inject: ['user', 'token'],
