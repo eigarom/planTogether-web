@@ -1,32 +1,28 @@
 <template>
 	<div class="top-20 w-96 gap-3 flex flex-col pt-20 pb-16">
 		<h1 class="text-3xl mb-4 text-center">{{ $t('eventsTitle') }}</h1>
-		<div v-if="!loading">
-			<div v-for="(events, date) in sortedEventsByTime" :key="date">
-				<h2> {{ formatPrettyDate(date) }} </h2>
-				<div>
-					<DailyEvents v-for="event in events" :id="event.id" :key="event.id" :color="event.color"
-								 :name="event.name"
-								 :periods="event.periods"/>
-				</div>
-			</div>
+		<Button as="router-link" :label="$t('buttonCreateEvent')" to="/events/add" />
+		<div v-if="!loading" class="flex flex-col border p-3 rounded-lg gap-3">
+			<DailyEvents v-for="date in dates" :key="date.id" :id="date.id" :events="date.events" />
 		</div>
 	</div>
+
 </template>
 
 <script>
-import DailyEvents from './DailyEvents.vue'
-import {getEventsList} from '@/services/eventServices.js';
+import Button from 'primevue/button';
+import DailyEvents from './DailyEvents.vue';
+import { getEventsList } from '../../services/eventServices';
 
 export default {
 	components: {
-		DailyEvents
+		DailyEvents, Button
 	},
 	inject: ['user'],
 	data() {
 		return {
 			eventsList: [],
-			currentDate: "",
+			dates: [],
 			loading: true
 		};
 	},
@@ -40,26 +36,49 @@ export default {
 					console.error('Erreur:', error);
 				}
 			}
+			this.generateDates();
+		},
+		generateDates() {
+			this.visibleEvents.forEach(event => {
+				event.periods.forEach(period => {
+					// Initialiser une boucle qui parcourt chaque jour dans l'intervalle de la période
+					for (
+						let dt = new Date(period.startDateTime);
+						// Vérifie si la date courante (dt) est avant ou égale à la fin de la journée du endDateTime
+						dt <= new Date(new Date(period.endDateTime).setHours(23, 59, 59, 999));
+						dt.setDate(dt.getDate() + 1)
+					) {
+
+						// Convertir `dt` du fuseau horaire UTC à local
+						const localDate = new Date(dt.getTime() - dt.getTimezoneOffset() * 60 * 1000);
+
+						// Format de la date locale en "YYYY-MM-DD"
+						const dayId = `${localDate.getFullYear()}-${String(localDate.getMonth() + 1).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}`;
+
+						// Vérifier si un objet `date` avec cet `id` existe déjà
+						let dateObj = this.dates.find(date => date.id === dayId);
+
+						if (!dateObj) {
+							// Si l'objet `date` n'existe pas, le créer avec cet `id` et un tableau `events` vide
+							dateObj = {
+								id: dayId,
+								events: []
+							};
+							this.dates.push(dateObj);
+						}
+
+						// Ajouter `newEvent` à `events` dans `dateObj`
+						dateObj.events.push({
+							id: event.id,
+							name: event.name,
+							period, // Ajout de la période entière ici
+							members: event.members
+						});
+					}
+				})
+			})
 			this.loading = false;
 		},
-		formatPrettyDate(dateString) {
-			const parts = dateString.split('/');
-			if (parts.length !== 3) {
-				console.warn(`Date invalide: ${dateString}`);
-				return 'Date invalide';
-			}
-
-			const formattedDateString = `${parts[2]}-${parts[1]}-${parts[0]}T00:00:00`;
-			const date = new Date(formattedDateString);
-
-			if (isNaN(date)) {
-				console.warn(`Date invalide: ${formattedDateString}`);
-				return 'Date invalide';
-			}
-
-			const options = {year: 'numeric', month: 'long', day: 'numeric'};
-			return date.toLocaleDateString('fr-FR', options);
-		}
 	},
 	computed: {
 		visibleEvents() {
@@ -68,48 +87,6 @@ export default {
 				return event.isVisible || isParticipant;
 			});
 		},
-		groupedEventsByDate() {
-			const eventsByDate = {};
-
-			this.visibleEvents.forEach(event => {
-				event.periods.forEach(period => {
-					const date = new Date(period.startDateTime).toLocaleDateString();
-
-					if (!eventsByDate[date]) {
-						eventsByDate[date] = [];
-					}
-
-					eventsByDate[date].push(event);
-				});
-			});
-
-			return eventsByDate;
-		},
-		sortedEventsByTime() {
-			const uniqueEvents = new Map();
-
-			this.visibleEvents.forEach(event => {
-				event.periods.forEach(period => {
-					const periodKey = `${event.id}-${period.startDateTime}-${period.endDateTime}`;
-					if (!uniqueEvents.has(periodKey)) {
-						uniqueEvents.set(periodKey, {...event, periods: [period]});
-					}
-				});
-			});
-
-			const sortedEvents = {};
-
-			uniqueEvents.forEach((event) => {
-				const date = new Date(event.periods[0].startDateTime).toLocaleDateString("fr-FR");
-
-				if (!sortedEvents[date]) {
-					sortedEvents[date] = [];
-				}
-				sortedEvents[date].push(event);
-			});
-
-			return sortedEvents;
-		}
 	},
 	mounted() {
 		this.getEventsWithToken();

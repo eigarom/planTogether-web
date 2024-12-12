@@ -9,6 +9,7 @@ import i18n from './locales/i18n.js';
 import App from './App.vue';
 import EventsList from './pages/events/EventsList.vue';
 import EventDetails from './pages/events/EventDetails.vue';
+import EventCreationForm from './pages/events/EventCreationForm.vue';
 import LoginForm from "@/pages/auth/LoginForm.vue";
 import FamilyOptions from "@/pages/families/FamilyOptions.vue";
 import FamilyCreationForm from "@/pages/families/FamilyCreationForm.vue";
@@ -45,7 +46,8 @@ const router = createRouter({
 		{path: '/login', component: LoginForm},
 		{path: '/register', component: RegisterForm},
 		{path: '/events', component: EventsList},
-		{path: '/events/:id', name: 'EventDetails', component: EventDetails, props: true},
+		{path: '/events/:id/periods/:periodId', component: EventDetails, props: true},
+		{path: '/events/add', component: EventCreationForm},
 		{path: '/families/add-or-join', component: FamilyOptions},
 		{path: '/families/add', component: FamilyCreationForm},
 		{path: '/families/join', component: FamilyJoinForm},

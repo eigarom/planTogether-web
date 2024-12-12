@@ -1,15 +1,15 @@
-DROP TABLE IF EXISTS family CASCADE;
-DROP TABLE IF EXISTS member CASCADE;
+DROP TABLE IF EXISTS alert CASCADE;
+DROP TABLE IF EXISTS period CASCADE;
+DROP TABLE IF EXISTS participation CASCADE;
+DROP TABLE IF EXISTS shopping_item CASCADE;
+DROP TABLE IF EXISTS shopping_list CASCADE;
+DROP TABLE IF EXISTS tasks_list CASCADE;
+DROP TABLE IF EXISTS task CASCADE;
 DROP TABLE IF EXISTS account_member CASCADE;
 DROP TABLE IF EXISTS guest_member CASCADE;
+DROP TABLE IF EXISTS member CASCADE;
 DROP TABLE IF EXISTS event CASCADE;
-DROP TABLE IF EXISTS period;
-DROP TABLE IF EXISTS alert;
-DROP TABLE IF EXISTS participation CASCADE;
-DROP TABLE IF EXISTS shopping_list CASCADE;
-DROP TABLE IF EXISTS shopping_item;
-DROP TABLE IF EXISTS tasks_list CASCADE;
-DROP TABLE IF EXISTS task;
+DROP TABLE IF EXISTS family CASCADE;
 
 CREATE TABLE family
 (
@@ -50,7 +50,6 @@ CREATE TABLE event
     id_event    serial PRIMARY KEY,
     name        varchar NOT NULL,
     description varchar,
-    color       varchar NOT NULL,
     isVisible   bool    NOT NULL,
     id_family   int     NOT NULL REFERENCES family (id_family) ON DELETE CASCADE
 );
@@ -74,7 +73,7 @@ CREATE TABLE alert
 (
     id_alert  serial PRIMARY KEY,
     date_time timestamp with time zone NOT NULL,
-    id_event  int                      NOT NULL REFERENCES event (id_event) ON DELETE CASCADE
+    id_period  int                      NOT NULL REFERENCES period (id_period) ON DELETE CASCADE
 );
 
 CREATE TABLE shopping_list
