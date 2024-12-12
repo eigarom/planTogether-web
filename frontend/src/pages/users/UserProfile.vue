@@ -1,7 +1,7 @@
 <template>
-	<div v-if="user" class="flex flex-col w-full">
-		<h1 class="text-3xl mb-10">{{ $t('userTitle') }}</h1>
-		<div class="flex flex-col gap-8">
+	<div v-if="user" class="flex flex-col w-full gap-5">
+		<h1 class="text-3xl">{{ $t('userTitle') }}</h1>
+		<div class="flex flex-col gap-8 bg-white border rounded-lg p-5">
 			<!--Image de l'utilisateur-->
 			<div class="flex gap-8 items-center">
 				<Avatar v-if="user.imageUrl" :image="user.imageUrl" alt="Image" class="custom-avatar" shape="circle"/>
