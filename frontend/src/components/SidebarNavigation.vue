@@ -50,7 +50,6 @@ export default {
 		},
 		items() {
 			return [
-				{separator: true},
 				{label: this.$t('calendarMenu'), icon: 'pi pi-calendar', route: '/events'},
 				{label: this.$t('familyMenu'), icon: 'pi pi-users', route: '/my-family'},
 			];
