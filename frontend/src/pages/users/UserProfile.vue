@@ -1,29 +1,43 @@
 <template>
 	<div v-if="user" class="flex flex-col w-full gap-5">
 		<h1 class="text-3xl">{{ $t('userTitle') }}</h1>
-		<div class="flex flex-col gap-8 bg-white border rounded-lg p-5">
+
+		<!--Contenu principal-->
+		<div class="flex flex-col gap-8 p-5 min-w-[500px] bg-white border rounded-lg w-fit">
+
 			<!--Image de l'utilisateur-->
 			<div class="flex gap-8 items-center">
-				<Avatar v-if="user.imageUrl" :image="user.imageUrl" alt="Image" class="custom-avatar" shape="circle"/>
-				<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
-						class="custom-avatar font-semibold text-white" shape="circle" size=""/>
-				<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
-							mode="basic" severity="secondary" @select="onImageSelect"/>
-				<Button :label="$t('deleteImageButton')" icon="pi pi-minus" outlined
-						severity="warn" @click="deleteUserImage"/>
+				<!--Image-->
+				<div class="w-fit">
+					<Avatar v-if="user.imageUrl" :image="user.imageUrl" alt="Image" class="custom-avatar"
+							shape="circle"/>
+					<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
+							class="custom-avatar font-semibold text-white" shape="circle" size=""/>
+				</div>
+
+				<!--Boutons-->
+				<div class="flex flex-wrap gap-8">
+					<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
+								mode="basic" severity="secondary" @select="onImageSelect"/>
+					<Button :disabled="isDeleteImageButtonDisabled" :label="$t('deleteImageButton')"
+							icon="pi pi-minus"
+							outlined severity="warn" @click="deleteUserImage"/>
+				</div>
 			</div>
 
-			<!--Informations de l'utilisateur-->
-			<form id="userProfileForm" class="flex flex-col gap-8" @submit.prevent="submitUpdateUser">
+			<!--Nom, courriel, couleur-->
+			<form id="userProfileForm" class="flex flex-col gap-8 w-full" @submit.prevent="submitUpdateUser">
 				<!--Inputs-->
-				<div class="flex gap-8 w-full">
+				<div class="flex gap-8">
+
 					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
-					<FloatLabel class="w-full" variant="on">
+
+					<FloatLabel class="min-w-[170px]" variant="on">
 						<InputText id="name" v-model.trim="name" class="w-full"/>
 						<label for="name">{{ $t('memberName') }}</label>
 					</FloatLabel>
 
-					<FloatLabel class="w-full" variant="on">
+					<FloatLabel class="min-w-[300px]" variant="on">
 						<InputText id="email" v-model.trim="email" class="w-full"/>
 						<label for="email">{{ $t('email') }}</label>
 					</FloatLabel>
@@ -38,6 +52,7 @@
 				</div>
 			</form>
 		</div>
+
 
 		<ConfirmDialog></ConfirmDialog>
 		<Toast ref="toast" position="bottom-right"/>
@@ -72,6 +87,9 @@ export default {
 	computed: {
 		isSubmitButtonDisabled() {
 			return this.name === this.user.name && this.email === this.user.email && this.color === this.user.color;
+		},
+		isDeleteImageButtonDisabled() {
+			return !this.user.imageUrl;
 		},
 		userInitial() {
 			return this.user.name.charAt(0).toUpperCase();
