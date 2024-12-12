@@ -42,5 +42,7 @@
 	"deleteEventConfirm": "Voulez-vous vraiment supprimer l'événement?",
 	"periodDeletedMessage": "L'occurrence a bien été supprimée",
 	"eventCreationFailure": "Échec lors de la création de l'événement.",
-	"formContainsErrors": "Le formulaire contient des erreurs. Veuillez vérifier les champs."
+	"formContainsErrors": "Le formulaire contient des erreurs. Veuillez vérifier les champs.",
+	"previousWeek": "Semaine précédente",
+	"nextWeek": "Semaine suivante"
 }

@@ -42,5 +42,7 @@
 	"deleteEventConfirm": "Do you really want to delete the event?",
 	"periodDeletedMessage": "The occurrence has been deleted",
 	"eventCreationFailure": "Failed to create event.",
-	"formContainsErrors": "The form contains errors. Please check the fields."
+	"formContainsErrors": "The form contains errors. Please check the fields.",
+	"previousWeek": "Previous week",
+	"nextWeek": "Next week"
 }
