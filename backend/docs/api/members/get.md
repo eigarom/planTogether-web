@@ -16,8 +16,6 @@ Permet de récupérer la liste des membres de la famille de l'utilisateur authen
 
 **Contenu** :
 
-Un tableau des membres de la famille sous forme d'objets JSON. Exemple :
-
 ```json
 {
     "accountMembers": [
