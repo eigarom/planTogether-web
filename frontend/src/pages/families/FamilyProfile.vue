@@ -119,7 +119,7 @@
 							</router-link>
 						</div>
 
-						<Button :label="$t('addMember')" icon="pi pi-user-plus" @click="navigateToAddMember"/>
+						<Button :label="$t('addMember')" icon="pi pi-user-plus" @click="addMember"/>
 					</div>
 				</div>
 			</div>
@@ -133,13 +133,32 @@
 			</div>
 		</div>
 
-		<Dialog v-model:visible="dialogVisible" :header="$t('inviteCode')">
+		<!--Créer code d'invitation-->
+		<Dialog v-model:visible="dialogInvitationCodeVisible" :header="$t('inviteCode')" modal>
 			<div class="flex flex-col items-center gap-3">
 				<p>{{ inviteCode }}</p>
 				<Button :label="$t('pasteCode')" icon="pi pi-copy" @click="copyInviteCode"/>
 			</div>
 		</Dialog>
+
+		<!--Créer un membre-->
+		<Dialog v-model:visible="dialogMemberCreationVisible" :header="$t('addMemberTitle')" modal>
+			<form id="profileForm" class="flex flex-col gap-8" @submit.prevent="submitCreateMember">
+				<div class="flex flex-inline gap-8 mt-2">
+					<FloatLabel variant="on">
+						<InputText id="name" v-model.trim="newMemberName" class="w-60"/>
+						<label for="name">{{ $t('memberName') }}</label>
+					</FloatLabel>
+
+					<ColorPicker v-model="newMemberColor" class="custom-color-picker" format="hex" inputId="color"/>
+				</div>
+
+				<Button :disabled="isAddMemberSubmitButtonDisabled" :label="$t('submitButton')" raised type="submit"/>
+			</form>
+		</Dialog>
+
 		<ConfirmDialog></ConfirmDialog>
+
 		<Toast ref="toast" position="bottom-right"/>
 	</div>
 </template>
@@ -161,9 +180,10 @@ import FileUpload from 'primevue/fileupload';
 import Toast from 'primevue/toast';
 import {familySchema} from "@/schemas/familySchemas.js";
 import Dialog from 'primevue/dialog';
-import {getAllMembersByFamilyId, getMemberImage} from "@/services/memberServices.js";
+import {createMember, getAllMembersByFamilyId, getMemberImage} from "@/services/memberServices.js";
 import Avatar from "primevue/avatar";
 import ConfirmDialog from 'primevue/confirmdialog';
+import {memberSchema} from "@/schemas/memberSchemas.js";
 
 export default {
 	inject: ['user', 'family', 'token'],
@@ -175,8 +195,11 @@ export default {
 			name: '',
 			color: '',
 			familyImageUrl: '',
-			dialogVisible: false,
+			dialogInvitationCodeVisible: false,
+			dialogMemberCreationVisible: false,
 			inviteCode: '',
+			newMemberName: '',
+			newMemberColor: 'FF0000',
 			accountMembers: [],
 			guestMembers: []
 		};
@@ -184,6 +207,9 @@ export default {
 	computed: {
 		isSubmitButtonDisabled() {
 			return this.name === this.family.name && this.color === this.family.color;
+		},
+		isAddMemberSubmitButtonDisabled() {
+			return !this.newMemberName;
 		},
 		isDeleteImageButtonDisabled() {
 			return !this.family.imageUrl;
@@ -236,7 +262,6 @@ export default {
 			}
 		},
 		async submitUpdateFamily() {
-
 			if (!this.color.startsWith('#')) {
 				this.color = '#' + this.color;
 			}
@@ -277,6 +302,7 @@ export default {
 		async submitQuitFamily(event) {
 			this.$confirm.require({
 				target: event.currentTarget,
+				header: this.$t('quitFamily'),
 				message: this.$t('quitFamilyConfirm'),
 				icon: 'pi pi-info-circle',
 				rejectProps: {
@@ -307,6 +333,7 @@ export default {
 		async submitDeleteFamily(event) {
 			this.$confirm.require({
 				target: event.currentTarget,
+				header: this.$t('deleteFamilyButton'),
 				message: this.$t('deleteFamilyConfirm'),
 				icon: 'pi pi-info-circle',
 				rejectProps: {
@@ -338,7 +365,7 @@ export default {
 			try {
 				const response = await createInvitationCode(this.token);
 				this.inviteCode = response.inviteCode;
-				this.dialogVisible = true;
+				this.dialogInvitationCodeVisible = true;
 			} catch (error) {
 				console.error('Erreur:', error);
 			}
@@ -360,8 +387,47 @@ export default {
 				});
 			});
 		},
-		navigateToAddMember() {
-			this.$router.push('/members/add');
+		addMember() {
+			this.dialogMemberCreationVisible = true;
+		},
+		async submitCreateMember() {
+			if (!this.newMemberColor.startsWith('#')) {
+				this.newMemberColor = '#' + this.newMemberColor;
+			}
+
+			const memberInformations = {
+				name: this.newMemberName,
+				color: this.newMemberColor
+			}
+
+			try {
+				await memberSchema.validate(memberInformations);
+				const newMember=await createMember(memberInformations, this.token);
+				this.guestMembers.push(newMember);
+				this.guestMembers = this.sortMembersAlphabetically(this.guestMembers);
+				this.newMemberName = '';
+				this.newMemberColor = '';
+				this.dialogMemberCreationVisible= false;
+				this.$refs.toast.add({
+					severity: 'success',
+					summary: this.$t('toastSuccessTitle'),
+					detail: this.$t('createMemberSuccessMessage'),
+					life: 3000
+				});
+			} catch (err) {
+				if (err.name === 'ValidationError') {
+					this.errorMessage = err.message;
+				} else {
+					this.errorMessage = this.$t('createMemberErrorMessage');
+				}
+
+				this.$refs.toast.add({
+					severity: 'error',
+					summary: this.$t('toastErrorTitle'),
+					detail: this.errorMessage,
+					life: 5000
+				});
+			}
 		},
 		sortMembersAlphabetically(members) {
 			return members.sort((a, b) => a.name.localeCompare(b.name));

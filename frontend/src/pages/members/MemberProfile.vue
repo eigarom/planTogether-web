@@ -222,6 +222,7 @@ export default {
 		async confirm(event) {
 			this.$confirm.require({
 				target: event.currentTarget,
+				header: this.$t('deleteMember'),
 				message: this.$t('deleteMemberConfirm'),
 				icon: 'pi pi-info-circle',
 				rejectProps: {
