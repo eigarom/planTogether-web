@@ -7,7 +7,7 @@
         </div>
         <div class="grid grid-cols-7 gap-2 border">
             <div v-for="day in week" :key="day.id" class="border p-2">
-                <h3>{{ formatDate(day.date) }}</h3>
+                <h3 class="flex justify-center">{{ getDayNumber(day.date) }}</h3>
                 <div v-for="event in day.events" :key="event.id" class="bg-blue-100 p-1 rounded">
                     <router-link :to="`/events/${event.id}/periods/${event.period.id}`">
                         {{ event.name }}
@@ -77,10 +77,17 @@ export default {
             return new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }).format(date);
         },
         previousWeek() {
-            this.currentWeekStart.setDate(this.currentWeekStart.getDate() - 7);
+            const newDate = new Date(this.currentWeekStart);
+            newDate.setDate(this.currentWeekStart.getDate() - 7);
+            this.currentWeekStart = newDate; //
         },
         nextWeek() {
-            this.currentWeekStart.setDate(this.currentWeekStart.getDate() + 7);
+            const newDate = new Date(this.currentWeekStart);
+            newDate.setDate(this.currentWeekStart.getDate() + 7);
+            this.currentWeekStart = newDate; //
+        },
+        getDayNumber(date) {
+            return new Date(date).getDate();
         },
         memberInitials(member) {
             return member.name.charAt(0).toUpperCase();
