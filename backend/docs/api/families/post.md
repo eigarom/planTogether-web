@@ -2,9 +2,9 @@
 
 Permet de créer une nouvelle famille pour l'utilisateur authentifié.
 
-**URL** : /families
+**URL** : `/families`
 
-**Méthode** : POST
+**Méthode** : `POST`
 
 **Authentification requise** : Oui
 
@@ -17,7 +17,7 @@ Permet de créer une nouvelle famille pour l'utilisateur authentifié.
 
 ## Opération réussie
 
-**Code** : 201 Created
+**Code** : `201 Created`
 
 **Contenu** :
 
@@ -35,7 +35,7 @@ Permet de créer une nouvelle famille pour l'utilisateur authentifié.
 
 ### Si le corps de la requête est invalide (validation échouée).
 
-**Code** : 400 Bad Request
+**Code** : `400 Bad Request`
 
 **Contenu** :
 
@@ -48,7 +48,7 @@ Permet de créer une nouvelle famille pour l'utilisateur authentifié.
 
 ## Si une erreur survient lors de la création de la famille ou de la récupération des informations utilisateur.
 
-**Code** : 500 Internal Server Error
+**Code** : `500 Internal Server Error`
 
 **Contenu** :
 
