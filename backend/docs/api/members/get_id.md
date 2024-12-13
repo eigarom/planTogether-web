@@ -2,7 +2,7 @@
 
 Permet de récupérer les informations d'un membre spécifique de la famille en utilisant son identifiant.
 
-**URL** : `/families/my-family/members/{id}`
+**URL** : `/members/{id}`
 
 **Méthode** : `GET`
 

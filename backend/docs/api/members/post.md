@@ -2,7 +2,7 @@
 
 Permet d'ajouter un nouveau membre à la famille de l'utilisateur authentifié.
 
-**URL** : `/families/my-family/members`
+**URL** : `/members`
 
 **Méthode** : `POST`
 
