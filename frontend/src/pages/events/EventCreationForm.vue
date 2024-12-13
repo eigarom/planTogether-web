@@ -15,23 +15,19 @@
 					<!-- Nom, description, visibilité -->
 					<div class="flex flex-col gap-8 p-5 bg-white border rounded-lg w-80">
 						<!-- Nom -->
-						<div class="row-start-1 col-start-1">
-							<FloatLabel class="w-full" variant="on">
-								<InputText id="name" v-model.trim="name" class="w-full"/>
-								<label for="name">{{ $t('eventName') }}</label>
-							</FloatLabel>
-						</div>
+						<FloatLabel class="w-full" variant="on">
+							<InputText id="name" v-model.trim="name" class="w-full"/>
+							<label for="name">{{ $t('eventName') }}</label>
+						</FloatLabel>
 
 						<!-- Description -->
-						<div class="row-start-1 row-span-2 col-start-2 h-full">
-							<FloatLabel class="w-full h-full" variant="on">
-								<Textarea id="description" v-model.trim="description" class="w-full h-full"/>
-								<label for="description">{{ $t('description') }}</label>
-							</FloatLabel>
-						</div>
+						<FloatLabel class="w-full h-full" variant="on">
+							<Textarea id="description" v-model.trim="description" class="w-full h-full"/>
+							<label for="description">{{ $t('description') }}</label>
+						</FloatLabel>
 
 						<!-- Visibilité -->
-						<div class="row-start-2 col-start-1 flex items-center gap-8">
+						<div class="flex items-center gap-8">
 							<p>{{ $t('visibility') }}</p>
 							<ToggleSwitch id="isVisible" v-model.trim="checked"/>
 						</div>
@@ -500,7 +496,8 @@ export default {
 			if (!newValidity) {
 				const newEndTime = new Date(this.startTime);
 				newEndTime.setHours(this.startTime.getHours() + 1);
-				this.endTime = newEndTime;			}
+				this.endTime = newEndTime;
+			}
 		}
 	}
 };
