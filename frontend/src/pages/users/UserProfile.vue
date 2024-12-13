@@ -3,41 +3,42 @@
 		<h1 class="text-3xl">{{ $t('userTitle') }}</h1>
 
 		<!--Contenu principal-->
-		<div class="flex flex-col gap-8 p-5 min-w-[500px] bg-white border rounded-lg w-fit">
+		<div class="flex flex-col gap-8 p-5 bg-white border rounded-lg w-[565px]">
 
 			<!--Image de l'utilisateur-->
 			<div class="flex gap-8 items-center">
+
 				<!--Image-->
-				<div class="w-fit">
-					<Avatar v-if="user.imageUrl" :image="user.imageUrl" alt="Image" class="custom-avatar"
-							shape="circle"/>
-					<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
-							class="custom-avatar font-semibold text-white" shape="circle" size=""/>
-				</div>
+				<Avatar v-if="user.imageUrl" :image="user.imageUrl" alt="Image" class="custom-avatar"
+						shape="circle"/>
+				<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
+						class="custom-avatar font-semibold text-white" shape="circle"/>
 
 				<!--Boutons-->
-				<div class="flex flex-wrap gap-8">
-					<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
+				<div class="flex gap-8">
+					<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined w-[180px]"
+								customUpload
 								mode="basic" severity="secondary" @select="onImageSelect"/>
+
 					<Button :disabled="isDeleteImageButtonDisabled" :label="$t('deleteImageButton')"
-							icon="pi pi-minus"
+							class="w-[180px]" icon="pi pi-minus"
 							outlined severity="warn" @click="deleteUserImage"/>
 				</div>
 			</div>
 
 			<!--Nom, courriel, couleur-->
 			<form id="userProfileForm" class="flex flex-col gap-8 w-full" @submit.prevent="submitUpdateUser">
-				<!--Inputs-->
-				<div class="flex gap-8">
 
+				<!--Inputs-->
+				<div class="flex gap-8 w-full">
 					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
 
-					<FloatLabel class="min-w-[170px]" variant="on">
+					<FloatLabel variant="on">
 						<InputText id="name" v-model.trim="name" class="w-full"/>
 						<label for="name">{{ $t('memberName') }}</label>
 					</FloatLabel>
 
-					<FloatLabel class="min-w-[300px]" variant="on">
+					<FloatLabel class="flex-grow" variant="on">
 						<InputText id="email" v-model.trim="email" class="w-full"/>
 						<label for="email">{{ $t('email') }}</label>
 					</FloatLabel>
@@ -45,9 +46,9 @@
 
 				<!--Boutons de modification et suppression du compte-->
 				<div class="flex gap-8 justify-end">
-					<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" class="w-32" raised
+					<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" class="w-32"
 							type="submit"/>
-					<Button :label="$t('deleteButton')" class="w-32" raised severity="danger"
+					<Button :label="$t('deleteButton')" class="w-32" severity="danger"
 							@click="confirm($event)"/>
 				</div>
 			</form>

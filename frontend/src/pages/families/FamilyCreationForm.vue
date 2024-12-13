@@ -1,25 +1,24 @@
 <template>
-	<FloatingTitle />
+	<div class="fixed top-0 left-0 h-screen w-screen flex justify-center items-center">
+		<div class="flex flex-col gap-8 bg-white p-5 border rounded-lg w-[350px]">
+			<h1 class="text-3xl text-center font-medium">{{ $t('createFamily') }}</h1>
 
-	<div class="w-80 pt-20">
-		<h1 class="text-3xl mb-8 text-center font-medium">{{ $t('createFamily') }}</h1>
-		<form id="familycreationForm" class="flex flex-col gap-5" @submit.prevent="submitCreateFamily">
+			<form id="familycreationForm" class="flex flex-col gap-8" @submit.prevent="submitCreateFamily">
 
-			<FloatLabel variant="on">
-				<InputText id="name" v-model.trim="name" class="w-full" />
-				<label for="name">{{ $t('familyName') }}</label>
-			</FloatLabel>
+				<div class="flex gap-8 w-full">
+					<FloatLabel class="w-full" variant="on">
+						<InputText id="name" v-model.trim="name" class="w-full"/>
+						<label for="name">{{ $t('familyName') }}</label>
+					</FloatLabel>
 
+					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
+				</div>
 
-			<div class="flex justify-between px-3">
-				<label class="font-medium" for="color">{{ $t('commonEventsColor') }}</label>
-				<ColorPicker v-model="color" format="hex" inputId="color" />
-			</div>
+				<Button :disabled="isCreateFamilyDisabled" :label="$t('confirmButton')" raised type="submit"/>
+			</form>
+		</div>
 
-			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
-
-			<Button :disabled="isCreateFamilyDisabled" :label="$t('confirmButton')" raised type="submit" />
-		</form>
+		<Toast ref="toast" position="bottom-right"/>
 	</div>
 </template>
 
@@ -29,13 +28,14 @@ import Button from "primevue/button";
 import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import ColorPicker from 'primevue/colorpicker';
-import { createFamily } from "@/services/familyServices.js";
-import { familySchema } from "@/schemas/familySchemas.js";
+import {createFamily} from "@/services/familyServices.js";
+import {familySchema} from "@/schemas/familySchemas.js";
 import FloatingTitle from "@/components/AppHeader.vue";
+import Toast from "primevue/toast";
 
 export default {
 	components: {
-		FloatingTitle, InputText, Button, Message, FloatLabel, ColorPicker
+		Toast, FloatingTitle, InputText, Button, Message, FloatLabel, ColorPicker
 	},
 	data: () => {
 		return {
@@ -51,8 +51,6 @@ export default {
 	},
 	methods: {
 		async submitCreateFamily() {
-			this.errorMessage = "";
-
 			if (!this.color.startsWith('#')) {
 				this.color = '#' + this.color;
 			}
@@ -72,10 +70,24 @@ export default {
 				if (err.name === 'ValidationError') {
 					this.errorMessage = err.message;
 				} else {
-					this.errorMessage = "Échec de la création de la famille.";
+					this.errorMessage = this.$t('createFamilyFailed');
 				}
+
+				this.$refs.toast.add({
+					severity: 'error',
+					summary: this.$t('toastErrorTitle'),
+					detail: this.errorMessage,
+					life: 5000
+				});
 			}
 		}
 	}
 };
 </script>
+
+<style scoped>
+.custom-color-picker {
+	--p-colorpicker-preview-width: 42px;
+	--p-colorpicker-preview-height: 42px;
+}
+</style>

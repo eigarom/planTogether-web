@@ -3,33 +3,36 @@
 		<h1 class="text-3xl">{{ $t('myFamily') }}</h1>
 
 		<!--Contenu principal-->
-		<div class="flex flex-wrap gap-8 w-full min-w-[500px]">
+		<div class="flex flex-wrap gap-8 w-fit">
 
 			<!--Informations de la famille-->
 			<div class="flex flex-col gap-8">
 
 				<!--Nom, image, couleur-->
-				<div class="flex flex-col gap-8 bg-white p-5 border rounded-lg">
+				<div class="flex flex-col gap-8 bg-white p-5 border rounded-lg w-fit">
 					<!--Image-->
 					<div class="flex items-center gap-8">
 						<img v-if="family.imageUrl" :src="family.imageUrl" alt="Image"
 							 class="shadow-md rounded-xl w-40"/>
+
 						<span v-else class="border-dashed border-2 rounded-xl h-24 w-40 bg-gray-100"></span>
 
 						<div class="flex flex-wrap gap-8">
-							<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined w-48"
-										customUpload
-										mode="basic" severity="secondary" @select="onImageSelect"/>
+							<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined w-[180px]"
+										customUpload mode="basic"
+										raised severity="secondary" @select="onImageSelect"/>
+
 							<Button :disabled="isDeleteImageButtonDisabled" :label="$t('deleteImageButton')"
-									class="w-48"
-									icon="pi pi-minus" outlined severity="warn"
+									class="w-[180px]" icon="pi pi-minus"
+									outlined severity="warn"
 									@click="deleteFamilyImage"/>
 						</div>
 					</div>
 
 					<!--Nom, couleur-->
-					<form id="profileForm" class="flex flex-wrap items-center gap-8"
+					<form id="profileForm" class="flex flex-wrap items-center gap-8 w-full"
 						  @submit.prevent="submitUpdateFamily">
+
 						<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
 
 						<FloatLabel class="flex-grow" variant="on">
@@ -37,7 +40,7 @@
 							<label for="name">{{ $t('familyName') }}</label>
 						</FloatLabel>
 
-						<Button :disabled="isSubmitButtonDisabled" :label="$t('saveModifications')" class="w-40" raised
+						<Button :disabled="isSubmitButtonDisabled" :label="$t('saveModifications')" class="w-40"
 								type="submit"/>
 					</form>
 				</div>
@@ -46,24 +49,48 @@
 				<div class="flex flex-wrap gap-8 justify-between">
 
 					<!--Membres principaux-->
-					<div class="flex flex-col gap-8 bg-white p-5 border rounded-lg w-[310px]">
+					<div class="flex flex-col flex-grow gap-5 bg-white p-5 border rounded-lg">
 						<h2 class="text-2xl text-center">{{ $t('accountMembers') }}</h2>
 
 						<div>
-							<router-link v-for="accountMember in accountMembers" :key="accountMember.id"
-										 :to="accountMember.id === user.id ? '/profile' : `/members/${accountMember.id}`"
-										 class="flex flex-inline items-center justify-between  p-3 rounded-lg
-									 hover:bg-gray-100">
-								<p>{{ accountMember.name }}</p>
+							<!--Utilisateur-->
+							<router-link :to="'/profile'">
+								<div class="flex flex-inline items-center justify-between  p-3 rounded-lg
+									 hover:bg-gray-100 h-fit"
+								>
 
-								<Avatar v-if="accountMember.imageUrl" :image="accountMember.imageUrl"
-										:style="{ borderColor: accountMember.color }" class="border-4"
-										shape="circle" size="small"/>
-								<Avatar v-else :label="accountMember.name[0].toUpperCase()"
-										:style="`background-color: ${accountMember.color}`"
-										class="font-semibold text-white"
-										shape="circle"
-										size="small"/>
+									<p>{{ user.name }}</p>
+
+									<Avatar v-if="user.imageUrl" :image="user.imageUrl"
+											:style="{ borderColor: user.color }" class="border-4"
+											shape="circle" size="small"/>
+									<Avatar v-else :label="user.name[0].toUpperCase()"
+											:style="`background-color: ${user.color}`"
+											class="font-semibold text-white"
+											shape="circle"
+											size="small"/>
+								</div>
+							</router-link>
+
+							<!--Autres membres principaux-->
+							<router-link v-for="accountMember in accountMembers" :key="accountMember.id"
+										 :to="`/members/${accountMember.id}`">
+								<div v-if="accountMember.id !== user.id"
+									 class="flex flex-inline items-center justify-between  p-3 rounded-lg hover:bg-gray-100 h-fit"
+								>
+									<p>{{ accountMember.name }}</p>
+
+									<Avatar v-if="accountMember.imageUrl" :image="accountMember.imageUrl"
+											:style="{ borderColor: accountMember.color }" class="border-4"
+											shape="circle" size="small"
+									/>
+									<Avatar v-else :label="accountMember.name[0].toUpperCase()"
+											:style="`background-color: ${accountMember.color}`"
+											class="font-semibold text-white"
+											shape="circle"
+											size="small"
+									/>
+								</div>
 							</router-link>
 						</div>
 
@@ -71,22 +98,24 @@
 					</div>
 
 					<!--Membres secondaires-->
-					<div class="flex flex-col p-5 gap-8 bg-white border rounded-lg w-[310px]">
+					<div class="flex flex-col flex-grow p-5 gap-5 bg-white border rounded-lg  h-fit">
 						<h2 class="text-2xl text-center">{{ $t('guestMembers') }}</h2>
 
-						<div>
+						<div v-if="guestMembers.length > 0">
 							<router-link v-for="guestMember in guestMembers" :key="guestMember.id"
 										 :to="`/members/${guestMember.id}`"
-										 class="flex flex-inline items-center justify-between p-3 rounded-lg hover:bg-gray-100">
+										 class="flex flex-inline items-center justify-between p-3 rounded-lg hover:bg-gray-100"
+							>
 								<p>{{ guestMember.name }}</p>
+
 								<Avatar v-if="guestMember.imageUrl" :image="guestMember.imageUrl"
 										:style="{ borderColor: guestMember.color }" class="border-4"
-										shape="circle" size="small"/>
+										shape="circle" size="small"
+								/>
 								<Avatar v-else :label="guestMember.name[0].toUpperCase()"
 										:style="`background-color: ${guestMember.color}`"
-										class="font-semibold text-white"
-										shape="circle"
-										size="small"/>
+										class="font-semibold text-white" shape="circle" size="small"
+								/>
 							</router-link>
 						</div>
 
@@ -97,9 +126,9 @@
 
 			<!--Boutons pour quitter et supprimer la famille-->
 			<div class="flex flex-col gap-8 bg-white border rounded-lg h-fit p-5">
-				<Button :label="$t('quitFamily')" outlined raised severity="danger"
+				<Button :label="$t('quitFamily')" outlined severity="danger"
 						@click="submitQuitFamily($event)"/>
-				<Button :label="$t('deleteFamilyButton')" raised severity="danger"
+				<Button :label="$t('deleteFamilyButton')" severity="danger"
 						@click="submitDeleteFamily($event)"/>
 			</div>
 		</div>

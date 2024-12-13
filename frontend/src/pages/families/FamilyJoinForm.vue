@@ -1,33 +1,36 @@
 <template>
-	<FloatingTitle />
+	<FloatingTitle/>
 
-	<div class="w-80 pt-20">
-		<h1 class="text-3xl mb-8 text-center font-medium">{{ $t('joinFamily') }}</h1>
-		<form id="familyJoinForm" class="flex flex-col gap-5" @submit.prevent="submitJoinFamily">
+	<div class="fixed top-0 left-0 h-screen w-screen flex justify-center items-center">
+		<div class="flex flex-col gap-8 bg-white p-5 border rounded-lg w-[350px]">
+			<h1 class="text-3xl text-center font-medium">{{ $t('joinFamily') }}</h1>
 
-			<FloatLabel variant="on">
-				<InputText id="inviteCode" v-model.trim="inviteCode" class="w-full" />
-				<label for="inviteCode">{{ $t('inviteCode') }}</label>
-			</FloatLabel>
+			<form id="familyJoinForm" class="flex flex-col gap-8" @submit.prevent="submitJoinFamily">
 
-			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
+				<FloatLabel variant="on">
+					<InputText id="inviteCode" v-model.trim="inviteCode" class="w-full"/>
+					<label for="inviteCode">{{ $t('inviteCode') }}</label>
+				</FloatLabel>
 
-			<Button :disabled="isButtonDisabled" :label="$t('confirmButton')" raised type="submit" />
-		</form>
+				<Button :disabled="isButtonDisabled" :label="$t('confirmButton')" raised type="submit"/>
+			</form>
+		</div>
+
+		<Toast ref="toast" position="bottom-right"/>
 	</div>
 </template>
 
 <script>
 import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
-import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import FloatingTitle from "@/components/AppHeader.vue";
 import {joinFamily} from "@/services/familyServices.js";
+import Toast from "primevue/toast";
 
 export default {
 	components: {
-		FloatingTitle, InputText, Button, Message, FloatLabel
+		Toast, FloatingTitle, InputText, Button, FloatLabel
 	},
 	data: () => {
 		return {
@@ -55,9 +58,16 @@ export default {
 				} else {
 					this.errorMessage = this.$t('joinErrorMessage');
 				}
+
+				this.$refs.toast.add({
+					severity: 'error',
+					summary: this.$t('toastErrorTitle'),
+					detail: this.errorMessage,
+					life: 5000
+				});
 			}
 		}
 	}
 }
-	;
+;
 </script>

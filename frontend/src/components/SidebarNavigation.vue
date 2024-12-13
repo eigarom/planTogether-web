@@ -3,18 +3,19 @@
 		<template #start>
 			<div class="flex flex-col gap-5 p-1">
 				<!--Informations de l'utilisateur-->
-				<div class="inline-flex items-center justify-between">
-					<router-link class="inline-flex items-center gap-3 " to="/profile">
-						<Avatar v-if="user.imageUrl" :image="user.imageUrl" shape="circle" size="small"/>
-						<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
-								class="font-semibold text-white" shape="circle" size="small"/>
-						<span class=" text-xl">{{ user.name }}</span>
-					</router-link>
-					<span class="pi pi-sign-out" @click="logout"></span>
-				</div>
+				<router-link class="inline-flex items-center gap-5" to="/profile">
+					<Avatar v-if="user.imageUrl" :image="user.imageUrl" shape="circle" size="large"/>
+					<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
+							class="font-semibold text-white" shape="circle" size="large"/>
+
+					<div class="flex flex-col justify-between">
+						<span class="text-xl">{{ user.name }}</span>
+						<span class="text-sm">{{ family.name }}</span>
+					</div>
+				</router-link>
 
 				<!--Image de la famille-->
-				<div v-if="family.imageUrl" class="flex flex-col items-cente pb-4">
+				<div v-if="family.imageUrl" class="flex flex-col items-cente pb-1">
 					<Image :src="family.imageUrl" alt="Image famille" image-class="rounded-xl"/>
 				</div>
 			</div>
@@ -40,7 +41,7 @@ export default {
 	components: {
 		Menu, Image, Avatar
 	},
-	inject: ['token', 'user', 'family', 'logout'],
+	inject: ['token', 'user', 'family'],
 	data() {
 		return {};
 	},
