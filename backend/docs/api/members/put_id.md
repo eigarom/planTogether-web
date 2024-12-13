@@ -1,6 +1,6 @@
 # Mettre à jour les informations d'un membre
 
-Permet de mettre à jour les informations (nom et couleur) d'un membre non inscrit de la famille.
+Permet de mettre à jour les informations (nom et couleur) d'un membre non inscrit de la famille de l'utilisateur.
 
 **URL** : `/members/:id`
 
@@ -8,7 +8,7 @@ Permet de mettre à jour les informations (nom et couleur) d'un membre non inscr
 
 **Authentification requise** : Oui
 
-**Permissions requises** : L'utilisateur doit être membre de la famille.
+**Permissions requises** : Aucune (mais l'utilisateur doit être membre de la famille).
 
 ## Paramètres de la requête
 

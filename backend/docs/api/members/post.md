@@ -1,6 +1,6 @@
 # Ajouter un membre à la famille
 
-Permet d'ajouter un nouveau membre à la famille de l'utilisateur authentifié.
+Permet d'ajouter un nouveau membre non inscrit à la famille de l'utilisateur authentifié.
 
 **URL** : `/members`
 
