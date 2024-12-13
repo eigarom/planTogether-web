@@ -1,4 +1,4 @@
-# Supprimer l'image de profil
+# Supprimer l'image de profil d'un membre
 
 Supprime l'image de profil du membre correspondant à l'id.
 
@@ -21,6 +21,7 @@ Supprime l'image de profil du membre correspondant à l'id.
 ```
 
 ## Opération échouée
+
 ### Si le token fourni est incorrect.
 
 **Code** : `401 Unauthorized`
@@ -29,8 +30,8 @@ Supprime l'image de profil du membre correspondant à l'id.
 
 ```json
 {
-    "status":401,
-    "message":"Erreur lors de la récupération du token"
+    "status": 401,
+    "message": "Erreur lors de la récupération du token"
 }
 ```
 
@@ -42,8 +43,8 @@ Supprime l'image de profil du membre correspondant à l'id.
 
 ```json
 {
-    "status":403,
-    "message":"Accès non autorisé aux données de ce membre"
+    "status": 403,
+    "message": "Accès non autorisé aux données de ce membre"
 }
 ```
 
@@ -55,8 +56,8 @@ Supprime l'image de profil du membre correspondant à l'id.
 
 ```json
 {
-    "status":404,
-    "message":"Membre introuvable"
+    "status": 404,
+    "message": "Membre introuvable"
 }
 ```
 
@@ -68,7 +69,7 @@ Supprime l'image de profil du membre correspondant à l'id.
 
 ```json
 {
-    "status":500,
-    "message":"[Message d'erreur correspondant]"
+    "status": 500,
+    "message": "[Message d'erreur correspondant]"
 }
 ```

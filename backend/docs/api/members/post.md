@@ -1,4 +1,4 @@
-# Ajouter un membre à la famille
+# Ajouter un membre non inscrit à la famille
 
 Permet d'ajouter un nouveau membre non inscrit à la famille de l'utilisateur authentifié.
 
@@ -8,7 +8,7 @@ Permet d'ajouter un nouveau membre non inscrit à la famille de l'utilisateur au
 
 **Authentification requise** : Oui
 
-**Permissions requises** : Aucune (mais l'utilisateur doit être membre de la famille)
+**Permissions requises** : Aucune
 
 ## Paramètres de la requête
 

@@ -8,7 +8,7 @@ Permet de supprimer un membre non inscrit de la famille en utilisant son identif
 
 **Authentification requise** : Oui
 
-**Permissions requises** : Aucune (mais l'utilisateur doit être membre de la famille).
+**Permissions requises** : Aucune
 
 ## Paramètres de la requête
 

@@ -8,7 +8,7 @@ Permet de récupérer les informations d'un membre spécifique de la famille en 
 
 **Authentification requise** : Oui
 
-**Permissions requises** : Aucune (mais l'utilisateur doit être membre de la famille)
+**Permissions requises** : Aucune
 
 ## Paramètres de la requête
 
