@@ -1,7 +1,7 @@
 {
     "myFamily": "Ma famille",
-    "saveModifications": "Enregistrer les modifications",
-    "familyOptionsTitle": "Créer ou rejoindre une famille",
+	"saveModifications": "Enregistrer",
+	"familyOptionsTitle": "Famille",
     "createFamily": "Créer une famille",
     "joinFamily": "Rejoindre une famille",
     "familyName": "Nom de la famille",
@@ -20,6 +20,7 @@
     "guestMembers": "Membres secondaires",
     "addMember": "Ajouter un membre",
     "quitFamily": "Quitter la famille",
+	"createFamilyFailed": "La famille n'a pas pu être créée",
     "toastErrorQuitFamily": "La famille n'a pas pu être quittée",
     "toastCopiedMessage": "Code copié",
     "toastErrorCopyMessage": "Erreur lors de la copie"

@@ -6,7 +6,7 @@
     "email": "Courriel",
     "updateImageButton": "Choisir une image",
     "deleteImageButton": "Supprimer l'image",
-    "updateButton": "Mettre à jour",
+	"updateButton": "Enregistrer",
     "colorInvalid": "La couleur n'est pas valide",
     "colorRequired": "La couleur est requise",
     "submitButton": "Soumettre",

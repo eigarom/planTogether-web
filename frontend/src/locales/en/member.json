@@ -6,7 +6,7 @@
     "email": "Email",
     "updateImageButton": "Choose an image",
     "deleteImageButton": "Delete image",
-    "updateButton": "Update",
+	"updateButton": "Save",
     "colorInvalid": "The color is invalid",
     "colorRequired": "The color is required",
     "submitButton": "Submit",
