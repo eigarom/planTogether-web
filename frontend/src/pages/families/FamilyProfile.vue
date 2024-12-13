@@ -1,5 +1,5 @@
 <template>
-	<div v-if="family" class="flex flex-col gap-5 w-full">
+	<div v-if="family" class="flex flex-col gap-5">
 		<h1 class="text-3xl">{{ $t('myFamily') }}</h1>
 
 		<!--Contenu principal-->
@@ -56,7 +56,7 @@
 							<!--Utilisateur-->
 							<router-link :to="'/profile'">
 								<div class="flex flex-inline items-center justify-between  p-3 rounded-lg
-									 hover:bg-gray-100 h-fit"
+									 hover:bg-slate-100 h-fit"
 								>
 
 									<p>{{ user.name }}</p>
@@ -76,7 +76,7 @@
 							<router-link v-for="accountMember in accountMembers" :key="accountMember.id"
 										 :to="`/members/${accountMember.id}`">
 								<div v-if="accountMember.id !== user.id"
-									 class="flex flex-inline items-center justify-between  p-3 rounded-lg hover:bg-gray-100 h-fit"
+									 class="flex flex-inline items-center justify-between  p-3 rounded-lg hover:bg-slate-100 h-fit"
 								>
 									<p>{{ accountMember.name }}</p>
 
@@ -104,7 +104,7 @@
 						<div v-if="guestMembers.length > 0">
 							<router-link v-for="guestMember in guestMembers" :key="guestMember.id"
 										 :to="`/members/${guestMember.id}`"
-										 class="flex flex-inline items-center justify-between p-3 rounded-lg hover:bg-gray-100"
+										 class="flex flex-inline items-center justify-between p-3 rounded-lg hover:bg-slate-100"
 							>
 								<p>{{ guestMember.name }}</p>
 
@@ -406,7 +406,7 @@ export default {
 				this.guestMembers.push(newMember);
 				this.guestMembers = this.sortMembersAlphabetically(this.guestMembers);
 				this.newMemberName = '';
-				this.newMemberColor = '';
+				this.newMemberColor = 'FF0000';
 				this.dialogMemberCreationVisible= false;
 				this.$refs.toast.add({
 					severity: 'success',

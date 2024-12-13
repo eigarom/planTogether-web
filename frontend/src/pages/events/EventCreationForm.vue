@@ -1,79 +1,149 @@
 <template>
-	<div class="top-20 w-96 gap-3 flex flex-col pt-20 pb-16">
-		<h1 class="text-3xl mb-4 text-center">{{ $t('newEvent') }}</h1>
-		<form id="eventForm" class="flex flex-col gap-5" @submit.prevent="submitCreateEvent">
-			<div class="flex items-center justify-between">
-				<FloatLabel variant="on" class="w-full">
-					<InputText id="name" v-model.trim="name" class="w-full" />
-					<label for="name">{{ $t('eventName') }}</label>
-				</FloatLabel>
-			</div>
-			<div>
-				<FloatLabel variant="on">
-					<Textarea id="description" v-model.trim="description" rows="2" class="w-full" />
-					<label for="description">{{ $t('description') }}</label>
-				</FloatLabel>
-			</div>
-			<div class="flex items-center gap-3">
-				<p>{{ $t('visibility') }}</p>
-				<ToggleSwitch id="isVisible" v-model.trim="checked" />
-			</div>
-			<div class="flex flex-col border p-3 rounded-lg gap-3">
-				<p class="text-lg text-center">{{ $t('participants') }}</p>
-				<div v-for="member in allMembers" :key="member.id"
-					class="flex flex-inline items-center justify-between border p-3 rounded-lg"
-					:class="{ 'bg-blue-100': isSelected(member) }" @click="toggleMemberSelection(member)"
-					style="cursor: pointer;">
-					<p>{{ member.name }}</p>
-					<Avatar v-if="member.imageUrl" :image="member.imageUrl" shape="circle" size="small" class="border-4"
-						:style="{ borderColor: member.color }" />
-					<Avatar v-else :label="memberInitials(member)" :style="`background-color: ${member.color}`"
-						class="font-semibold text-white" shape="circle" size="small" />
+	<div class="flex flex-col gap-5">
+		<h1 class="text-3xl">{{ $t('newEvent') }}</h1>
+
+		<!-- Contenu principal -->
+		<form id="eventForm" class="flex flex-col gap-8 bg-white border rounded-lg p-5"
+			  @submit.prevent="submitCreateEvent"
+		>
+			<!-- Renseignements -->
+			<div class="flex flex-col gap-8">
+
+				<!-- Première ligne -->
+				<div class="flex gap-8">
+
+					<!-- Nom, description, visibilité -->
+					<div class="flex flex-col gap-8 p-5 bg-white border rounded-lg w-80">
+						<!-- Nom -->
+						<div class="row-start-1 col-start-1">
+							<FloatLabel class="w-full" variant="on">
+								<InputText id="name" v-model.trim="name" class="w-full"/>
+								<label for="name">{{ $t('eventName') }}</label>
+							</FloatLabel>
+						</div>
+
+						<!-- Description -->
+						<div class="row-start-1 row-span-2 col-start-2 h-full">
+							<FloatLabel class="w-full h-full" variant="on">
+								<Textarea id="description" v-model.trim="description" class="w-full h-full"/>
+								<label for="description">{{ $t('description') }}</label>
+							</FloatLabel>
+						</div>
+
+						<!-- Visibilité -->
+						<div class="row-start-2 col-start-1 flex items-center gap-8">
+							<p>{{ $t('visibility') }}</p>
+							<ToggleSwitch id="isVisible" v-model.trim="checked"/>
+						</div>
+					</div>
+
+					<!-- Dates, heures, répétition -->
+					<div class="flex flex-col gap-8 border rounded-lg p-5 w-fit h-fit bg-white">
+
+						<div class="flex gap-8">
+							<!-- Date début -->
+							<FloatLabel class="w-52" variant="on">
+								<DatePicker v-model="startDate" iconDisplay="input" inputId="startDate" showIcon
+											@update:modelValue="onDateChange"/>
+								<label for="startDate">{{ $t('startDate') }}</label>
+							</FloatLabel>
+
+							<!-- Date fin -->
+							<FloatLabel class="w-52" variant="on">
+								<DatePicker v-model="endDate" iconDisplay="input" inputId="endDate" showIcon
+											@update:modelValue="onDateChange"/>
+								<label for="endDate">{{ $t('endDate') }}</label>
+							</FloatLabel>
+						</div>
+
+						<!-- Toute la journée -->
+						<div class="flex items-center gap-8">
+							<p>{{ $t('wholeDay') }}</p>
+
+							<ToggleSwitch id="allDay" v-model.trim="allDay" @update:modelValue="onDateChange"/>
+						</div>
+
+						<!-- Heures -->
+						<div v-if="!allDay" class="flex gap-8">
+							<FloatLabel class="w-52" variant="on">
+								<DatePicker id="startTime" v-model="startTime" fluid timeOnly
+											@update:modelValue="onDateChange"/>
+								<label for="startTime">{{ $t('startTimeLabel') }}</label>
+							</FloatLabel>
+
+							<FloatLabel class="w-52" variant="on">
+								<DatePicker id="endTime" v-model="endTime" fluid timeOnly
+											@update:modelValue="onDateChange"/>
+								<label for="endTime">{{ $t('endTimeLabel') }}</label>
+							</FloatLabel>
+						</div>
+
+						<!-- Répétition et alertes -->
+						<div class="flex gap-8">
+							<!-- Répétition -->
+							<div class="flex items-center">
+								<label class="w-[92px]">{{ $t('repeat') }}</label>
+
+								<Select
+									v-model="selectedFrequency" :options="translatedFrequencies"
+									:placeholder="$t('nonePlaceholder')"
+									class="w-48"
+									optionLabel="name"
+								/>
+							</div>
+
+							<InputNumber v-if="selectedFrequency !== null && selectedFrequency.code !== 'none'"
+										 v-model="numberRepeats" :max="365" :min="0" buttonLayout="horizontal"
+										 class="text-center" fluid inputId="numberRepeats"
+										 inputStyle="text-align: center;"
+										 showButtons style="width: 132px;"
+							/>
+						</div>
+
+						<!-- Alertes -->
+						<div class="flex items-center">
+							<label class="w-[92px]">{{ $t('alerts') }}</label>
+
+							<MultiSelect v-model="selectedAlertTypes" :options="translatedAlertTypes"
+										 :placeholder="$t('nonePlaceholder')"
+										 :showSelectAll="false" class="w-48"
+										 optionLabel="name"
+							/>
+						</div>
+					</div>
+				</div>
+
+				<!-- Participants -->
+				<div class="grid grid-cols-4 gap-5 w-full ">
+					<div v-for="member in allMembers" :key="member.id"
+						 :class="{ 'bg-blue-100': isSelected(member) }"
+						 class="flex flex-inline items-center justify-between border p-3 rounded-lg gap-3 hover:bg-slate-100 "
+						 style="cursor: pointer;"
+						 @click="toggleMemberSelection(member)">
+
+						<p>{{ member.name }}</p>
+
+						<Avatar v-if="member.imageUrl" :image="member.imageUrl"
+								:style="{ borderColor: member.color }"
+								class="border-4" shape="circle"
+								size="small"/>
+						<Avatar v-else :label="memberInitials(member)"
+								:style="`background-color: ${member.color}`"
+								class="font-semibold text-white" shape="circle" size="small"/>
+					</div>
 				</div>
 			</div>
-			<div class="flex items-center gap-3">
-				<FloatLabel variant="on">
-					<DatePicker v-model="startDate" inputId="startDate" showIcon iconDisplay="input"
-						@update:modelValue="onDateChange" />
-					<label for="startDate">{{ $t('startDate') }}</label>
-				</FloatLabel>
-				<FloatLabel variant="on">
-					<DatePicker v-model="endDate" inputId="endDate" showIcon iconDisplay="input"
-						@update:modelValue="onDateChange" />
-					<label for="endDate">{{ $t('endDate') }}</label>
-				</FloatLabel>
-			</div>
-			<div class="flex items-center gap-3">
-				<p>{{ $t('wholeDay') }}</p>
-				<ToggleSwitch id="allDay" v-model.trim="allDay" @update:modelValue="onDateChange" />
-			</div>
-			<div class="flex items-center gap-3" v-if="!allDay">
-				<DatePicker id="startTime" v-model="startTime" timeOnly fluid @update:modelValue="onDateChange" />
-				<DatePicker id="endTime" v-model="endTime" timeOnly fluid @update:modelValue="onDateChange" />
-			</div>
-			<Message v-if="!areValidDates" severity="error" icon="pi pi-times-circle" class="mb-2">La date/heure de fin
-				de l'événement doit être après le début!</Message>
-			<div class="flex items-center gap-3">
-				<label>{{ $t('repeat') }}</label>
-				<Select v-model="selectedFrequency" :options="translatedFrequencies" optionLabel="name"
-					:placeholder="$t('nonePlaceholder')" />
-			</div>
-			<div class="flex items-center gap-3" v-if="selectedFrequency !== null && selectedFrequency.code !== 'none'">
-				<label for="numberRepeats">{{ $t('numberRepeats') }}</label>
-				<InputNumber v-model="numberRepeats" inputId="numberRepeats" showButtons buttonLayout="vertical"
-					style="width: 10rem" :min="0" :max="365" fluid />
-			</div>
-			<div class="flex items-center gap-3">
-				<label>{{ $t('alerts') }}</label>
-				<MultiSelect v-model="selectedAlertTypes" :options="translatedAlertTypes" optionLabel="name"
-					:placeholder="$t('nonePlaceholder')" :showSelectAll="false" />
-			</div>
-			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-			<Button :disabled="isSubmitButtonDisabled" :label="$t('buttonCreateEvent')" raised type="submit" />
+			<!-- Bouton de soumission -->
+			<div class="flex justify-center">
+				<Button
+					:disabled="isSubmitButtonDisabled" :label="$t('buttonCreateEvent')" class="w-60"
+					type="submit"
+				/>
+			</div>
 		</form>
 
-		<Toast ref="toast" position="bottom-right" />
+		<Toast ref="toast" position="bottom-right"/>
 	</div>
 </template>
 
@@ -89,16 +159,26 @@ import Button from "primevue/button";
 import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import Toast from 'primevue/toast';
-import { eventSchema } from "@/schemas/eventSchemas.js";
-import { createEvent } from "@/services/eventServices.js";
-import { getAllMembersByFamilyId } from "@/services/memberServices.js";
-import { getMemberImage } from "@/services/memberServices.js";
+import {eventSchema} from "@/schemas/eventSchemas.js";
+import {createEvent} from "@/services/eventServices.js";
+import {getAllMembersByFamilyId, getMemberImage} from "@/services/memberServices.js";
 import Avatar from "primevue/avatar";
 
 export default {
 	inject: ['token', 'user'],
 	components: {
-		InputText, Textarea, ToggleSwitch, DatePicker, Select, InputNumber, MultiSelect, Button, Message, FloatLabel, Toast, Avatar
+		InputText,
+		Textarea,
+		ToggleSwitch,
+		DatePicker,
+		Select,
+		InputNumber,
+		MultiSelect,
+		Button,
+		Message,
+		FloatLabel,
+		Toast,
+		Avatar
 	},
 	data: () => {
 		return {
@@ -111,22 +191,22 @@ export default {
 			allDay: false,
 			startTime: '',
 			endTime: '',
-			selectedFrequency: { name: 'Aucune', code: 'none' },
+			selectedFrequency: {name: 'Aucune', code: 'none'},
 			frequencies: [
-				{ labelKey: 'frequencies.none', code: 'none' },
-				{ labelKey: 'frequencies.daily', code: 'daily' },
-				{ labelKey: 'frequencies.weekly', code: 'weekly' },
-				{ labelKey: 'frequencies.monthly', code: 'monthly' },
-				{ labelKey: 'frequencies.annual', code: 'annual' }
+				{labelKey: 'frequencies.none', code: 'none'},
+				{labelKey: 'frequencies.daily', code: 'daily'},
+				{labelKey: 'frequencies.weekly', code: 'weekly'},
+				{labelKey: 'frequencies.monthly', code: 'monthly'},
+				{labelKey: 'frequencies.annual', code: 'annual'}
 			],
 			numberRepeats: '',
 			selectedAlertTypes: [],
 			alertTypes: [
-				{ labelKey: 'alertTypes.10min', code: '10min' },
-				{ labelKey: 'alertTypes.30min', code: '30min' },
-				{ labelKey: 'alertTypes.1hour', code: '1hour' },
-				{ labelKey: 'alertTypes.4hours', code: '4hours' },
-				{ labelKey: 'alertTypes.24hours', code: '24hours' },
+				{labelKey: 'alertTypes.10min', code: '10min'},
+				{labelKey: 'alertTypes.30min', code: '30min'},
+				{labelKey: 'alertTypes.1hour', code: '1hour'},
+				{labelKey: 'alertTypes.4hours', code: '4hours'},
+				{labelKey: 'alertTypes.24hours', code: '24hours'},
 			],
 			selectedParticipants: [],
 			allMembers: [],
@@ -155,18 +235,6 @@ export default {
 	},
 	methods: {
 		async submitCreateEvent() {
-
-			// Empêcher l'envoi si le formulaire n'est pas valide
-			if (this.isSubmitButtonDisabled) {
-				this.$refs.toast.add({
-					severity: 'error',
-					summary: this.$t('toastErrorTitle'),
-					detail: this.$t('formContainsErrors'),
-					life: 5000
-				});
-				return;
-			}
-
 			const dataValidation = {
 				name: this.name,
 				description: this.description,
@@ -187,6 +255,7 @@ export default {
 					detail: err.message,
 					life: 5000
 				});
+				return;
 			}
 
 			this.setIsVisible();
@@ -204,7 +273,12 @@ export default {
 				await createEvent(eventDetails, this.token);
 				this.$router.push('/events');
 			} catch {
-				this.errorMessage = this.$t('eventCreationFailure');
+				this.$refs.toast.add({
+					severity: 'error',
+					summary: this.$t('toastErrorTitle'),
+					detail: this.$t('eventCreationFailure'),
+					life: 5000
+				});
 			}
 		},
 		setIsVisible() {
@@ -252,7 +326,7 @@ export default {
 			return new Date(`${datePart}T${hours}:${minutes}:00`);
 		},
 		addToPeriods(startDateTime, endDateTime) {
-			const newPeriod = { "startDateTime": startDateTime, "endDateTime": endDateTime, alerts: [] };
+			const newPeriod = {"startDateTime": startDateTime, "endDateTime": endDateTime, alerts: []};
 			this.periods.push(newPeriod);
 		},
 		handleFrequency(frequencyCode, initialStartDateTime, initialEndDateTime) {
@@ -421,6 +495,12 @@ export default {
 				this.startTime = startTime;
 				this.onDateChange();
 			}
+		},
+		areValidDates(newValidity) {
+			if (!newValidity) {
+				const newEndTime = new Date(this.startTime);
+				newEndTime.setHours(this.startTime.getHours() + 1);
+				this.endTime = newEndTime;			}
 		}
 	}
 };

@@ -31,6 +31,8 @@
 <script>
 import Button from 'primevue/button';
 import Menu from 'primevue/menu';
+import enLocale from '../locales/en/primevue.json';
+import frLocale from '../locales/fr/primevue.json';
 
 export default {
 	inject: ['user', 'logout'],
@@ -50,6 +52,12 @@ export default {
 			this.$refs.menu.toggle(event);
 		},
 		changeLanguage(lang) {
+			const locales = {
+				en: enLocale,
+				fr: frLocale
+			};
+
+			this.$primevue.config.locale = locales[lang];
 			this.$i18n.locale = lang;
 			this.$cookies.set('language', lang);
 		}

@@ -5,6 +5,7 @@ import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
 import ConfirmationService from 'primevue/confirmationservice';
 import i18n from './locales/i18n.js';
+import frLocale from './locales/fr/primevue.json';
 
 import App from './App.vue';
 import EventsList from './pages/events/EventsList.vue';
@@ -31,9 +32,12 @@ app.use(PrimeVue, {
 		options: {
 			darkModeSelector: '.my-app-dark',
 		}
-	}
+	},
+	locale: frLocale
 });
 app.use(ConfirmationService);
+
+app.config.globalProperties.$primevue = { config: app.config.globalProperties.$primevue.config };
 
 // Cookies
 app.use(VueCookies, {expires: '100d'});

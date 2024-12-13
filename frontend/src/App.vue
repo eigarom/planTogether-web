@@ -1,7 +1,7 @@
 <template>
 	<AppHeader />
 	<SidebarNavigation v-if="user && family"/>
-	<main v-if="!isLoading" class="flex w-full pb-20">
+	<main v-if="!isLoading" class="flex w-full pb-[75px]">
 		<router-view></router-view>
 	</main>
 	<AppFooter />
@@ -15,6 +15,8 @@ import {getFamilyFromToken, getFamilyImage} from "@/services/familyServices.js";
 import {getMemberImage} from "@/services/memberServices.js";
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from "@/components/AppFooter.vue";
+import enLocale from "@/locales/en/primevue.json";
+import frLocale from "@/locales/fr/primevue.json";
 
 export default {
 	components: {
@@ -66,11 +68,18 @@ export default {
 		},
 		logout() {
 			this.$cookies.remove("jwtToken");
+			this.$cookies.remove("language");
 			window.location.href = "/";
 		},
 		chargeLanguage() {
 			const savedLanguage = this.$cookies.get('language');
+			const locales = {
+				en: enLocale,
+				fr: frLocale
+			};
+
 			if (savedLanguage) {
+				this.$primevue.config.locale = locales[savedLanguage];
 				this.$i18n.locale = savedLanguage;
 			}
 		}

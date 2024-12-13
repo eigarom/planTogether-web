@@ -1,9 +1,9 @@
 <template>
 	<Menu id="sidebar" :model="items" class="fixed left-8 z-40 p-4 h-[calc(100%-165px)] w-60">
 		<template #start>
-			<div class="flex flex-col gap-5 p-1">
+			<div class="flex flex-col gap-4 p-1">
 				<!--Informations de l'utilisateur-->
-				<router-link class="inline-flex items-center gap-5" to="/profile">
+				<router-link class="inline-flex items-center gap-5 hover:bg-slate-100 rounded p-1" to="/profile">
 					<Avatar v-if="user.imageUrl" :image="user.imageUrl" shape="circle" size="large"/>
 					<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
 							class="font-semibold text-white" shape="circle" size="large"/>
