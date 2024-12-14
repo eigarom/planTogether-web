@@ -1,9 +1,12 @@
 <template>
 	<AppHeader/>
-	<SidebarNavigation v-if="user && family"/>
-	<main v-if="!isLoading" class="flex w-full pb-[75px]">
+
+	<main v-if="!isLoading" class="flex gap-8 h-full pl-[260px] pr-5 pt-20 pb-[68px] overflow-auto">
+		<SidebarNavigation v-if="user && family"/>
+
 		<router-view></router-view>
 	</main>
+
 	<AppFooter/>
 </template>
 

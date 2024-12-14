@@ -1,5 +1,5 @@
 <template>
-	<div v-if="family" class="flex flex-col gap-5">
+	<div v-if="family" class="flex flex-col gap-5 min-h-fit">
 		<h1 class="text-3xl">{{ $t('myFamily') }}</h1>
 
 		<!--Contenu principal-->

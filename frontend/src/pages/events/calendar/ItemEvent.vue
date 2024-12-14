@@ -6,13 +6,13 @@
 
 			<div class="flex flex-col">
 				<!-- Nom de l'événement -->
-				<span class="text-xl">{{ event.name }}</span>
+				<p class="text-xl truncate">{{ event.name }}</p>
 
 				<!-- Affichage de l'heure de début et de fin -->
-				<span v-if="isAllDayEvent()">{{ $t('wholeDay') }}</span>
-				<span v-else>{{ formatTime(event.period.startDateTime) }} - {{
+				<p v-if="isAllDayEvent()" class="truncate">{{ $t('wholeDay') }}</p>
+				<p v-else class="truncate">{{ formatTime(event.period.startDateTime) }} - {{
 						formatTime(event.period.endDateTime)
-					}}</span>
+					}}</p>
 			</div>
 
 			<!-- Membres de l'événement -->

@@ -1,5 +1,5 @@
 <template>
-	<div class="border p-2 w-full h-auto">
+	<div class="border rounded p-2 w-full ">
 		<h3 class="flex justify-center">{{ dayNumber }}</h3>
 
 		<div class="flex flex-col gap-2">

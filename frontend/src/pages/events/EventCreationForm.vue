@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col gap-5">
+	<div class="flex flex-col gap-5 min-h-fit">
 		<h1 class="text-3xl">{{ $t('newEvent') }}</h1>
 
 		<!-- Contenu principal -->

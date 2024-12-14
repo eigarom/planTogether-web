@@ -1,16 +1,23 @@
 <template>
-	<Menu id="sidebar" :model="items" class="fixed left-8 z-40 p-4 h-[calc(100%-165px)] w-60">
+	<Menu id="sidebar" :model="items" class="fixed left-5 z-40 p-4 h-[calc(100%-148px)] w-52">
 		<template #start>
 			<div class="flex flex-col gap-4 p-1">
 				<!--Informations de l'utilisateur-->
-				<router-link class="inline-flex items-center gap-5 hover:bg-slate-100 rounded p-1" to="/profile">
-					<Avatar v-if="user.imageUrl" :image="user.imageUrl" shape="circle" size="large"/>
-					<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
-							class="font-semibold text-white" shape="circle" size="large"/>
+				<router-link
+					class="inline-flex items-center gap-2 hover:bg-slate-100 rounded p-1"
+					to="/profile">
+					<Avatar
+						:image="user.imageUrl"
+						:label="!user.imageUrl ? userInitial : null"
+						:style="!user.imageUrl ? `background-color: ${user.color}` : null"
+						class="font-semibold text-white flex-shrink-0"
+						shape="circle"
+						size="small"
+					/>
 
-					<div class="flex flex-col justify-between">
-						<span class="text-xl">{{ user.name }}</span>
-						<span class="text-sm">{{ family.name }}</span>
+					<div class="flex flex-col justify-between w-[117px]">
+						<p class="text-nowrap overflow-hidden">{{ user.name }}</p>
+						<p class="text-xs">{{ family.name }}</p>
 					</div>
 				</router-link>
 

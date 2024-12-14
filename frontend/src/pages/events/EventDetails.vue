@@ -1,5 +1,5 @@
 <template>
-	<div v-if="event" class="flex flex-col gap-5">
+	<div v-if="event" class="flex flex-col gap-5 min-h-fit">
 		<h1 class="text-3xl">{{ $t('eventDetailTitle') }}</h1>
 
 		<!-- Contenu principal -->

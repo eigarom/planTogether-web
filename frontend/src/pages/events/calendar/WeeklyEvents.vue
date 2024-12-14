@@ -1,5 +1,6 @@
 <template>
-	<div class="flex flex-col bg-white border p-3 rounded-lg gap-3 h-[calc(100vh-227px)] w-full">
+	<!--	<div class="flex flex-col bg-white border p-3 rounded-lg gap-3 min-h-[calc(100vh-227px)] w-full">-->
+	<div class="flex flex-col bg-white border p-3 rounded-lg gap-3   w-full">
 
 		<!-- Année -->
 		<div class="flex justify-center items-center text-xl font-bold">
@@ -19,7 +20,7 @@
 		<!--			</div>-->
 
 		<!-- Événements de la semaine -->
-		<div class="flex h-full w-full">
+		<div class="grid grid-cols-7 gap-2 w-full h-full">
 			<DailyEvents
 				v-for="day in week"
 				:key="day.id"

@@ -1,5 +1,6 @@
 <template>
-	<div class="flex flex-col gap-5 w-full">
+	<div class="flex flex-col gap-5 w-full min-h-fit">
+
 		<!-- Entête -->
 		<div class="flex justify-between">
 			<h1 class="text-3xl">{{ $t('eventsTitle') }}</h1>
@@ -8,7 +9,7 @@
 		</div>
 
 		<!-- Calendrier -->
-		<div v-if="!loading">
+		<div v-if="!loading" class="flex flex-grow">
 			<WeeklyEvents :dates="dates"/>
 		</div>
 	</div>
