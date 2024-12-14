@@ -65,15 +65,7 @@ import FileUpload from 'primevue/fileupload';
 import Toast from 'primevue/toast';
 import ConfirmDialog from 'primevue/confirmdialog';
 import {memberSchema} from "@/schemas/memberSchemas.js";
-import {
-	deleteMember,
-	deleteMemberImage,
-	getAllMembersByFamilyId,
-	getMemberById,
-	getMemberImage,
-	updateMemberById,
-	uploadMemberImage
-} from "@/services/memberServices.js";
+import {deleteMember, deleteMemberImage, updateMemberById, uploadMemberImage} from "@/services/memberServices.js";
 import Avatar from "primevue/avatar";
 
 export default {
@@ -107,24 +99,12 @@ export default {
 	},
 	methods: {
 		async getMemberInformations(id) {
-			const token = this.$cookies.get('jwtToken');
-			if (token) {
-				try {
-					const member = await getMemberById(token, id);
-					this.name = member.name;
-					this.color = member.color;
-					this.initialName = member.name;
-					this.initialColor = member.color;
-					this.imageUrl = await getMemberImage(this.token, id);
-				} catch {
-					this.$refs.toast.add({
-						severity: 'error',
-						summary: this.$t('toastErrorTitle'),
-						detail: this.$t('errorGetMessage'),
-						life: 5000
-					});
-				}
-			}
+			const member = this.family.guestMembers.find(member => member.id === parseInt(id));
+			this.name = member.name;
+			this.color = member.color;
+			this.initialName = member.name;
+			this.initialColor = member.color;
+			this.imageUrl = member.imageUrl;
 		},
 		async onImageSelect(event) {
 			const formData = new FormData();
@@ -133,6 +113,8 @@ export default {
 
 			try {
 				this.imageUrl = await uploadMemberImage(this.token, this.id, formData);
+				this.family.guestMembers.find(member => member.id === parseInt(this.id)).imageUrl = this.imageUrl;
+
 				this.$refs.toast.add({
 					severity: 'success',
 					summary: this.$t('toastSuccessTitle'),
@@ -152,6 +134,7 @@ export default {
 			try {
 				await deleteMemberImage(this.token, this.id);
 				this.imageUrl = '';
+				this.family.guestMembers.find(member => member.id === parseInt(this.id)).imageUrl = '';
 				this.$refs.toast.add({
 					severity: 'success',
 					summary: this.$t('toastSuccessTitle'),
@@ -168,7 +151,6 @@ export default {
 			}
 		},
 		async submitUpdateMember() {
-
 			if (!this.color.startsWith('#')) {
 				this.color = '#' + this.color;
 			}
@@ -180,8 +162,13 @@ export default {
 			try {
 				await memberSchema.validate(memberInformations);
 				await updateMemberById(this.token, memberInformations, this.id);
+
 				this.initialName = this.name;
 				this.initialColor = this.color;
+
+				this.family.guestMembers.find(member => member.id === parseInt(this.id)).name = this.name;
+				this.family.guestMembers.find(member => member.id === parseInt(this.id)).color = this.color;
+
 				this.$refs.toast.add({
 					severity: 'success',
 					summary: this.$t('toastSuccessTitle'),
@@ -204,19 +191,6 @@ export default {
 						life: 5000
 					});
 				}
-			}
-		},
-		async checkIfGuestMember() {
-			try {
-				const familyMembers = await getAllMembersByFamilyId(this.token);
-				for (const guestMember of familyMembers.guestMembers) {
-					if (guestMember.id === parseInt(this.id)) {
-						this.isGuestMember = true;
-						return;
-					}
-				}
-			} catch (error) {
-				console.error('Erreur:', error);
 			}
 		},
 		async confirm(event) {
@@ -253,7 +227,6 @@ export default {
 	},
 	created() {
 		this.getMemberInformations(this.id);
-		this.checkIfGuestMember();
 	}
 };
 </script>
