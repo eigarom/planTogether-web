@@ -9,7 +9,7 @@
 
 		<!-- Calendrier -->
 		<div v-if="!loading">
-			<WeeklyEvents :events="dates.flatMap(date => date.events)"/>
+			<WeeklyEvents :dates="dates"/>
 		</div>
 	</div>
 </template>

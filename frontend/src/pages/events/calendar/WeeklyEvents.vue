@@ -36,7 +36,7 @@ import DailyEvents from "./DailyEvents.vue";
 export default {
 	components: {Avatar, DailyEvents},
 	props: {
-		events: Array
+		dates: Array
 	},
 	data() {
 		return {
@@ -45,21 +45,21 @@ export default {
 	},
 	computed: {
 		week() {
-			console.log('events:', this.events);
 			const week = [];
+
 			for (let i = 0; i < 7; i++) {
 				const date = new Date(this.currentWeekStart);
+
 				date.setDate(this.currentWeekStart.getDate() + i);
+
 				const formattedDate = date.toLocaleDateString('fr-CA');
 
-				const dayEvents = this.events.filter(event => {
-					const eventDate = new Date(event.period.startDateTime);
-					return eventDate.toLocaleDateString('fr-CA') === formattedDate;
-				});
+				const day = this.dates.find(d => d.id === formattedDate) || {id: formattedDate, events: []};
+
 				week.push({
 					date,
 					id: formattedDate,
-					events: dayEvents
+					events: day.events
 				});
 			}
 			return week;
