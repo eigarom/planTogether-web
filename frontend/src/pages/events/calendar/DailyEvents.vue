@@ -4,8 +4,9 @@
 
 		<div class="flex flex-col gap-2">
 			<ItemEvent
-				v-for="event in day.events"
+				v-for="event in sortedEvents"
 				:key="event.id"
+				:day="day"
 				:event="event"
 			/>
 		</div>
@@ -29,6 +30,11 @@ export default {
 	computed: {
 		dayNumber() {
 			return this.day.date.getDate()
+		},
+		sortedEvents() {
+			return this.day.events.slice().sort((a, b) => {
+				return new Date(a.period.startDateTime) - new Date(b.period.startDateTime);
+			});
 		}
 	}
 }

@@ -6,11 +6,11 @@
 
 			<div class="flex flex-col">
 				<!-- Nom de l'événement -->
-				<p class="text-xl truncate">{{ event.name }}</p>
+				<p class="truncate">{{ event.name }}</p>
 
 				<!-- Affichage de l'heure de début et de fin -->
-				<p v-if="isAllDayEvent()" class="truncate">{{ $t('wholeDay') }}</p>
-				<p v-else class="truncate">{{ formatTime(event.period.startDateTime) }} - {{
+				<p v-if="isAllDayEvent()" class="text-xs truncate">{{ $t('wholeDay') }}</p>
+				<p v-else class="text-xs truncate">{{ formatTime(event.period.startDateTime) }} - {{
 						formatTime(event.period.endDateTime)
 					}}</p>
 			</div>
@@ -47,6 +47,10 @@ export default {
 		event: {
 			type: Object,
 			required: true
+		},
+		day: {
+			type: Object,
+			required: true
 		}
 	},
 	methods: {
@@ -62,10 +66,13 @@ export default {
 			}
 		},
 		isAllDayEvent() {
-			const start = new Date(this.event.period.startDateTime);
-			const end = new Date(this.event.period.endDateTime);
-			return start.getHours() === 0 && start.getMinutes() === 0 && end.getHours() === 23 &&
-				end.getMinutes() === 59;
+			const startEvent = new Date(this.event.period.startDateTime);
+			const endEvent = new Date(this.event.period.endDateTime);
+
+			const startDay = new Date(new Date(this.day.date).setHours(0, 0, 0, 0));
+			const endDay = new Date(new Date(this.day.date).setHours(23, 59, 0, 0));
+
+			return startDay >= startEvent && endDay <= endEvent;
 		},
 		formatTime(dateTime) {
 			const date = new Date(dateTime);
