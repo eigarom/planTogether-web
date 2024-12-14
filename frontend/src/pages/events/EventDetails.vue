@@ -599,7 +599,7 @@ export default {
 						target: event.currentTarget,
 						header: this.$t('deleteEventTitle'),
 						message: this.$t('deleteEventConfirm'),
-						icon: 'pi pi-info-circle',
+						icon: 'pi pi-exclamation-triangle',
 						rejectProps: {
 							label: this.$t('cancelButton'),
 							severity: 'secondary',
@@ -675,5 +675,4 @@ export default {
 	},
 
 }
-// TODO Changer icon supprimer par triangle warning
 </script>

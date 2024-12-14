@@ -189,7 +189,7 @@ export default {
 				target: event.currentTarget,
 				header: this.$t('deleteAccount'),
 				message: this.$t('deleteAccountConfirm'),
-				icon: 'pi pi-info-circle',
+				icon: 'pi pi-exclamation-triangle',
 				rejectProps: {
 					label: this.$t('cancelButton'),
 					severity: 'secondary',

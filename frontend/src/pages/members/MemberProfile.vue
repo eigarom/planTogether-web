@@ -224,7 +224,7 @@ export default {
 				target: event.currentTarget,
 				header: this.$t('deleteMember'),
 				message: this.$t('deleteMemberConfirm'),
-				icon: 'pi pi-info-circle',
+				icon: 'pi pi-exclamation-triangle',
 				rejectProps: {
 					label: this.$t('cancelButton'),
 					severity: 'secondary',

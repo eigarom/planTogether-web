@@ -307,7 +307,7 @@ export default {
 				target: event.currentTarget,
 				header: this.$t('quitFamily'),
 				message: this.$t('quitFamilyConfirm'),
-				icon: 'pi pi-info-circle',
+				icon: 'pi pi-exclamation-triangle',
 				rejectProps: {
 					label: this.$t('cancelButton'),
 					severity: 'secondary',
@@ -338,7 +338,7 @@ export default {
 				target: event.currentTarget,
 				header: this.$t('deleteFamilyButton'),
 				message: this.$t('deleteFamilyConfirm'),
-				icon: 'pi pi-info-circle',
+				icon: 'pi pi-exclamation-triangle',
 				rejectProps: {
 					label: this.$t('cancelButton'),
 					severity: 'secondary',
