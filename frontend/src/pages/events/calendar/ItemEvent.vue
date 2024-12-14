@@ -9,10 +9,7 @@
 				<p class="truncate">{{ event.name }}</p>
 
 				<!-- Affichage de l'heure de début et de fin -->
-				<p v-if="isAllDayEvent()" class="text-xs truncate">{{ $t('wholeDay') }}</p>
-				<p v-else class="text-xs truncate">{{ formatTime(event.period.startDateTime) }} - {{
-						formatTime(event.period.endDateTime)
-					}}</p>
+				<p class="text-xs truncate">{{ getEventTime() }}</p>
 			</div>
 
 			<!-- Membres de l'événement -->
@@ -65,19 +62,33 @@ export default {
 					member.imageUrl = this.family.accountMembers.find(m => m.id === member.id).imageUrl;
 			}
 		},
-		isAllDayEvent() {
+		getEventTime() {
 			const startEvent = new Date(this.event.period.startDateTime);
 			const endEvent = new Date(this.event.period.endDateTime);
-
 			const startDay = new Date(new Date(this.day.date).setHours(0, 0, 0, 0));
 			const endDay = new Date(new Date(this.day.date).setHours(23, 59, 0, 0));
 
-			return startDay >= startEvent && endDay <= endEvent;
+			// Si l'événement commence et se termine le même jour
+			if (startDay >= startEvent && endDay <= endEvent) {
+				return this.$t('wholeDay');
+			}
+			// Si l'événement se termine un autre jour afficher heur de fin à 23h59
+			if (endDay < endEvent) {
+				return `${this.formatTime(startEvent)} - 23:59`;
+			}
+
+			// Si l'événement commence un autre jour afficher heure de début à 00h00
+			if (startDay > startEvent) {
+				return `00:00 - ${this.formatTime(endEvent)}`;
+			}
+
+			// Si l'événement commence et se termine le même jour
+			return `${this.formatTime(startTime)} - ${this.formatTime(endTime)}`;
 		},
 		formatTime(dateTime) {
 			const date = new Date(dateTime);
 			return date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-		}
+		},
 	},
 	computed: {
 		eventBackgroundColorClass() {
