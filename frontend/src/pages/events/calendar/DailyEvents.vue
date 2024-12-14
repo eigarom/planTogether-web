@@ -28,7 +28,6 @@ export default {
 	},
 	computed: {
 		dayNumber() {
-			console.log(this.day)
 			return this.day.date.getDate()
 		}
 	}

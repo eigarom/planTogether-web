@@ -47,19 +47,16 @@ export default {
 			this.visibleEvents.forEach(event => {
 				event.periods.forEach(period => {
 					// Initialiser une boucle qui parcourt chaque jour dans l'intervalle de la période
+					const endDateTimeEndOfDay = new Date(new Date(period.endDateTime).setHours(23, 59, 59, 999));
+
 					for (
 						let dt = new Date(period.startDateTime);
 						// Vérifie si la date courante (dt) est avant ou égale à la fin de la journée du endDateTime
-						dt <= new Date(new Date(period.endDateTime).setHours(23, 59, 59, 999));
+						dt < endDateTimeEndOfDay;
 						dt.setDate(dt.getDate() + 1)
 					) {
-
-						// Convertir `dt` du fuseau horaire UTC à local
-						const localDate = new Date(dt.getTime() - dt.getTimezoneOffset() * 60 * 1000);
-
 						// Format de la date locale en "YYYY-MM-DD"
-						const dayId = `${localDate.getFullYear()}-${String(localDate.getMonth() + 1).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}`;
-						// const dayId = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+						const dayId = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
 
 						// Vérifier si un objet `date` avec cet `id` existe déjà
 						let dateObj = this.dates.find(date => date.id === dayId);
@@ -81,10 +78,10 @@ export default {
 							members: event.members
 						});
 					}
-				})
-			})
+				});
+			});
 			this.loading = false;
-		},
+		}
 	},
 	computed: {
 		visibleEvents() {

@@ -2,7 +2,7 @@
 
 	<router-link :to="`/events/${event.id}/periods/${event.period.id}`">
 
-		<div :style="backgroundColorClass" class="flex flex-col gap-3 p-3 rounded hover:bg-slate-100">
+		<div :style="eventBackgroundColorClass" class="flex flex-col gap-3 p-3 rounded hover:bg-slate-100">
 
 			<div class="flex flex-col">
 				<!-- Nom de l'événement -->
@@ -21,15 +21,14 @@
 					<Avatar
 						v-if="member.imageUrl"
 						:image="member.imageUrl"
-						class="shadow border border-gray-200"
 						shape="circle"
 						size="small"
 					/>
 					<Avatar
 						v-else
 						:label="memberInitials(member)"
-						:style="`background-color: ${member.color}`"
-						class="font-semibold text-white shadow border"
+						:style="avatarColorClass"
+						class="font-semibold"
 						shape="circle"
 						size="small"
 					/>
@@ -80,12 +79,24 @@ export default {
 		}
 	},
 	computed: {
-		backgroundColorClass() {
+		eventBackgroundColorClass() {
 			if (this.event.members.length > 1) {
 				return {backgroundColor: this.family.color};
 			}
 			return {backgroundColor: this.event.members[0].color};
-		}
+		},
+		avatarColorClass() {
+			if (this.event.members.length > 1) {
+				return {
+					backgroundColor: this.event.members[0].color,
+					color: 'white'
+				};
+			}
+			return {
+				backgroundColor: 'white',
+				color: this.event.members[0].color
+			};
+		},
 	},
 	mounted() {
 		this.getMemberImages();

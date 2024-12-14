@@ -45,14 +45,17 @@ export default {
 	},
 	computed: {
 		week() {
+			console.log('events:', this.events);
 			const week = [];
 			for (let i = 0; i < 7; i++) {
 				const date = new Date(this.currentWeekStart);
 				date.setDate(this.currentWeekStart.getDate() + i);
-				const formattedDate = date.toISOString().split('T')[0];
-				const dayEvents = this.events.filter(event =>
-					new Date(event.period.startDateTime).toISOString().split('T')[0] === formattedDate
-				);
+				const formattedDate = date.toLocaleDateString('fr-CA');
+
+				const dayEvents = this.events.filter(event => {
+					const eventDate = new Date(event.period.startDateTime);
+					return eventDate.toLocaleDateString('fr-CA') === formattedDate;
+				});
 				week.push({
 					date,
 					id: formattedDate,
