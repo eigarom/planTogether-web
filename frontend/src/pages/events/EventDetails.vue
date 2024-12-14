@@ -80,6 +80,7 @@
 						<div class="flex items-center gap-5">
 							<label>{{ $t('alerts') }}</label>
 							<MultiSelect v-model="translatedSelectedAlertTypes" :options="translatedAlertTypes"
+										 :placeholder="$t('nonePlaceholder')"
 										 :showSelectAll="false"
 										 optionLabel="name"/>
 						</div>
@@ -181,7 +182,7 @@ export default {
 			name: "",
 			description: "",
 			checked: false,
-			isVisible: "",
+			isVisible: false,
 			period: {},
 			members: [],
 			startDate: "",
@@ -452,6 +453,18 @@ export default {
 			this.endDate = new Date(this.period.endDateTime);
 			this.startTime = new Date(this.startDate);
 			this.endTime = new Date(this.endDate);
+
+			if (
+				this.startTime.getHours() === 0 &&
+				this.startTime.getMinutes() === 0 &&
+				this.endTime.getHours() === 23 &&
+				this.endTime.getMinutes() === 59 &&
+				this.startDate.toDateString() === this.endDate.toDateString()
+			) {
+				this.allDay = true;
+			} else {
+				this.allDay = false;
+			}
 		},
 		setAlerts() {
 			this.alerts = this.period.alerts;
@@ -593,6 +606,7 @@ export default {
 				} else {
 					this.$confirm.require({
 						target: event.currentTarget,
+						header: this.$t('deleteEventTitle'),
 						message: this.$t('deleteEventConfirm'),
 						icon: 'pi pi-info-circle',
 						rejectProps: {

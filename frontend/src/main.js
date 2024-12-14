@@ -8,7 +8,7 @@ import i18n from './locales/i18n.js';
 import frLocale from './locales/fr/primevue.json';
 
 import App from './App.vue';
-import EventsList from './pages/events/EventsList.vue';
+import EventsList from './pages/events/calendar/EventsList.vue';
 import EventDetails from './pages/events/EventDetails.vue';
 import EventCreationForm from './pages/events/EventCreationForm.vue';
 import LoginForm from "@/pages/auth/LoginForm.vue";

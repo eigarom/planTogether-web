@@ -1,9 +1,15 @@
 <template>
-	<div class="top-20 gap-3 flex flex-col pt-20 pb-16">
-		<h1 class="text-3xl mb-4 text-center">{{ $t('eventsTitle') }}</h1>
-		<Button class="w-48" as="router-link" :label="$t('buttonCreateEvent')" to="/events/add" />
-		<div v-if="!loading" class="flex flex-col border p-3 rounded-lg gap-3">
-			<WeeklyEvents :events="dates.flatMap(date => date.events)" />
+	<div class="flex flex-col gap-5 w-full">
+		<!-- Entête -->
+		<div class="flex justify-between">
+			<h1 class="text-3xl">{{ $t('eventsTitle') }}</h1>
+
+			<Button as="router-link" class="w-48" icon="pi pi-calendar-plus" to="/events/add"/>
+		</div>
+
+		<!-- Calendrier -->
+		<div v-if="!loading">
+			<WeeklyEvents :events="dates.flatMap(date => date.events)"/>
 		</div>
 	</div>
 </template>
@@ -11,7 +17,7 @@
 <script>
 import Button from 'primevue/button';
 import WeeklyEvents from './WeeklyEvents.vue';
-import { getEventsList } from '../../services/eventServices';
+import {getEventsList} from '@/services/eventServices.js';
 
 export default {
 	components: {
@@ -53,6 +59,7 @@ export default {
 
 						// Format de la date locale en "YYYY-MM-DD"
 						const dayId = `${localDate.getFullYear()}-${String(localDate.getMonth() + 1).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}`;
+						// const dayId = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
 
 						// Vérifier si un objet `date` avec cet `id` existe déjà
 						let dateObj = this.dates.find(date => date.id === dayId);
