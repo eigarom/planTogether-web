@@ -77,7 +77,7 @@ import {
 import Avatar from "primevue/avatar";
 
 export default {
-	inject: ['token'],
+	inject: ['token', 'family'],
 	components: {
 		Avatar, InputText, Button, FloatLabel, ColorPicker, FileUpload, Toast, ConfirmDialog
 	},
@@ -237,7 +237,8 @@ export default {
 				accept: async () => {
 					try {
 						await deleteMember(this.token, this.id);
-						window.location.href = '/my-family';
+						this.family.guestMembers.splice(this.family.guestMembers.findIndex(member => member.id === parseInt(this.id)), 1);
+						this.$router.push('/my-family');
 					} catch {
 						this.$refs.toast.add({
 							severity: 'error',

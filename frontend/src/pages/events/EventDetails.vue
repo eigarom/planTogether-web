@@ -145,7 +145,6 @@ import {
 	updateEventById,
 	updatePeriodById
 } from '@/services/eventServices.js';
-import {getAllMembersByFamilyId, getMemberImage} from "@/services/memberServices.js";
 import {eventOnlySchema, eventPeriodSchema} from "@/schemas/eventSchemas.js";
 import FloatLabel from "primevue/floatlabel";
 import Toast from 'primevue/toast';
@@ -159,7 +158,7 @@ import ConfirmDialog from 'primevue/confirmdialog';
 import MultiSelect from 'primevue/multiselect';
 
 export default {
-	inject: ['token', 'user'],
+	inject: ['token', 'user', 'family'],
 	components: {
 		FloatLabel,
 		Toast,
@@ -416,37 +415,29 @@ export default {
 		isSelected(member) {
 			return this.selectedParticipants.includes(member.id);
 		},
-		async getAllFamilyMembers() {
-			try {
-				const familyMembers = await getAllMembersByFamilyId(this.token);
+		getAllFamilyMembers() {
+			this.allMembers = [
+				...this.family.accountMembers,
+				...this.family.guestMembers
+			];
 
-				this.allMembers = [
-					...familyMembers.accountMembers,
-					...familyMembers.guestMembers
-				];
+			this.sortMembersAlphabetically(this.allMembers);
 
-				this.allMembers.forEach(async member => {
-					member.imageUrl = await getMemberImage(this.token, member.id);
-				});
+			if (this.user) {
+				// Filtre pour retirer toute occurrence de `this.user` dans `allMembers` dans le but de l'ajouter au début de la liste
+				this.allMembers = this.allMembers.filter(member => member.id !== this.user.id);
 
-				if (this.user) {
-					// Filtre pour retirer toute occurrence de `this.user` dans `allMembers` dans le but de l'ajouter au début de la liste
-					this.allMembers = this.allMembers.filter(member => member.id !== this.user.id);
+				// Ajoute `this.user` au début de la liste
+				this.allMembers.unshift(this.user);
 
-					// Ajoute `this.user` au début de la liste
-					this.allMembers.unshift(this.user);
+				// Sélectionner l'utilisateur par défaut
+				if (!this.selectedParticipants.includes(this.user.id)) {
+					this.selectedParticipants.push(this.user.id);
 				}
-
-				// Ajouter les membres de `members` à `selectedParticipants` par défaut
-				this.members.forEach(member => {
-					if (!this.selectedParticipants.includes(member.id)) {
-						this.selectedParticipants.push(member.id);
-					}
-				});
-
-			} catch (error) {
-				console.error('Erreur:', error);
 			}
+		},
+		sortMembersAlphabetically(members) {
+			return members.sort((a, b) => a.name.localeCompare(b.name));
 		},
 		setDateTime() {
 			this.startDate = new Date(this.period.startDateTime);

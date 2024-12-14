@@ -405,12 +405,13 @@ export default {
 
 			try {
 				await memberSchema.validate(memberInformations);
-				const newMember=await createMember(memberInformations, this.token);
+				const newMember = await createMember(memberInformations, this.token);
 				this.guestMembers.push(newMember);
 				this.guestMembers = this.sortMembersAlphabetically(this.guestMembers);
+				this.family.guestMembers = this.guestMembers;
 				this.newMemberName = '';
 				this.newMemberColor = 'FF0000';
-				this.dialogMemberCreationVisible= false;
+				this.dialogMemberCreationVisible = false;
 				this.$refs.toast.add({
 					severity: 'success',
 					summary: this.$t('toastSuccessTitle'),
@@ -431,6 +432,9 @@ export default {
 					life: 5000
 				});
 			}
+		},
+		sortMembersAlphabetically(members) {
+			return members.sort((a, b) => a.name.localeCompare(b.name));
 		}
 	},
 	created() {
