@@ -1,5 +1,5 @@
 <template>
-	<div v-if="event" class="flex flex-col gap-5 min-h-fit">
+	<div v-if="!isLoading" class="flex flex-col gap-5 min-h-fit">
 		<h1 class="text-3xl">{{ $t('eventDetailTitle') }}</h1>
 
 		<!-- Contenu principal -->
@@ -106,14 +106,13 @@
 
 						<p>{{ member.name }}</p>
 
-						<Avatar v-if="member.imageUrl" :image="member.imageUrl"
-								:style="{ borderColor: member.color }"
-								class="border-4" shape="circle"
-								size="small"
-						/>
-						<Avatar v-else :label="memberInitials(member)"
-								:style="`background-color: ${member.color}`"
-								class="font-semibold text-white" shape="circle" size="small"
+						<Avatar
+							:image="member.imageUrl"
+							:label="!member.imageUrl ? memberInitials(member) : null"
+							:style="!member.imageUrl ? `background-color: ${member.color}` : `border: 4px solid ${member.color}`"
+							class="font-semibold text-white flex-shrink-0"
+							shape="circle"
+							size="small"
 						/>
 					</div>
 				</div>
@@ -205,7 +204,8 @@ export default {
 			translatedAlertTypes: [],
 			updatedAlerts: [],
 			areValidDates: true,
-			errorMessage: ""
+			errorMessage: "",
+			isLoading: true
 		}
 	},
 	computed: {
@@ -242,11 +242,13 @@ export default {
 					this.isVisible = this.event.isVisible;
 					this.period = this.event.period;
 					this.members = this.event.members;
+					this.selectedParticipants = this.members.map(member => member.id);
 
 					this.setIsChecked();
 					this.getAllFamilyMembers();
 					this.setDateTime();
 					this.setAlerts();
+					this.setIsAllDay();
 				} catch (error) {
 					this.event = null;
 					console.error('Erreur:', error);
@@ -255,6 +257,19 @@ export default {
 		},
 		setIsChecked() {
 			this.checked = !this.isVisible;
+		},
+		setIsAllDay() {
+			if (
+				this.startTime.getHours() === 0 &&
+				this.startTime.getMinutes() === 0 &&
+				this.endTime.getHours() === 23 &&
+				this.endTime.getMinutes() === 59 &&
+				this.startDate.toDateString() === this.endDate.toDateString()
+			) {
+				this.allDay = true;
+			} else {
+				this.allDay = false;
+			}
 		},
 		async submitUpdateEvent() {
 			this.setIsVisible();
@@ -429,11 +444,6 @@ export default {
 
 				// Ajoute `this.user` au début de la liste
 				this.allMembers.unshift(this.user);
-
-				// Sélectionner l'utilisateur par défaut
-				if (!this.selectedParticipants.includes(this.user.id)) {
-					this.selectedParticipants.push(this.user.id);
-				}
 			}
 		},
 		sortMembersAlphabetically(members) {
@@ -631,6 +641,7 @@ export default {
 	},
 	mounted() {
 		this.getEventWithToken();
+		this.isLoading = false;
 	},
 	watch: {
 		'$i18n.locale': {
