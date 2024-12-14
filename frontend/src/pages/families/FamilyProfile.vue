@@ -180,7 +180,7 @@ import FileUpload from 'primevue/fileupload';
 import Toast from 'primevue/toast';
 import {familySchema} from "@/schemas/familySchemas.js";
 import Dialog from 'primevue/dialog';
-import {createMember, getAllMembersByFamilyId, getMemberImage} from "@/services/memberServices.js";
+import {createMember} from "@/services/memberServices.js";
 import Avatar from "primevue/avatar";
 import ConfirmDialog from 'primevue/confirmdialog';
 import {memberSchema} from "@/schemas/memberSchemas.js";
@@ -219,6 +219,9 @@ export default {
 		initializeFamilyData() {
 			this.name = this.family.name;
 			this.color = this.family.color;
+			this.familyImageUrl = this.family.imageUrl;
+			this.accountMembers = this.family.accountMembers;
+			this.guestMembers = this.family.guestMembers;
 		},
 		async onImageSelect(event) {
 			const formData = new FormData();
@@ -428,29 +431,10 @@ export default {
 					life: 5000
 				});
 			}
-		},
-		sortMembersAlphabetically(members) {
-			return members.sort((a, b) => a.name.localeCompare(b.name));
-		},
-		async getAllFamilyMembers() {
-			try {
-				const familyMembers = await getAllMembersByFamilyId(this.token);
-				this.accountMembers = this.sortMembersAlphabetically(familyMembers.accountMembers);
-				for (const accountMember of this.accountMembers) {
-					accountMember.imageUrl = await getMemberImage(this.token, accountMember.id);
-				}
-				this.guestMembers = this.sortMembersAlphabetically(familyMembers.guestMembers);
-				for (const guestMember of this.guestMembers) {
-					guestMember.imageUrl = await getMemberImage(this.token, guestMember.id);
-				}
-			} catch (error) {
-				console.error('Erreur:', error);
-			}
 		}
 	},
 	created() {
 		this.initializeFamilyData();
-		this.getAllFamilyMembers();
 	}
 };
 </script>

@@ -684,5 +684,5 @@ export default {
 	},
 
 }
-
+// TODO Changer icon supprimer par triangle warning
 </script>

@@ -16,23 +16,18 @@
 			</div>
 
 			<!-- Membres de l'événement -->
-			<div class="flex gap-1">
-				<div v-for="member in event.members" :key="member.id" class="flex items-center">
+			<div class="card flex justify-left">
+				<AvatarGroup>
 					<Avatar
-						v-if="member.imageUrl"
+						v-for="member in event.members"
+						:key="member.id"
 						:image="member.imageUrl"
+						:label="!member.imageUrl ? memberInitials(member) : null"
+						:style="!member.imageUrl ? avatarColorClass : null"
 						shape="circle"
 						size="small"
 					/>
-					<Avatar
-						v-else
-						:label="memberInitials(member)"
-						:style="avatarColorClass"
-						class="font-semibold"
-						shape="circle"
-						size="small"
-					/>
-				</div>
+				</AvatarGroup>
 			</div>
 		</div>
 	</router-link>
@@ -40,12 +35,12 @@
 
 <script>
 import Avatar from "primevue/avatar";
-import {getMemberImage} from "@/services/memberServices.js";
+import AvatarGroup from "primevue/avatargroup";
 
 export default {
 	name: 'ItemEvent',
 	components: {
-		Avatar
+		Avatar, AvatarGroup
 	},
 	inject: ['token', 'family'],
 	props: {
@@ -60,11 +55,10 @@ export default {
 		},
 		async getMemberImages() {
 			for (const member of this.event.members) {
-				try {
-					member.imageUrl = await getMemberImage(this.token, member.id);
-				} catch (error) {
-					console.error(`Erreur lors du chargement de l'image pour le membre ${member.id}:`, error);
-				}
+				if (this.family.guestMembers.find(m => m.id === member.id))
+					member.imageUrl = this.family.guestMembers.find(m => m.id === member.id).imageUrl;
+				else
+					member.imageUrl = this.family.accountMembers.find(m => m.id === member.id).imageUrl;
 			}
 		},
 		isAllDayEvent() {
