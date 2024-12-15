@@ -68,7 +68,8 @@
 						:key="member.id"
 						:image="member.imageUrl"
 						:label="!member.imageUrl ? memberInitials(member) : null"
-						:style="!member.imageUrl ? avatarColorClass : null"
+						:style="!member.imageUrl ? `background-color: ${member.color}` : `border: 4px solid ${member.color}`"
+						class="font-semibold text-white flex-shrink-0"
 						shape="circle"
 						size="small"
 					/>

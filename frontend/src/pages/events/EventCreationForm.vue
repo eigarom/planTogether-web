@@ -40,14 +40,14 @@
 							<!-- Date début -->
 							<FloatLabel class="w-full" variant="on">
 								<DatePicker v-model="startEvent" class="w-full" iconDisplay="input" inputId="startDate"
-											showIcon @update:modelValue="onDateChange"/>
+											showIcon showTime @update:modelValue="onDateChange"/>
 								<label for="startDate">{{ $t('startDate') }}</label>
 							</FloatLabel>
 
 							<!-- Date fin -->
 							<FloatLabel class="w-full" variant="on">
 								<DatePicker v-model="endEvent" class="w-full" iconDisplay="input" inputId="endDate"
-											showIcon @update:modelValue="onDateChange"/>
+											showIcon showTime @update:modelValue="onDateChange"/>
 								<label for="endDate">{{ $t('endDate') }}</label>
 							</FloatLabel>
 						</div>
@@ -57,23 +57,8 @@
 							<div class="flex items-center justify-between">
 								<p>{{ $t('wholeDay') }}</p>
 
-								<ToggleSwitch id="allDay" v-model.trim="allDay" @update:modelValue="setTimeForAllDay"/>
+								<ToggleSwitch id="allDay" v-model="allDay" @update:modelValue="setTimeForAllDay"/>
 							</div>
-						</div>
-
-						<!-- Heures -->
-						<div v-if="!allDay" class="grid grid-cols-2 gap-8">
-							<FloatLabel class="w-full" variant="on">
-								<DatePicker id="startTime" v-model="startEvent" fluid timeOnly
-											@update:modelValue="onDateChange"/>
-								<label for="startTime">{{ $t('startTimeLabel') }}</label>
-							</FloatLabel>
-
-							<FloatLabel class="w-full" variant="on">
-								<DatePicker id="endTime" v-model="endEvent" fluid timeOnly
-											@update:modelValue="onDateChange"/>
-								<label for="endTime">{{ $t('endTimeLabel') }}</label>
-							</FloatLabel>
 						</div>
 
 						<!-- Répétition et alertes -->
@@ -295,6 +280,10 @@ export default {
 		setTimeForAllDay() {
 			this.startEvent.setHours(0, 0, 0, 0);
 			this.endEvent.setHours(23, 59, 0, 0);
+
+			// Réassigner pour forcer la réactivité
+			this.startEvent = new Date(this.startEvent.getTime());
+			this.endEvent = new Date(this.endEvent.getTime());
 		},
 		addToPeriods(startDateTime, endDateTime) {
 			const newPeriod = {"startDateTime": startDateTime, "endDateTime": endDateTime, alerts: []};
