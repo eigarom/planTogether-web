@@ -1,5 +1,5 @@
 <template>
-	<div v-if="!isLoading" class="flex flex-col gap-5 min-h-fit">
+	<div v-if="!isLoading" class="flex flex-col gap-5 min-h-fit w-full">
 		<h1 class="text-3xl">{{ $t('newEvent') }}</h1>
 
 		<!-- Contenu principal -->
@@ -10,10 +10,10 @@
 			<div class="flex flex-col gap-8">
 
 				<!-- Première ligne -->
-				<div class="flex gap-8">
+				<div class="grid grid-cols-2 gap-5">
 
 					<!-- Nom, description, visibilité -->
-					<div class="flex flex-col gap-8 p-5 bg-white border rounded-lg w-80">
+					<div class="flex flex-col gap-8 p-5 border rounded-lg shadow">
 						<!-- Nom -->
 						<FloatLabel class="w-full" variant="on">
 							<InputText id="name" v-model.trim="name" class="w-full"/>
@@ -34,40 +34,42 @@
 					</div>
 
 					<!-- Dates, heures, répétition -->
-					<div class="flex flex-col gap-8 border rounded-lg p-5 w-fit h-fit bg-white">
+					<div class="flex flex-col gap-8 border rounded-lg p-5 h-fit shadow">
 
-						<div class="flex gap-8">
+						<div class="grid grid-cols-2 gap-8">
 							<!-- Date début -->
-							<FloatLabel class="w-52" variant="on">
-								<DatePicker v-model="startEvent" iconDisplay="input" inputId="startDate" showIcon
-											@update:modelValue="onDateChange"/>
+							<FloatLabel class="w-full" variant="on">
+								<DatePicker v-model="startEvent" class="w-full" iconDisplay="input" inputId="startDate"
+											showIcon @update:modelValue="onDateChange"/>
 								<label for="startDate">{{ $t('startDate') }}</label>
 							</FloatLabel>
 
 							<!-- Date fin -->
-							<FloatLabel class="w-52" variant="on">
-								<DatePicker v-model="endEvent" iconDisplay="input" inputId="endDate" showIcon
-											@update:modelValue="onDateChange"/>
+							<FloatLabel class="w-full" variant="on">
+								<DatePicker v-model="endEvent" class="w-full" iconDisplay="input" inputId="endDate"
+											showIcon @update:modelValue="onDateChange"/>
 								<label for="endDate">{{ $t('endDate') }}</label>
 							</FloatLabel>
 						</div>
 
 						<!-- Toute la journée -->
-						<div class="flex items-center gap-8">
-							<p>{{ $t('wholeDay') }}</p>
+						<div class="gap-8 grid grid-cols-2">
+							<div class="flex items-center justify-between">
+								<p>{{ $t('wholeDay') }}</p>
 
-							<ToggleSwitch id="allDay" v-model.trim="allDay" @update:modelValue="setTimeForAllDay"/>
+								<ToggleSwitch id="allDay" v-model.trim="allDay" @update:modelValue="setTimeForAllDay"/>
+							</div>
 						</div>
 
 						<!-- Heures -->
-						<div v-if="!allDay" class="flex gap-8">
-							<FloatLabel class="w-52" variant="on">
+						<div v-if="!allDay" class="grid grid-cols-2 gap-8">
+							<FloatLabel class="w-full" variant="on">
 								<DatePicker id="startTime" v-model="startEvent" fluid timeOnly
 											@update:modelValue="onDateChange"/>
 								<label for="startTime">{{ $t('startTimeLabel') }}</label>
 							</FloatLabel>
 
-							<FloatLabel class="w-52" variant="on">
+							<FloatLabel class="w-full" variant="on">
 								<DatePicker id="endTime" v-model="endEvent" fluid timeOnly
 											@update:modelValue="onDateChange"/>
 								<label for="endTime">{{ $t('endTimeLabel') }}</label>
@@ -75,59 +77,59 @@
 						</div>
 
 						<!-- Répétition et alertes -->
-						<div class="flex gap-8">
+						<div class="grid grid-cols-2 gap-8">
 							<!-- Répétition -->
-							<div class="flex items-center">
-								<label class="w-[92px]">{{ $t('repeat') }}</label>
-
+							<FloatLabel class="w-full" variant="on">
 								<Select
 									v-model="selectedFrequency" :options="translatedFrequencies"
-									:placeholder="$t('nonePlaceholder')"
-									class="w-48"
+									class="w-full"
 									optionLabel="name"
 								/>
-							</div>
+								<label class="w-[92px]">{{ $t('repeat') }}</label>
+							</FloatLabel>
 
 							<InputNumber v-if="selectedFrequency !== null && selectedFrequency.code !== 'none'"
 										 v-model="numberRepeats" :max="365" :min="0" buttonLayout="horizontal"
-										 class="text-center" fluid inputId="numberRepeats"
+										 class="text-center w-full" fluid inputId="numberRepeats"
 										 inputStyle="text-align: center;"
-										 showButtons style="width: 132px;"
+										 showButtons
 							/>
 						</div>
 
 						<!-- Alertes -->
-						<div class="flex items-center">
-							<label class="w-[92px]">{{ $t('alerts') }}</label>
-
-							<MultiSelect v-model="selectedAlertTypes" :options="translatedAlertTypes"
-										 :placeholder="$t('nonePlaceholder')"
-										 :showSelectAll="false" class="w-48"
-										 optionLabel="name"
-							/>
+						<div class="grid grid-cols-2 gap-8">
+							<FloatLabel class="w-full" variant="on">
+								<MultiSelect v-model="selectedAlertTypes" :options="translatedAlertTypes"
+											 class="w-full"
+											 optionLabel="name"
+								/>
+								<label class="w-[92px]">{{ $t('alerts') }}</label>
+							</FloatLabel>
 						</div>
 					</div>
 				</div>
 
 				<!-- Participants -->
 				<div class="grid grid-cols-4 gap-5">
-					<div v-for="member in allMembers" :key="member.id"
-						 :class="{ 'bg-blue-100': isSelected(member) }"
-						 class="inline-flex items-center justify-between border p-3 rounded-lg gap-3 hover:bg-slate-100 w-[190px]"
-						 style="cursor: pointer;"
-						 @click="toggleMemberSelection(member)">
+					<Button
+						v-for="member in allMembers"
+						:key="member.id"
+						:severity="isSelected(member) ? 'info':'secondary'"
+						@click="toggleMemberSelection(member)"
+					>
+						<div class="inline-flex  items-center justify-between w-full">
+							<p class="truncate">{{ member.name }}</p>
 
-						<p class="truncate">{{ member.name }}</p>
-
-						<Avatar
-							:image="member.imageUrl"
-							:label="!member.imageUrl ? memberInitials(member) : null"
-							:style="!member.imageUrl ? `background-color: ${member.color}` : `border: 4px solid ${member.color}`"
-							class="font-semibold text-white flex-shrink-0"
-							shape="circle"
-							size="small"
-						/>
-					</div>
+							<Avatar
+								:image="member.imageUrl"
+								:label="!member.imageUrl ? memberInitials(member) : null"
+								:style="!member.imageUrl ? `background-color: ${member.color}` : `border: 4px solid ${member.color}`"
+								class="font-semibold text-white flex-shrink-0"
+								shape="circle"
+								size="small"
+							/>
+						</div>
+					</Button>
 				</div>
 			</div>
 
