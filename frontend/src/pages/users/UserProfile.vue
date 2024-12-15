@@ -74,7 +74,7 @@ import {deleteMemberImage, uploadMemberImage} from "@/services/memberServices.js
 import Avatar from "primevue/avatar";
 
 export default {
-	inject: ['user', 'token'],
+	inject: ['user', 'token', 'family'],
 	components: {
 		Avatar, InputText, Button, FloatLabel, ColorPicker, FileUpload, Toast, ConfirmDialog
 	},
@@ -109,6 +109,9 @@ export default {
 
 			try {
 				this.user.imageUrl = await uploadMemberImage(this.token, this.user.id, formData);
+				this.family.accountMembers.find(member => member.id === parseInt(this.user.id)).imageUrl =
+					this.user.imageUrl;
+
 				this.$refs.toast.add({
 					severity: 'success',
 					summary: this.$t('toastSuccessTitle'),
