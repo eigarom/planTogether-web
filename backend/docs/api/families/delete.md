@@ -1,8 +1,8 @@
-# Supprimer l'image de profil d'un membre
+# Supprimer une famille
 
-Supprime l'image de profil du membre correspondant à l'id.
+Permet de supprimer la famille de l'utilisateur authentifié.
 
-**URL** : `/members/:id/image`
+**URL** : `/families/my-family`
 
 **Méthode** : `DELETE`
 
@@ -14,10 +14,12 @@ Supprime l'image de profil du membre correspondant à l'id.
 
 **Code** : `200 OK`
 
-**Contenu**
+**Contenu** :
 
 ```json
-{}
+{
+    "token": "Nouveau token d'authentification"
+}
 ```
 
 ## Opération échouée
@@ -35,33 +37,20 @@ Supprime l'image de profil du membre correspondant à l'id.
 }
 ```
 
-### Si l'id ne correspond pas à un membre de la famille de l'utilisateur authentifié.
+### Si la famille n'est pas trouvée.
 
-**Code** : `403 Forbidden`
-
-**Contenu** :
-
-```json
-{
-    "status": 403,
-    "message": "Accès non autorisé aux données de ce membre"
-}
-```
-
-### Si le token utilisé contient l'id d'un utilisateur inexistant.
-
-**Code** : `404 Not found`
+**Code** : `404 Not Found`
 
 **Contenu** :
 
 ```json
 {
     "status": 404,
-    "message": "Membre introuvable"
+    "message": "Famille introuvable"
 }
 ```
 
-### Si une erreur survient côté serveur.
+### Si une erreur survient lors de la suppression de la famille ou de la récupération des informations utilisateur.
 
 **Code** : `500 Internal Server Error`
 

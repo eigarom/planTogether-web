@@ -1,23 +1,31 @@
-# Supprimer l'image de profil d'un membre
+# Récupérer un membre spécifique de la famille
 
-Supprime l'image de profil du membre correspondant à l'id.
+Permet de récupérer les informations d'un membre spécifique de la famille en utilisant son identifiant.
 
-**URL** : `/members/:id/image`
+**URL** : `/members/{id}`
 
-**Méthode** : `DELETE`
+**Méthode** : `GET`
 
 **Authentification requise** : Oui
 
 **Permissions requises** : Aucune
 
+## Paramètres de la requête
+
+-   **id** (string, requis) : L'identifiant du membre à récupérer.
+
 ## Opération réussie
 
 **Code** : `200 OK`
 
-**Contenu**
+**Contenu** :
 
 ```json
-{}
+{
+    "id": "memberId",
+    "name": "result.name",
+    "color": "result.color"
+}
 ```
 
 ## Opération échouée
@@ -35,22 +43,9 @@ Supprime l'image de profil du membre correspondant à l'id.
 }
 ```
 
-### Si l'id ne correspond pas à un membre de la famille de l'utilisateur authentifié.
+### Si le membre spécifié n'est pas trouvé.
 
-**Code** : `403 Forbidden`
-
-**Contenu** :
-
-```json
-{
-    "status": 403,
-    "message": "Accès non autorisé aux données de ce membre"
-}
-```
-
-### Si le token utilisé contient l'id d'un utilisateur inexistant.
-
-**Code** : `404 Not found`
+**Code** : `404 Not Found`
 
 **Contenu** :
 
@@ -61,7 +56,7 @@ Supprime l'image de profil du membre correspondant à l'id.
 }
 ```
 
-### Si une erreur survient côté serveur.
+### Si une erreur survient lors de la récupération du membre.
 
 **Code** : `500 Internal Server Error`
 

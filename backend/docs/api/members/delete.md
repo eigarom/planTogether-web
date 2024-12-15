@@ -1,8 +1,8 @@
-# Supprimer l'image de profil d'un membre
+# Supprimer un membre non inscrit
 
-Supprime l'image de profil du membre correspondant à l'id.
+Permet de supprimer un membre non inscrit de la famille en utilisant son identifiant.
 
-**URL** : `/members/:id/image`
+**URL** : `/members/:id`
 
 **Méthode** : `DELETE`
 
@@ -10,11 +10,15 @@ Supprime l'image de profil du membre correspondant à l'id.
 
 **Permissions requises** : Aucune
 
+## Paramètres de la requête
+
+-   **id** (string, requis) : L'identifiant du membre à supprimer.
+
 ## Opération réussie
 
 **Code** : `200 OK`
 
-**Contenu**
+**Contenu** :
 
 ```json
 {}
@@ -48,9 +52,9 @@ Supprime l'image de profil du membre correspondant à l'id.
 }
 ```
 
-### Si le token utilisé contient l'id d'un utilisateur inexistant.
+### Si le membre spécifié n'est pas trouvé.
 
-**Code** : `404 Not found`
+**Code** : `404 Not Found`
 
 **Contenu** :
 
@@ -61,7 +65,7 @@ Supprime l'image de profil du membre correspondant à l'id.
 }
 ```
 
-### Si une erreur survient côté serveur.
+### Si une erreur survient lors de la suppression du membre.
 
 **Code** : `500 Internal Server Error`
 
