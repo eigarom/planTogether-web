@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col gap-5 w-full min-h-fit">
+	<div class="flex flex-col gap-5 min-h-fit">
 
 		<!-- Entête -->
 		<div class="flex justify-between">

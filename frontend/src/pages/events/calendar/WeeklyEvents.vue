@@ -1,6 +1,5 @@
 <template>
-	<!--	<div class="flex flex-col bg-white border p-3 rounded-lg gap-3 min-h-[calc(100vh-227px)] w-full">-->
-	<div class="flex flex-col bg-white border p-3 rounded-lg gap-3   w-full">
+	<div class="flex flex-col bg-white border p-3 rounded-lg gap-3">
 
 		<!-- Année -->
 		<div class="flex justify-center items-center text-xl font-bold">

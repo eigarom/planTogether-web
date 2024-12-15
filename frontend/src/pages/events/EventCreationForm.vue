@@ -110,22 +110,23 @@
 				</div>
 
 				<!-- Participants -->
-				<div class="grid grid-cols-4 gap-5 w-full ">
+				<div class="grid grid-cols-4 gap-5">
 					<div v-for="member in allMembers" :key="member.id"
 						 :class="{ 'bg-blue-100': isSelected(member) }"
-						 class="flex flex-inline items-center justify-between border p-3 rounded-lg gap-3 hover:bg-slate-100 "
+						 class="inline-flex items-center justify-between border p-3 rounded-lg gap-3 hover:bg-slate-100 w-[190px]"
 						 style="cursor: pointer;"
 						 @click="toggleMemberSelection(member)">
 
-						<p>{{ member.name }}</p>
+						<p class="truncate">{{ member.name }}</p>
 
-						<Avatar v-if="member.imageUrl" :image="member.imageUrl"
-								:style="{ borderColor: member.color }"
-								class="border-4" shape="circle"
-								size="small"/>
-						<Avatar v-else :label="memberInitials(member)"
-								:style="`background-color: ${member.color}`"
-								class="font-semibold text-white" shape="circle" size="small"/>
+						<Avatar
+							:image="member.imageUrl"
+							:label="!member.imageUrl ? memberInitials(member) : null"
+							:style="!member.imageUrl ? `background-color: ${member.color}` : `border: 4px solid ${member.color}`"
+							class="font-semibold text-white flex-shrink-0"
+							shape="circle"
+							size="small"
+						/>
 					</div>
 				</div>
 			</div>

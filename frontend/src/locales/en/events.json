@@ -3,7 +3,7 @@
 	"alertDate": "Time",
 	"noAlerts": "No alerts",
 	"buttonCreateEvent": "Add event",
-	"buttonUpdateEvent": "Update events",
+	"buttonUpdateEvent": "Update",
 	"toastUpdateEventSuccessMessage": "The event has been updated",
 	"descriptionMax": "The description must not exceed 500 characters",
 	"buttonUpdatePeriod": "Update this period",

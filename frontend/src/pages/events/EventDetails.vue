@@ -100,11 +100,11 @@
 				<div class="grid grid-cols-4 gap-5 w-full">
 					<div v-for="member in allMembers" :key="member.id"
 						 :class="{ 'bg-blue-100': isSelected(member) }"
-						 class="flex flex-inline items-center justify-between border p-3 rounded-lg gap-3 hover:bg-slate-100 "
+						 class="flex flex-inline items-center justify-between border p-3 rounded-lg gap-3 hover:bg-slate-100 w-[190px]"
 						 style="cursor: pointer;"
 						 @click="toggleMemberSelection(member)">
 
-						<p>{{ member.name }}</p>
+						<p class="truncate">{{ member.name }}</p>
 
 						<Avatar
 							:image="member.imageUrl"
@@ -337,6 +337,7 @@ export default {
 				endDateTime: this.endDateTime,
 				alerts: this.updatedAlerts
 			}
+
 			try {
 				await updatePeriodById(this.token, periodDetails, this.periodId, this.id);
 				this.$refs.toast.add({
@@ -450,6 +451,7 @@ export default {
 			return members.sort((a, b) => a.name.localeCompare(b.name));
 		},
 		setDateTime() {
+
 			this.startDate = new Date(this.period.startDateTime);
 			this.endDate = new Date(this.period.endDateTime);
 			this.startTime = new Date(this.startDate);

@@ -14,8 +14,8 @@
 							size="small"
 						/>
 
-						<div class="flex flex-col justify-between w-[117px]">
-							<p class="text-nowrap overflow-hidden">{{ user.name }}</p>
+						<div class="flex flex-col justify-between">
+							<p class="truncate">{{ user.name }}</p>
 							<p class="text-xs">{{ family.name }}</p>
 						</div>
 					</a>
