@@ -143,8 +143,9 @@ export default {
 			const date = new Date(dateTime);
 			return date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
 		}, formatDate(dateTime) {
+			const locale = this.$i18n.locale;
 			const date = new Date(dateTime);
-			return date.toLocaleDateString([], {year: 'numeric', month: 'long', day: 'numeric'});
+			return new Intl.DateTimeFormat(locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(date);
 		},
 		isAllday() {
 			const startEvent = new Date(this.event.period.startDateTime);
