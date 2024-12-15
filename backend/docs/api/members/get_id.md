@@ -30,6 +30,19 @@ Permet de récupérer les informations d'un membre spécifique de la famille en 
 
 ## Opération échouée
 
+### Si le token fourni est incorrect.
+
+**Code** : `401 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status": 401,
+    "message": "Erreur lors de la récupération du token"
+}
+```
+
 ### Si le membre spécifié n'est pas trouvé.
 
 **Code** : `404 Not Found`

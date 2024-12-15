@@ -45,6 +45,19 @@ Permet de mettre à jour les informations (nom et couleur) d'un membre de la fam
 }
 ```
 
+### Si le token fourni est incorrect.
+
+**Code** : `401 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status": 401,
+    "message": "Erreur lors de la récupération du token"
+}
+```
+
 ### Si l'utilisateur tente de modifier les informations d'un membre qui n'est pas dans sa famille.
 
 **Code** : `403 Forbidden`
