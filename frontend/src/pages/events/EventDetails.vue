@@ -371,12 +371,8 @@ export default {
 			}
 		},
 		setTimeForAllDay() {
-			if (this.allDay) { // Si toute la journée a été sélectionnée, régler startTime à minuit et endTime à 23h59
-				if (!this.startTime) this.startTime = new Date();
-				if (!this.endTime) this.endTime = new Date();
-				this.startTime.setHours(0, 0, 0, 0);
-				this.endTime.setHours(23, 59, 0, 0);
-			}
+			this.startEvent.setHours(0, 0, 0, 0);
+			this.endEvent.setHours(23, 59, 0, 0);
 		},
 		memberInitials(member) {
 			return member.name.charAt(0).toUpperCase();
@@ -461,8 +457,9 @@ export default {
 			}));
 		},
 		onDateChange() {
-			if (this.startEvent > this.endEvent) {
-				this.endEvent = this.startEvent;
+			if (this.startEvent >= this.endEvent) {
+				this.endEvent = new Date(this.startEvent);
+				this.endEvent.setHours(this.endEvent.getHours() + 1);
 			}
 		},
 		handleAlerts(alertCode) {

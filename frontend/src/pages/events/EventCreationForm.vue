@@ -82,6 +82,7 @@
 							<FloatLabel class="w-full" variant="on">
 								<Select
 									v-model="selectedFrequency" :options="translatedFrequencies"
+									:placeholder="$t('nonePlaceholder')"
 									class="w-full"
 									optionLabel="name"
 								/>
@@ -298,12 +299,8 @@ export default {
 			}
 		},
 		setTimeForAllDay() {
-			if (this.allDay) { // Si toute la journée a été sélectionnée, régler startTime à minuit et endTime à 23h59
-				if (!this.startTime) this.startTime = new Date();
-				if (!this.endTime) this.endTime = new Date();
-				this.startTime.setHours(0, 0, 0, 0);
-				this.endTime.setHours(23, 59, 0, 0);
-			}
+			this.startEvent.setHours(0, 0, 0, 0);
+			this.endEvent.setHours(23, 59, 0, 0);
 		},
 		addToPeriods(startDateTime, endDateTime) {
 			const newPeriod = {"startDateTime": startDateTime, "endDateTime": endDateTime, alerts: []};
@@ -420,7 +417,8 @@ export default {
 		},
 		onDateChange() {
 			if (this.startEvent > this.endEvent) {
-				this.endEvent = this.startEvent;
+				this.endEvent = new Date(this.startEvent);
+				this.endEvent.setHours(this.endEvent.getHours() + 1);
 			}
 		}
 	},

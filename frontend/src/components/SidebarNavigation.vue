@@ -4,7 +4,8 @@
 			<!-- Item du profil -->
 			<template v-if="item.route === '/profile'">
 				<router-link v-slot="{ href, navigate }" :to="item.route" custom>
-					<a :href="href" class="inline-flex items-center gap-2" v-bind="props.action" @click="navigate">
+					<a :href="href" v-bind="props.action"
+					   @click="navigate">
 						<Avatar
 							:image="user.imageUrl"
 							:label="!user.imageUrl ? userInitial : null"
