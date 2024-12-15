@@ -13,8 +13,24 @@ Permet de mettre à jour les informations (nom et couleur) d'un membre de la fam
 ## Paramètres de la requête
 
 -   **id** (string, requis) : L'identifiant du membre dont les informations doivent être mises à jour.
--   **name** (string, requis) : Le nouveau nom du membre.
--   **color** (string, requis) : La nouvelle couleur associée au membre.
+
+**Contraintes de données**
+
+```json
+{
+    "name": "[nom valide]",
+    "color": "[couleur valide]"
+}
+```
+
+**Exemple de données**
+
+```json
+{
+    "name": "John Doe",
+    "color": "#FF0000"
+}
+```
 
 ## Opération réussie
 
