@@ -72,7 +72,7 @@ export default {
 			if (startDay >= startEvent && endDay <= endEvent) {
 				return this.$t('wholeDay');
 			}
-			// Si l'événement se termine un autre jour afficher heur de fin à 23h59
+			// Si l'événement se termine un autre jour afficher heure de fin à 23h59
 			if (endDay < endEvent) {
 				return `${this.formatTime(startEvent)} - 23:59`;
 			}
@@ -83,7 +83,7 @@ export default {
 			}
 
 			// Si l'événement commence et se termine le même jour
-			return `${this.formatTime(startTime)} - ${this.formatTime(endTime)}`;
+			return `${this.formatTime(startEvent)} - ${this.formatTime(endEvent)}`;
 		},
 		formatTime(dateTime) {
 			const date = new Date(dateTime);

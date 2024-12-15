@@ -7,14 +7,10 @@ export const eventSchema = Yup.object({
         .required(() => i18n.global.t('nameRequired')),
     description: Yup.string()
         .max(500, () => i18n.global.t('descriptionMax')),
-    startDate: Yup.date()
+	startEvent: Yup.date()
         .required("Date début manquante"),
-    endDate: Yup.date()
+	endEvent: Yup.date()
         .required("Date de fin manquante"),
-    startTime: Yup.string()
-        .required("Heure début manquante"),
-    endTime: Yup.string()
-        .required("Heure fin manquante"),
     numberRepeats: Yup.number()
         .min(0, "Le minimum de répétition est de 0.")
         .max(365, "Le maximum de répétitions est de 365.")
@@ -37,12 +33,8 @@ export const eventOnlySchema = Yup.object({
 });
 
 export const eventPeriodSchema = Yup.object({
-    startDate: Yup.date()
+	startEvent: Yup.date()
         .required("Date début manquante"),
-    endDate: Yup.date()
+	endEvent: Yup.date()
         .required("Date de fin manquante"),
-    startTime: Yup.string()
-        .required("Heure début manquante"),
-    endTime: Yup.string()
-        .required("Heure fin manquante")
 });

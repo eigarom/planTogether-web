@@ -40,14 +40,14 @@
 						<div class="flex gap-8">
 							<!-- Date début -->
 							<FloatLabel class="w-52" variant="on">
-								<DatePicker v-model="startDate" iconDisplay="input" inputId="startDate" showIcon
+								<DatePicker v-model="startEvent" iconDisplay="input" inputId="startDate" showIcon
 											@update:modelValue="onDateChange"/>
 								<label for="startDate">{{ $t('startDate') }}</label>
 							</FloatLabel>
 
 							<!-- Date fin -->
 							<FloatLabel class="w-52" variant="on">
-								<DatePicker v-model="endDate" iconDisplay="input" inputId="endDate" showIcon
+								<DatePicker v-model="endEvent" iconDisplay="input" inputId="endDate" showIcon
 											@update:modelValue="onDateChange"/>
 								<label for="endDate">{{ $t('endDate') }}</label>
 							</FloatLabel>
@@ -58,19 +58,19 @@
 						<div class="flex items-center gap-8">
 							<p>{{ $t('wholeDay') }}</p>
 
-							<ToggleSwitch id="allDay" v-model.trim="allDay" @update:modelValue="onDateChange"/>
+							<ToggleSwitch id="allDay" v-model.trim="allDay" @update:modelValue="setTimeForAllDay"/>
 						</div>
 
 						<!-- Heures -->
 						<div v-if="!allDay" class="flex gap-8">
 							<FloatLabel class="w-52" variant="on">
-								<DatePicker id="startTime" v-model="startTime" fluid timeOnly
+								<DatePicker id="startTime" v-model="startEvent" fluid timeOnly
 											@update:modelValue="onDateChange"/>
 								<label for="startTime">{{ $t('startTimeLabel') }}</label>
 							</FloatLabel>
 
 							<FloatLabel class="w-52" variant="on">
-								<DatePicker id="endTime" v-model="endTime" fluid timeOnly
+								<DatePicker id="endTime" v-model="endEvent" fluid timeOnly
 											@update:modelValue="onDateChange"/>
 								<label for="endTime">{{ $t('endTimeLabel') }}</label>
 							</FloatLabel>
@@ -183,11 +183,9 @@ export default {
 			isVisible: false,
 			period: {},
 			members: [],
-			startDate: "",
-			endDate: "",
+			startEvent: "",
+			endEvent: "",
 			allDay: false,
-			startTime: "",
-			endTime: "",
 			selectedParticipants: [],
 			allMembers: [],
 			startDateTime: "",
@@ -203,7 +201,6 @@ export default {
 			],
 			translatedAlertTypes: [],
 			updatedAlerts: [],
-			areValidDates: true,
 			errorMessage: "",
 			isLoading: true
 		}
@@ -213,7 +210,7 @@ export default {
 			return (!this.name || this.selectedParticipants.length === 0);
 		},
 		isSubmitPeriodButtonDisabled() {
-			return (!this.startDate || !this.endDate || !this.areValidDates);
+			return (!this.startEvent || !this.endEvent || this.startEvent >= this.endEvent);
 		},
 		translatedSelectedAlertTypes: {
 			get() {
@@ -258,18 +255,16 @@ export default {
 		setIsChecked() {
 			this.checked = !this.isVisible;
 		},
+		setDateTime() {
+			this.startEvent = new Date(this.period.startDateTime);
+			this.endEvent = new Date(this.period.endDateTime);
+		},
 		setIsAllDay() {
-			if (
-				this.startTime.getHours() === 0 &&
-				this.startTime.getMinutes() === 0 &&
-				this.endTime.getHours() === 23 &&
-				this.endTime.getMinutes() === 59 &&
-				this.startDate.toDateString() === this.endDate.toDateString()
-			) {
-				this.allDay = true;
-			} else {
-				this.allDay = false;
-			}
+			this.allDay = this.startEvent.getHours() === 0 &&
+				this.startEvent.getMinutes() === 0 &&
+				this.endEvent.getHours() === 23 &&
+				this.endEvent.getMinutes() === 59 &&
+				this.startEvent.toDateString() === this.endEvent.toDateString();
 		},
 		async submitUpdateEvent() {
 			this.setIsVisible();
@@ -312,10 +307,8 @@ export default {
 		},
 		async submitUpdatePeriod() {
 			const periodValidation = {
-				startDate: this.startDate,
-				endDate: this.endDate,
-				startTime: this.startTime,
-				endTime: this.endTime,
+				startEvent: this.startEvent,
+				endEvent: this.endEvent,
 				alerts: this.updatedAlerts
 			}
 
@@ -330,11 +323,11 @@ export default {
 				});
 			}
 
-			this.setPeriod();
+			this.setAlertPeriods();
 
 			const periodDetails = {
-				startDateTime: this.startDateTime,
-				endDateTime: this.endDateTime,
+				startDateTime: this.startEvent,
+				endDateTime: this.endEvent,
 				alerts: this.updatedAlerts
 			}
 
@@ -364,9 +357,7 @@ export default {
 				}
 			}
 		},
-		setPeriod() {
-			this.startDateTime = this.combineDateTime(this.startDate, this.startTime);
-			this.endDateTime = this.combineDateTime(this.endDate, this.endTime);
+		setAlertPeriods() {
 			if (this.selectedAlertTypes.length > 0) {
 				for (let alert of this.selectedAlertTypes) {
 					this.handleAlerts(alert.code);
@@ -380,40 +371,6 @@ export default {
 				this.startTime.setHours(0, 0, 0, 0);
 				this.endTime.setHours(23, 59, 0, 0);
 			}
-		},
-		combineDateTime(date, time) {
-			// Vérification que `date` est un objet Date valide
-			if (!(date instanceof Date) || isNaN(date)) {
-				console.error('Date invalide:', date);
-				return null;
-			}
-
-			let hours, minutes;
-
-			// Gestion de `time` selon son type
-			if (typeof time === 'string') {
-				// Si `time` est une chaîne au format "HH:mm"
-				const timeParts = time.split(':');
-				if (timeParts.length !== 2 || isNaN(timeParts[0]) || isNaN(timeParts[1])) {
-					console.error('Heure invalide (chaîne) :', time);
-					return null;
-				}
-				hours = parseInt(timeParts[0], 10);
-				minutes = parseInt(timeParts[1], 10);
-			} else if (time instanceof Date && !isNaN(time)) {
-				// Si `time` est un objet `Date`
-				hours = time.getHours();
-				minutes = time.getMinutes();
-			} else {
-				console.error('Heure invalide :', time);
-				return null;
-			}
-
-			// Formatage de la partie date
-			const datePart = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; // YYYY-MM-DD
-
-			// Combinaison de la date et de l'heure
-			return new Date(`${datePart}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`);
 		},
 		memberInitials(member) {
 			return member.name.charAt(0).toUpperCase();
@@ -450,25 +407,6 @@ export default {
 		sortMembersAlphabetically(members) {
 			return members.sort((a, b) => a.name.localeCompare(b.name));
 		},
-		setDateTime() {
-
-			this.startDate = new Date(this.period.startDateTime);
-			this.endDate = new Date(this.period.endDateTime);
-			this.startTime = new Date(this.startDate);
-			this.endTime = new Date(this.endDate);
-
-			if (
-				this.startTime.getHours() === 0 &&
-				this.startTime.getMinutes() === 0 &&
-				this.endTime.getHours() === 23 &&
-				this.endTime.getMinutes() === 59 &&
-				this.startDate.toDateString() === this.endDate.toDateString()
-			) {
-				this.allDay = true;
-			} else {
-				this.allDay = false;
-			}
-		},
 		setAlerts() {
 			this.alerts = this.period.alerts;
 			this.selectedAlertTypes = [];
@@ -476,7 +414,7 @@ export default {
 			// Parcours des alertes existantes
 			this.alerts.forEach(alert => {
 				const alertDateTime = new Date(alert.dateTime);
-				const startDateTime = new Date(this.startDate);
+				const startDateTime = new Date(this.startEvent);
 
 				// Calcul de la différence en minutes entre l'alerte et le début
 				const diffInMinutes = Math.round((startDateTime - alertDateTime) / (1000 * 60));
@@ -517,20 +455,9 @@ export default {
 			}));
 		},
 		onDateChange() {
-			this.setTimeForAllDay();
-
-			const initialStartDateTime = this.combineDateTime(this.startDate, this.startTime);
-			const initialEndDateTime = this.combineDateTime(this.endDate, this.endTime);
-
-			this.validateDates(initialStartDateTime, initialEndDateTime)
-		},
-		validateDates(startDateTime, endDateTime) {
-			if (!startDateTime || !endDateTime) {
-				this.areValidDates = true; // Laissez passer tant que l'utilisateur n'a pas rempli toutes les valeurs
-				return;
+			if (this.startEvent > this.endEvent) {
+				this.endEvent = this.startEvent;
 			}
-
-			this.areValidDates = endDateTime >= startDateTime;
 		},
 		handleAlerts(alertCode) {
 			// Dictionnaire associant les codes d'alerte à la durée en millisecondes
@@ -651,41 +578,7 @@ export default {
 				this.updateTranslatedAlertTypes(); // Mettre à jour la liste des types d'alertes
 			},
 			immediate: true // Met à jour dès que le composant est monté
-		},
-		startDate(newStartDate) {
-			if (!this.endDate || this.endDate < this.startDate) {
-				this.endDate = newStartDate;
-				this.onDateChange();
-			}
-		},
-		endDate(newEndDate) {
-			if (this.endDate < this.startDate) {
-				this.startDate = newEndDate;
-				this.onDateChange();
-			}
-		},
-		startTime(newStartTime) {
-			const endTime = new Date(newStartTime);
-			endTime.setHours(endTime.getHours() + 1);
-			this.endTime = endTime;
-			this.onDateChange();
-		},
-		endTime(newEndTime) {
-			if (newEndTime < this.startTime && this.startDate === this.endDate) {
-				const startTime = new Date(newEndTime);
-				startTime.setHours(startTime.getHours() - 1);
-				this.startTime = startTime;
-				this.onDateChange();
-			}
-		},
-		areValidDates(newValidity) {
-			if (!newValidity) {
-				const newEndTime = new Date(this.startTime);
-				newEndTime.setHours(this.startTime.getHours() + 1);
-				this.endTime = newEndTime;
-			}
 		}
-	},
-
+	}
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col gap-5 min-h-fit">
+	<div v-if="!isLoading" class="flex flex-col gap-5 min-h-fit">
 		<h1 class="text-3xl">{{ $t('newEvent') }}</h1>
 
 		<!-- Contenu principal -->
@@ -39,14 +39,14 @@
 						<div class="flex gap-8">
 							<!-- Date début -->
 							<FloatLabel class="w-52" variant="on">
-								<DatePicker v-model="startDate" iconDisplay="input" inputId="startDate" showIcon
+								<DatePicker v-model="startEvent" iconDisplay="input" inputId="startDate" showIcon
 											@update:modelValue="onDateChange"/>
 								<label for="startDate">{{ $t('startDate') }}</label>
 							</FloatLabel>
 
 							<!-- Date fin -->
 							<FloatLabel class="w-52" variant="on">
-								<DatePicker v-model="endDate" iconDisplay="input" inputId="endDate" showIcon
+								<DatePicker v-model="endEvent" iconDisplay="input" inputId="endDate" showIcon
 											@update:modelValue="onDateChange"/>
 								<label for="endDate">{{ $t('endDate') }}</label>
 							</FloatLabel>
@@ -56,19 +56,19 @@
 						<div class="flex items-center gap-8">
 							<p>{{ $t('wholeDay') }}</p>
 
-							<ToggleSwitch id="allDay" v-model.trim="allDay" @update:modelValue="onDateChange"/>
+							<ToggleSwitch id="allDay" v-model.trim="allDay" @update:modelValue="setTimeForAllDay"/>
 						</div>
 
 						<!-- Heures -->
 						<div v-if="!allDay" class="flex gap-8">
 							<FloatLabel class="w-52" variant="on">
-								<DatePicker id="startTime" v-model="startTime" fluid timeOnly
+								<DatePicker id="startTime" v-model="startEvent" fluid timeOnly
 											@update:modelValue="onDateChange"/>
 								<label for="startTime">{{ $t('startTimeLabel') }}</label>
 							</FloatLabel>
 
 							<FloatLabel class="w-52" variant="on">
-								<DatePicker id="endTime" v-model="endTime" fluid timeOnly
+								<DatePicker id="endTime" v-model="endEvent" fluid timeOnly
 											@update:modelValue="onDateChange"/>
 								<label for="endTime">{{ $t('endTimeLabel') }}</label>
 							</FloatLabel>
@@ -182,11 +182,9 @@ export default {
 			description: '',
 			checked: false,
 			isVisible: true,
-			startDate: '',
-			endDate: '',
+			startEvent: '',
+			endEvent: '',
 			allDay: false,
-			startTime: '',
-			endTime: '',
 			selectedFrequency: {name: 'Aucune', code: 'none'},
 			frequencies: [
 				{labelKey: 'frequencies.none', code: 'none'},
@@ -209,12 +207,14 @@ export default {
 			periods: [],
 			members: [],
 			areValidDates: true,
-			errorMessage: ""
+			errorMessage: "",
+			isLoading: true
 		};
 	},
 	computed: {
 		isSubmitButtonDisabled() {
-			return (!this.name || !this.startDate || !this.endDate || this.selectedParticipants.length === 0 || !this.areValidDates);
+			return (!this.name || !this.startEvent || !this.endEvent || this.selectedParticipants.length === 0 ||
+				this.startEvent >= this.endEvent);
 		},
 		translatedFrequencies() {
 			return this.frequencies.map(frequency => ({
@@ -234,10 +234,8 @@ export default {
 			const dataValidation = {
 				name: this.name,
 				description: this.description,
-				startDate: this.startDate,
-				endDate: this.endDate,
-				startTime: this.startTime,
-				endTime: this.endTime,
+				startEvent: this.startEvent,
+				endEvent: this.endEvent,
 				numberRepeats: this.numberRepeats,
 				selectedParticipants: this.selectedParticipants
 			}
@@ -285,14 +283,10 @@ export default {
 			}
 		},
 		setPeriods() {
-
-			const initialStartDateTime = this.combineDateTime(this.startDate, this.startTime);
-			const initialEndDateTime = this.combineDateTime(this.endDate, this.endTime);
-
-			this.addToPeriods(initialStartDateTime, initialEndDateTime);
+			this.addToPeriods(this.startEvent, this.endEvent);
 
 			if (this.selectedFrequency.code && this.selectedFrequency.code !== 'none') {
-				this.handleFrequency(this.selectedFrequency.code, initialStartDateTime, initialEndDateTime);
+				this.handleFrequency(this.selectedFrequency.code, this.startEvent, this.endEvent);
 			}
 
 			if (this.selectedAlertTypes.length > 0) {
@@ -308,18 +302,6 @@ export default {
 				this.startTime.setHours(0, 0, 0, 0);
 				this.endTime.setHours(23, 59, 0, 0);
 			}
-		},
-		combineDateTime(date, time) {
-			if (!date || !time) return null; // Vérifie si les deux valeurs existent
-
-			// Convertit date et time en chaînes pour obtenir les parties de date et d'heure
-			const datePart = date.toISOString().split('T')[0]; // YYYY-MM-DD
-
-			const hours = String(time.getHours()).padStart(2, '0');
-			const minutes = String(time.getMinutes()).padStart(2, '0');
-
-			// Combine les parties de date et d'heure dans un format ISO
-			return new Date(`${datePart}T${hours}:${minutes}:00`);
 		},
 		addToPeriods(startDateTime, endDateTime) {
 			const newPeriod = {"startDateTime": startDateTime, "endDateTime": endDateTime, alerts: []};
@@ -421,79 +403,29 @@ export default {
 		sortMembersAlphabetically(members) {
 			return members.sort((a, b) => a.name.localeCompare(b.name));
 		},
-		initializeDate() {
-			this.startDate = new Date();
+		initializeEventSchedule() {
+			this.startEvent = new Date();
 
 			const now = new Date();
 			const date = now.getDate();
-
-			this.startDate.setDate(date);
-		},
-		initializeTime() {
-			this.startTime = new Date();
-
-			const now = new Date();
 			const hours = now.getHours();
 
-			this.startTime.setHours(hours);
+			this.startEvent.setDate(date);
+			this.startEvent.setHours(hours);
+
+			this.endEvent = new Date(this.startEvent);
+			this.endEvent.setHours(this.endEvent.getHours() + 1);
 		},
 		onDateChange() {
-			this.setTimeForAllDay();
-
-			const initialStartDateTime = this.combineDateTime(this.startDate, this.startTime);
-			const initialEndDateTime = this.combineDateTime(this.endDate, this.endTime);
-
-			this.validateDates(initialStartDateTime, initialEndDateTime)
-		},
-		validateDates(startDateTime, endDateTime) {
-			if (!startDateTime || !endDateTime) {
-				this.areValidDates = true; // Laissez passer tant que l'utilisateur n'a pas rempli toutes les valeurs
-				return;
+			if (this.startEvent > this.endEvent) {
+				this.endEvent = this.startEvent;
 			}
-
-			this.areValidDates = endDateTime >= startDateTime;
 		}
-
 	},
 	mounted() {
 		this.getAllFamilyMembers();
-		this.initializeDate();
-		this.initializeTime();
+		this.initializeEventSchedule();
+		this.isLoading = false;
 	},
-	watch: {
-		startDate(newStartDate) {
-			if (!this.endDate || this.endDate < this.startDate) {
-				this.endDate = newStartDate;
-				this.onDateChange();
-			}
-		},
-		endDate(newEndDate) {
-			if (this.endDate < this.startDate) {
-				this.startDate = newEndDate;
-				this.onDateChange();
-			}
-		},
-		startTime(newStartTime) {
-			const endTime = new Date(newStartTime);
-			endTime.setHours(endTime.getHours() + 1);
-			this.endTime = endTime;
-			this.onDateChange();
-		},
-		endTime(newEndTime) {
-			if (newEndTime < this.startTime && this.startDate === this.endDate) {
-				const startTime = new Date(newEndTime);
-				startTime.setHours(startTime.getHours() - 1);
-				this.startTime = startTime;
-				this.onDateChange();
-			}
-		},
-		areValidDates(newValidity) {
-			if (!newValidity) {
-				const newEndTime = new Date(this.startTime);
-				newEndTime.setHours(this.startTime.getHours() + 1);
-				this.endTime = newEndTime;
-			}
-		}
-	}
 };
 </script>
