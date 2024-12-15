@@ -24,6 +24,19 @@ Permet à l'utilisateur authentifié de quitter sa famille.
 
 ## Opération échouée
 
+### Si le token fourni est incorrect.
+
+**Code** : `401 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status": 401,
+    "message": "Erreur lors de la récupération du token"
+}
+```
+
 ### Si une erreur survient lors du processus de quitter la famille (par exemple, problème de suppression des liens ou de mise à jour des informations).
 
 **Code** : `500 Internal Server Error`

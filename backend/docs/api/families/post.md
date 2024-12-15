@@ -33,6 +33,19 @@ Permet de créer une nouvelle famille pour l'utilisateur authentifié.
 
 ## Opération échouée
 
+### Si le token fourni est incorrect.
+
+**Code** : `401 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status": 401,
+    "message": "Erreur lors de la récupération du token"
+}
+```
+
 ### Si le corps de la requête est invalide (validation échouée).
 
 **Code** : `400 Bad Request`

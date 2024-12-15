@@ -31,6 +31,19 @@ Permet d'ajouter un nouveau membre non inscrit à la famille de l'utilisateur au
 
 ## Opération échouée
 
+### Si le token fourni est incorrect.
+
+**Code** : `401 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status": 401,
+    "message": "Erreur lors de la récupération du token"
+}
+```
+
 ### Si l'utilisateur n'est pas trouvé dans la famille.
 
 **Code** : `404 Not Found`

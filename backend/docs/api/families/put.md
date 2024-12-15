@@ -44,6 +44,19 @@ Permet de mettre à jour les informations de la famille de l'utilisateur authent
 }
 ```
 
+### Si le token fourni est incorrect.
+
+**Code** : `401 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status": 401,
+    "message": "Erreur lors de la récupération du token"
+}
+```
+
 ### Si une erreur survient lors de la mise à jour des informations de la famille.
 
 **Code** : `500 Internal Server Error`

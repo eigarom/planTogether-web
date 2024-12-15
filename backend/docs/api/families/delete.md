@@ -24,6 +24,19 @@ Permet de supprimer la famille de l'utilisateur authentifié.
 
 ## Opération échouée
 
+### Si le token fourni est incorrect.
+
+**Code** : `401 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status": 401,
+    "message": "Erreur lors de la récupération du token"
+}
+```
+
 ### Si la famille n'est pas trouvée.
 
 **Code** : `404 Not Found`

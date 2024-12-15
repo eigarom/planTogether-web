@@ -37,6 +37,19 @@ Permet de récupérer la liste des membres de la famille de l'utilisateur authen
 
 ## Opération échouée
 
+### Si le token fourni est incorrect.
+
+**Code** : `401 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status": 401,
+    "message": "Erreur lors de la récupération du token"
+}
+```
+
 ### Si les membres de la famille ne sont pas trouvés.
 
 **Code** : `404 Not Found`

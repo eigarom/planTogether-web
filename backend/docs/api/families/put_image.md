@@ -37,6 +37,19 @@ L'image de la famille mise à jour, envoyée en réponse dans le format appropri
 }
 ```
 
+### Si le token fourni est incorrect.
+
+**Code** : `401 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status": 401,
+    "message": "Erreur lors de la récupération du token"
+}
+```
+
 ### Si l'identifiant de la famille ne correspond à aucune famille existante.
 
 **Code** : `404 Not Found`
