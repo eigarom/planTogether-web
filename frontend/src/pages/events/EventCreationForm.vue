@@ -279,11 +279,7 @@ export default {
 			}
 		},
 		setIsVisible() {
-			if (this.checked) {
-				this.isVisible = false;
-			} else {
-				this.isVisible = true;
-			}
+			this.isVisible = !this.checked;
 		},
 		setPeriods() {
 			this.addToPeriods(this.startEvent, this.endEvent);
@@ -354,7 +350,7 @@ export default {
 			// Vérifie si le code d'alerte est valide
 			if (alertCalculation[alertCode] !== undefined) {
 				for (let period of this.periods) {
-					const startDateTime = new Date(period.startEvent);
+					const startDateTime = new Date(period.startDateTime);
 					const alertTime = new Date(startDateTime.getTime() - alertCalculation[alertCode]);
 					period.alerts.push(alertTime);
 				}
