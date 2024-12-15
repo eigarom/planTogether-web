@@ -1,7 +1,7 @@
 {
     "myFamily": "My family",
-    "saveModifications": "Save modifications",
-    "familyOptionsTitle": "Create or join a family",
+	"saveModifications": "Save",
+	"familyOptionsTitle": "Family",
     "createFamily": "Create a family",
     "joinFamily": "Join a family",
     "familyName": "Family name",
@@ -20,6 +20,7 @@
     "guestMembers": "Guest members",
     "addMember": "Add a member",
     "quitFamily": "Quit family",
+	"createFamilyFailed": "Family could not be created",
     "toastErrorQuitFamily": "Family could not be left",
     "toastCopiedMessage": "Code copied",
     "toastErrorCopyMessage": "Error copying"

@@ -1,41 +1,67 @@
 <template>
-	<div v-if="user" class="flex flex-col gap-3 w-80 pt-20">
-		<h1 class="text-3xl mb-4 text-center">{{ $t('userTitle') }}</h1>
-		<form id="userProfileForm" class="flex flex-col gap-5 border p-3 rounded-lg" @submit.prevent="submitUpdateUser">
-			<div class="flex items-center justify-between">
-				<FloatLabel variant="on">
-					<InputText id="name" v-model.trim="name" class="w-60" />
-					<label for="name">{{ $t('memberName') }}</label>
-				</FloatLabel>
-				<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color" />
+	<div v-if="user" class="flex flex-col w-full gap-3">
+		<h1 class="text-2xl">{{ $t('userTitle') }}</h1>
+
+		<!--Contenu principal-->
+		<div class="flex flex-col gap-8 p-5 bg-white border rounded-lg w-[565px]">
+
+			<!--Image de l'utilisateur-->
+			<div class="flex gap-8 items-center">
+
+				<!--Image-->
+				<Avatar v-if="user.imageUrl" :image="user.imageUrl" alt="Image" class="custom-avatar"
+						shape="circle"/>
+				<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
+						class="custom-avatar font-semibold text-white" shape="circle"/>
+
+				<!--Boutons-->
+				<div class="flex gap-8">
+					<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined w-[180px]"
+								customUpload
+								mode="basic" severity="secondary" @select="onImageSelect"/>
+
+					<Button :disabled="isDeleteImageButtonDisabled" :label="$t('deleteImageButton')"
+							class="w-[180px]" icon="pi pi-minus"
+							outlined severity="warn" @click="deleteUserImage"/>
+				</div>
 			</div>
 
-			<FloatLabel variant="on">
-				<InputText id="email" v-model.trim="email" class="w-full" />
-				<label for="email">{{ $t('email') }}</label>
-			</FloatLabel>
+			<!--Nom, courriel, couleur-->
+			<form id="userProfileForm" class="flex flex-col gap-8 w-full" @submit.prevent="submitUpdateUser">
 
-			<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" raised type="submit" />
-		</form>
+				<!--Inputs-->
+				<div class="flex gap-8 w-full">
+					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
 
-		<div class="flex items-center justify-between border p-3 rounded-lg">
-			<div class="flex flex-col gap-3">
-				<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
-					mode="basic" severity="secondary" @select="onImageSelect" />
-				<Button v-if="user.imageUrl" :label="$t('deleteImageButton')" icon="pi pi-minus" outlined
-					severity="warn" @click="deleteUserImage" />
-			</div>
-			<img v-if="user.imageUrl" :src="user.imageUrl" alt="Image" class="shadow-md rounded-xl h-24" />
+					<FloatLabel variant="on">
+						<InputText id="name" v-model.trim="name" class="w-full"/>
+						<label for="name">{{ $t('memberName') }}</label>
+					</FloatLabel>
+
+					<FloatLabel class="flex-grow" variant="on">
+						<InputText id="email" v-model.trim="email" class="w-full"/>
+						<label for="email">{{ $t('email') }}</label>
+					</FloatLabel>
+				</div>
+
+				<!--Boutons de modification et suppression du compte-->
+				<div class="flex gap-8 justify-center">
+					<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" class="w-32"
+							type="submit"/>
+					<Button :label="$t('deleteButton')" class="w-32" severity="danger"
+							@click="confirm($event)"/>
+				</div>
+			</form>
 		</div>
 
-		<Button :label="$t('deleteButton')" raised severity="danger" @click="confirm($event)" />
+
 		<ConfirmDialog></ConfirmDialog>
-		<Toast ref="toast" position="bottom-right" />
+		<Toast ref="toast" position="bottom-right"/>
 	</div>
 </template>
 
 <script>
-import { deleteUser, updateUser } from "@/services/userServices.js";
+import {deleteUser, updateUser} from "@/services/userServices.js";
 import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
 import FloatLabel from "primevue/floatlabel";
@@ -43,13 +69,14 @@ import ColorPicker from 'primevue/colorpicker';
 import FileUpload from 'primevue/fileupload';
 import Toast from 'primevue/toast';
 import ConfirmDialog from 'primevue/confirmdialog';
-import { userSchema } from "@/schemas/userSchemas.js";
-import { deleteMemberImage, uploadMemberImage } from "@/services/memberServices.js";
+import {userSchema} from "@/schemas/userSchemas.js";
+import {deleteMemberImage, uploadMemberImage} from "@/services/memberServices.js";
+import Avatar from "primevue/avatar";
 
 export default {
-	inject: ['user', 'token'],
+	inject: ['user', 'token', 'family'],
 	components: {
-		InputText, Button, FloatLabel, ColorPicker, FileUpload, Toast, ConfirmDialog
+		Avatar, InputText, Button, FloatLabel, ColorPicker, FileUpload, Toast, ConfirmDialog
 	},
 	data: () => {
 		return {
@@ -61,6 +88,12 @@ export default {
 	computed: {
 		isSubmitButtonDisabled() {
 			return this.name === this.user.name && this.email === this.user.email && this.color === this.user.color;
+		},
+		isDeleteImageButtonDisabled() {
+			return !this.user.imageUrl;
+		},
+		userInitial() {
+			return this.user.name.charAt(0).toUpperCase();
 		}
 	},
 	methods: {
@@ -76,6 +109,9 @@ export default {
 
 			try {
 				this.user.imageUrl = await uploadMemberImage(this.token, this.user.id, formData);
+				this.family.accountMembers.find(member => member.id === parseInt(this.user.id)).imageUrl =
+					this.user.imageUrl;
+
 				this.$refs.toast.add({
 					severity: 'success',
 					summary: this.$t('toastSuccessTitle'),
@@ -154,8 +190,9 @@ export default {
 		async confirm(event) {
 			this.$confirm.require({
 				target: event.currentTarget,
+				header: this.$t('deleteAccount'),
 				message: this.$t('deleteAccountConfirm'),
-				icon: 'pi pi-info-circle',
+				icon: 'pi pi-exclamation-triangle',
 				rejectProps: {
 					label: this.$t('cancelButton'),
 					severity: 'secondary',
@@ -192,5 +229,11 @@ export default {
 .custom-color-picker {
 	--p-colorpicker-preview-width: 42px;
 	--p-colorpicker-preview-height: 42px;
+}
+
+.custom-avatar {
+	--p-avatar-width: 100px;
+	--p-avatar-height: 100px;
+	--p-avatar-font-size: 2rem;
 }
 </style>

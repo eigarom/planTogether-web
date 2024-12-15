@@ -6,5 +6,6 @@
 	"register": "Register",
 	"noAccount": "No account yet ?",
 	"subscribe": "Sign up",
-	"loginFailed": "Authentication failed"
+	"loginFailed": "Authentication failed",
+	"invalidMail": "Invalid email"
 }

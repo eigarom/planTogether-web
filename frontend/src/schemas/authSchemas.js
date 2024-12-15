@@ -21,3 +21,10 @@ export const registrationSchema = Yup.object({
 		})
 		.required(() => i18n.global.t('nameRequired')),
 });
+
+export const loginSchema = Yup.object({
+	email: Yup.string()
+		.email(() => i18n.global.t('invalidMail'))
+		.required(() => i18n.global.t('emailRequired')),
+	password: Yup.string().required(() => i18n.global.t('passwordRequired')),
+});

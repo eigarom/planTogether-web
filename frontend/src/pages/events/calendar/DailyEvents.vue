@@ -1,0 +1,34 @@
+<template>
+	<div class="flex flex-col gap-2 border p-2 w-full pb-7">
+		<ItemEvent
+			v-for="event in sortedEvents"
+			:key="event.id"
+			:day="day"
+			:event="event"
+		/>
+	</div>
+</template>
+
+<script>
+import ItemEvent from './ItemEvent.vue'
+
+export default {
+	name: 'DailyEvents',
+	components: {
+		ItemEvent
+	},
+	props: {
+		day: {
+			type: Object,
+			required: true
+		}
+	},
+	computed: {
+		sortedEvents() {
+			return this.day.events.slice().sort((a, b) => {
+				return new Date(a.period.startDateTime) - new Date(b.period.startDateTime);
+			});
+		}
+	}
+}
+</script>
