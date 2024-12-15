@@ -3,13 +3,13 @@
 		<h1 class="text-3xl">{{ $t('myFamily') }}</h1>
 
 		<!--Contenu principal-->
-		<div class="flex flex-wrap gap-8 w-fit">
+		<div class="flex flex-wrap gap-8 w-fit border rounded-lg bg-white p-5">
 
 			<!--Informations de la famille-->
 			<div class="flex flex-col gap-8">
 
 				<!--Nom, image, couleur-->
-				<div class="flex flex-col gap-8 bg-white p-5 border rounded-lg w-fit">
+				<div class="flex flex-col gap-8 bg-white p-5 border rounded-lg w-fit shadow">
 					<!--Image-->
 					<div class="flex items-center gap-8">
 						<img v-if="family.imageUrl" :src="family.imageUrl" alt="Image"
@@ -49,7 +49,7 @@
 				<div class="flex flex-wrap gap-8 justify-between">
 
 					<!--Membres principaux-->
-					<div class="flex flex-col flex-grow gap-5 bg-white p-5 border rounded-lg">
+					<div class="flex flex-col flex-grow gap-5 bg-white p-5 border rounded-lg shadow">
 						<h2 class="text-2xl text-center">{{ $t('accountMembers') }}</h2>
 
 						<div>
@@ -76,7 +76,7 @@
 							<router-link v-for="accountMember in accountMembers" :key="accountMember.id"
 										 :to="`/members/${accountMember.id}`">
 								<div v-if="accountMember.id !== user.id"
-									 class="flex flex-inline items-center justify-between  p-3 rounded-lg hover:bg-slate-100 h-fit"
+									 class="flex flex-inline items-center justify-between p-3 rounded-lg hover:bg-slate-100 h-fit"
 								>
 									<p>{{ accountMember.name }}</p>
 
@@ -98,7 +98,7 @@
 					</div>
 
 					<!--Membres secondaires-->
-					<div class="flex flex-col flex-grow p-5 gap-5 bg-white border rounded-lg  h-fit">
+					<div class="flex flex-col flex-grow p-5 gap-5 bg-white border rounded-lg  h-fit shadow">
 						<h2 class="text-2xl text-center">{{ $t('guestMembers') }}</h2>
 
 						<div v-if="guestMembers.length > 0">
@@ -125,7 +125,7 @@
 			</div>
 
 			<!--Boutons pour quitter et supprimer la famille-->
-			<div class="flex flex-col gap-8 bg-white border rounded-lg h-fit p-5">
+			<div class="flex flex-col gap-8 bg-white border rounded-lg h-fit p-5 shadow">
 				<Button :label="$t('quitFamily')" outlined severity="danger"
 						@click="submitQuitFamily($event)"/>
 				<Button :label="$t('deleteFamilyButton')" severity="danger"

@@ -47,5 +47,6 @@
 	"eventCreationFailure": "Échec lors de la création de l'événement.",
 	"formContainsErrors": "Le formulaire contient des erreurs. Veuillez vérifier les champs.",
 	"previousWeek": "Semaine précédente",
-	"nextWeek": "Semaine suivante"
+	"nextWeek": "Semaine suivante",
+	"today": "Aujourd'hui"
 }

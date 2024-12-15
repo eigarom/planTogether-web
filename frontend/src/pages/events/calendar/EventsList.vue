@@ -1,15 +1,9 @@
 <template>
-	<div class="flex flex-col gap-5 min-h-fit">
-
-		<!-- Entête -->
-		<div class="flex justify-between">
-			<h1 class="text-3xl">{{ $t('eventsTitle') }}</h1>
-
-			<Button as="router-link" class="w-48" icon="pi pi-calendar-plus" to="/events/add"/>
-		</div>
+	<div class="flex flex-col gap-5 w-full">
+		<h1 class="text-2xl">{{ $t('eventsTitle') }}</h1>
 
 		<!-- Calendrier -->
-		<div v-if="!loading" class="flex flex-grow">
+		<div v-if="!loading" class="flex bg-white border p-5 rounded-lg h-[calc(100vh-210px)]">
 			<WeeklyEvents :dates="dates"/>
 		</div>
 	</div>
@@ -75,6 +69,7 @@ export default {
 						dateObj.events.push({
 							id: event.id,
 							name: event.name,
+							description: event.description,
 							period, // Ajout de la période entière ici
 							members: event.members
 						});

@@ -1,19 +1,57 @@
 <template>
 
-	<router-link :to="`/events/${event.id}/periods/${event.period.id}`">
+	<!-- Affichage de l'événement -->
+	<div :style="eventBackgroundColorClass" class="flex flex-col gap-3 p-3 rounded hover:bg-slate-100 cursor-pointer"
+		 @click="showDialog = true">
 
-		<div :style="eventBackgroundColorClass" class="flex flex-col gap-3 p-3 rounded hover:bg-slate-100">
+		<div class="flex flex-col">
+			<!-- Nom de l'événement -->
+			<p class="truncate">{{ event.name }}</p>
 
+			<!-- Affichage de l'heure de début et de fin -->
+			<p class="text-xs truncate">{{ getEventTime() }}</p>
+		</div>
+
+		<!-- Membres de l'événement -->
+		<div class="flex justify-left">
+			<AvatarGroup>
+				<Avatar
+					v-for="member in event.members"
+					:key="member.id"
+					:image="member.imageUrl"
+					:label="!member.imageUrl ? memberInitials(member) : null"
+					:style="!member.imageUrl ? avatarColorClass : null"
+					shape="circle"
+					size="small"
+				/>
+			</AvatarGroup>
+		</div>
+	</div>
+
+	<!-- Dialog pour afficher les détails de l'événement -->
+	<Dialog v-model:visible="showDialog" :header="$t('eventsTitle')" modal>
+		<div class="flex flex-col gap-4 w-96">
+
+			<!-- Nom et horaires de l'événement -->
 			<div class="flex flex-col">
-				<!-- Nom de l'événement -->
-				<p class="truncate">{{ event.name }}</p>
+				<p class="text-xl font-semibold">{{ event.name }}</p>
 
-				<!-- Affichage de l'heure de début et de fin -->
-				<p class="text-xs truncate">{{ getEventTime() }}</p>
+				<div>
+					<p v-if="isAllday()">{{ formatDate(event.period.startDateTime) }} - {{ $t('wholeDay') }}</p>
+					<div v-else class="flex flex-col justify-left">
+						<p>{{ formatDate(event.period.startDateTime) }} - {{ formatTime(event.period.startDateTime) }}
+							-</p>
+						<p>{{ formatDate(event.period.endDateTime) }} - {{ formatTime(event.period.endDateTime) }}</p>
+					</div>
+				</div>
 			</div>
 
-			<!-- Membres de l'événement -->
-			<div class="card flex justify-left">
+			<div v-if="event.description" class="overflow-auto max-h-40">
+				<p>{{ event.description }}</p>
+			</div>
+
+			<div class="inline-flex items-center gap-3">
+				<i class="pi pi-users" style="font-size: 1.5rem"></i>
 				<AvatarGroup>
 					<Avatar
 						v-for="member in event.members"
@@ -26,17 +64,28 @@
 					/>
 				</AvatarGroup>
 			</div>
+
+			<div class="flex justify-center gap-2 mt-4">
+				<Button :to="`/events/${event.id}/periods/${event.period.id}`" as="router-link" class="w-40"
+						label="Modifier"/>
+			</div>
 		</div>
-	</router-link>
+	</Dialog>
 </template>
 
 <script>
 import Avatar from "primevue/avatar";
 import AvatarGroup from "primevue/avatargroup";
+import InputText from "primevue/inputtext";
+import ColorPicker from "primevue/colorpicker";
+import FloatLabel from "primevue/floatlabel";
+import Button from "primevue/button";
+import Dialog from "primevue/dialog";
 
 export default {
 	name: 'ItemEvent',
 	components: {
+		Dialog, Button, FloatLabel, ColorPicker, InputText,
 		Avatar, AvatarGroup
 	},
 	inject: ['token', 'family'],
@@ -49,6 +98,11 @@ export default {
 			type: Object,
 			required: true
 		}
+	},
+	data() {
+		return {
+			showDialog: false
+		};
 	},
 	methods: {
 		memberInitials(member) {
@@ -88,7 +142,18 @@ export default {
 		formatTime(dateTime) {
 			const date = new Date(dateTime);
 			return date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+		}, formatDate(dateTime) {
+			const date = new Date(dateTime);
+			return date.toLocaleDateString([], {year: 'numeric', month: 'long', day: 'numeric'});
 		},
+		isAllday() {
+			const startEvent = new Date(this.event.period.startDateTime);
+			const endEvent = new Date(this.event.period.endDateTime);
+			const startDay = new Date(new Date(this.day.date).setHours(0, 0, 0, 0));
+			const endDay = new Date(new Date(this.day.date).setHours(23, 59, 0, 0));
+
+			return startDay >= startEvent && endDay <= endEvent;
+		}
 	},
 	computed: {
 		eventBackgroundColorClass() {
