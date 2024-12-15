@@ -12,8 +12,25 @@ Permet de créer une nouvelle famille pour l'utilisateur authentifié.
 
 ## Paramètres de la requête
 
--   **name** (string, requis) : Le nom de la famille à créer.
--   **color** (string, requis) : La couleur associée à la famille.
+-   **id** (string, requis) : L'identifiant du user dont les informations doivent être mises à jour.
+
+**Contraintes de données**
+
+```json
+{
+    "name": "[nom valide]",
+    "color": "[couleur valide]"
+}
+```
+
+**Exemple de données**
+
+```json
+{
+    "name": "John Doe",
+    "color": "#FF0000"
+}
+```
 
 ## Opération réussie
 
