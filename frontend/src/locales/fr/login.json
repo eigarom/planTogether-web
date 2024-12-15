@@ -3,6 +3,7 @@
 	"mail": "Courriel",
 	"password": "Mot de passe",
 	"login": "Se connecter",
+	"invalidMail": "Le courriel n'est pas valide",
 	"noAccount": "Pas encore de compte ?",
 	"subscribe": "Inscrivez-vous",
 	"loginFailed": "Échec de l'authentification"

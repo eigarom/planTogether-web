@@ -6,11 +6,13 @@
     "email": "Email",
     "updateImageButton": "Choose an image",
     "deleteImageButton": "Delete image",
-    "updateButton": "Update",
+	"updateButton": "Save",
     "colorInvalid": "The color is invalid",
     "colorRequired": "The color is required",
     "submitButton": "Submit",
     "deleteButton": "Delete",
+    "deleteAccount": "Delete account",
+    "deleteMember": "Delete member",
     "cancelButton": "Cancel",
     "quitButton": "Quit",
     "deleteAccountConfirm": "Do you really want to delete your account?",
@@ -21,5 +23,7 @@
     "toastUpdateImageSuccessMessage": "The image has been updated",
     "toastDeleteImageSuccessMessage": "The image has been deleted",
     "errorUpdateMessage": "Error during update",
-    "errorDeleteMessage": "Error during deletion"
+    "errorDeleteMessage": "Error during deletion",
+    "createMemberSuccessMessage": "The member has been created",
+    "createMemberErrorMessage": "Error during member creation"
 }

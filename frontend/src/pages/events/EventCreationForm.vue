@@ -1,79 +1,134 @@
 <template>
-	<div class="top-20 w-96 gap-3 flex flex-col pt-20 pb-16">
-		<h1 class="text-3xl mb-4 text-center">{{ $t('newEvent') }}</h1>
-		<form id="eventForm" class="flex flex-col gap-5" @submit.prevent="submitCreateEvent">
-			<div class="flex items-center justify-between">
-				<FloatLabel variant="on" class="w-full">
-					<InputText id="name" v-model.trim="name" class="w-full" />
-					<label for="name">{{ $t('eventName') }}</label>
-				</FloatLabel>
-			</div>
-			<div>
-				<FloatLabel variant="on">
-					<Textarea id="description" v-model.trim="description" rows="2" class="w-full" />
-					<label for="description">{{ $t('description') }}</label>
-				</FloatLabel>
-			</div>
-			<div class="flex items-center gap-3">
-				<p>{{ $t('visibility') }}</p>
-				<ToggleSwitch id="isVisible" v-model.trim="checked" />
-			</div>
-			<div class="flex flex-col border p-3 rounded-lg gap-3">
-				<p class="text-lg text-center">{{ $t('participants') }}</p>
-				<div v-for="member in allMembers" :key="member.id"
-					class="flex flex-inline items-center justify-between border p-3 rounded-lg"
-					:class="{ 'bg-blue-100': isSelected(member) }" @click="toggleMemberSelection(member)"
-					style="cursor: pointer;">
-					<p>{{ member.name }}</p>
-					<Avatar v-if="member.imageUrl" :image="member.imageUrl" shape="circle" size="small" class="border-4"
-						:style="{ borderColor: member.color }" />
-					<Avatar v-else :label="memberInitials(member)" :style="`background-color: ${member.color}`"
-						class="font-semibold text-white" shape="circle" size="small" />
+	<div v-if="!isLoading" class="flex flex-col gap-3 min-h-fit w-full">
+		<h1 class="text-2xl">{{ $t('newEvent') }}</h1>
+
+		<!-- Contenu principal -->
+		<form id="eventForm" class="flex flex-col gap-8 bg-white border rounded-lg p-5"
+			  @submit.prevent="submitCreateEvent"
+		>
+			<!-- Renseignements -->
+			<div class="flex flex-col gap-8">
+
+				<!-- Première ligne -->
+				<div class="grid grid-cols-2 gap-5">
+
+					<!-- Nom, description, visibilité -->
+					<div class="flex flex-col gap-8 p-5 border rounded-lg shadow">
+						<!-- Nom -->
+						<FloatLabel class="w-full" variant="on">
+							<InputText id="name" v-model.trim="name" class="w-full"/>
+							<label for="name">{{ $t('eventName') }}</label>
+						</FloatLabel>
+
+						<!-- Description -->
+						<FloatLabel class="w-full h-full" variant="on">
+							<Textarea id="description" v-model.trim="description" class="w-full h-full"/>
+							<label for="description">{{ $t('description') }}</label>
+						</FloatLabel>
+
+						<!-- Visibilité -->
+						<div class="flex items-center gap-8">
+							<p>{{ $t('visibility') }}</p>
+							<ToggleSwitch id="isVisible" v-model.trim="checked"/>
+						</div>
+					</div>
+
+					<!-- Dates, heures, répétition -->
+					<div class="flex flex-col gap-8 border rounded-lg p-5 h-fit shadow">
+
+						<div class="grid grid-cols-2 gap-8">
+							<!-- Date début -->
+							<FloatLabel class="w-full" variant="on">
+								<DatePicker v-model="startEvent" class="w-full" iconDisplay="input" inputId="startDate"
+											showIcon showTime @update:modelValue="onDateChange"/>
+								<label for="startDate">{{ $t('startDate') }}</label>
+							</FloatLabel>
+
+							<!-- Date fin -->
+							<FloatLabel class="w-full" variant="on">
+								<DatePicker v-model="endEvent" class="w-full" iconDisplay="input" inputId="endDate"
+											showIcon showTime @update:modelValue="onDateChange"/>
+								<label for="endDate">{{ $t('endDate') }}</label>
+							</FloatLabel>
+						</div>
+
+						<!-- Toute la journée -->
+						<div class="gap-8 grid grid-cols-2">
+							<div class="flex items-center justify-between">
+								<p>{{ $t('wholeDay') }}</p>
+
+								<ToggleSwitch id="allDay" v-model="allDay" @update:modelValue="setTimeForAllDay"/>
+							</div>
+						</div>
+
+						<!-- Répétition et alertes -->
+						<div class="grid grid-cols-2 gap-8">
+							<!-- Répétition -->
+							<FloatLabel class="w-full" variant="on">
+								<Select
+									v-model="selectedFrequency" :options="translatedFrequencies"
+									:placeholder="$t('nonePlaceholder')"
+									class="w-full"
+									optionLabel="name"
+								/>
+								<label class="w-[92px]">{{ $t('repeat') }}</label>
+							</FloatLabel>
+
+							<InputNumber v-if="selectedFrequency !== null && selectedFrequency.code !== 'none'"
+										 v-model="numberRepeats" :max="365" :min="0" buttonLayout="horizontal"
+										 class="text-center w-full" fluid inputId="numberRepeats"
+										 inputStyle="text-align: center;"
+										 showButtons
+							/>
+						</div>
+
+						<!-- Alertes -->
+						<div class="grid grid-cols-2 gap-8">
+							<FloatLabel class="w-full" variant="on">
+								<MultiSelect v-model="selectedAlertTypes" :options="translatedAlertTypes"
+											 class="w-full"
+											 optionLabel="name"
+								/>
+								<label class="w-[92px]">{{ $t('alerts') }}</label>
+							</FloatLabel>
+						</div>
+					</div>
+				</div>
+
+				<!-- Participants -->
+				<div class="grid grid-cols-4 gap-5">
+					<Button
+						v-for="member in allMembers"
+						:key="member.id"
+						:severity="isSelected(member) ? 'info':'secondary'"
+						@click="toggleMemberSelection(member)"
+					>
+						<div class="inline-flex  items-center justify-between w-full">
+							<p class="truncate">{{ member.name }}</p>
+
+							<Avatar
+								:image="member.imageUrl"
+								:label="!member.imageUrl ? memberInitials(member) : null"
+								:style="!member.imageUrl ? `background-color: ${member.color}` : `border: 4px solid ${member.color}`"
+								class="font-semibold text-white flex-shrink-0"
+								shape="circle"
+								size="small"
+							/>
+						</div>
+					</Button>
 				</div>
 			</div>
-			<div class="flex items-center gap-3">
-				<FloatLabel variant="on">
-					<DatePicker v-model="startDate" inputId="startDate" showIcon iconDisplay="input"
-						@update:modelValue="onDateChange" />
-					<label for="startDate">{{ $t('startDate') }}</label>
-				</FloatLabel>
-				<FloatLabel variant="on">
-					<DatePicker v-model="endDate" inputId="endDate" showIcon iconDisplay="input"
-						@update:modelValue="onDateChange" />
-					<label for="endDate">{{ $t('endDate') }}</label>
-				</FloatLabel>
-			</div>
-			<div class="flex items-center gap-3">
-				<p>{{ $t('wholeDay') }}</p>
-				<ToggleSwitch id="allDay" v-model.trim="allDay" @update:modelValue="onDateChange" />
-			</div>
-			<div class="flex items-center gap-3" v-if="!allDay">
-				<DatePicker id="startTime" v-model="startTime" timeOnly fluid @update:modelValue="onDateChange" />
-				<DatePicker id="endTime" v-model="endTime" timeOnly fluid @update:modelValue="onDateChange" />
-			</div>
-			<Message v-if="!areValidDates" severity="error" icon="pi pi-times-circle" class="mb-2">La date/heure de fin
-				de l'événement doit être après le début!</Message>
-			<div class="flex items-center gap-3">
-				<label>{{ $t('repeat') }}</label>
-				<Select v-model="selectedFrequency" :options="translatedFrequencies" optionLabel="name"
-					:placeholder="$t('nonePlaceholder')" />
-			</div>
-			<div class="flex items-center gap-3" v-if="selectedFrequency !== null && selectedFrequency.code !== 'none'">
-				<label for="numberRepeats">{{ $t('numberRepeats') }}</label>
-				<InputNumber v-model="numberRepeats" inputId="numberRepeats" showButtons buttonLayout="vertical"
-					style="width: 10rem" :min="0" :max="365" fluid />
-			</div>
-			<div class="flex items-center gap-3">
-				<label>{{ $t('alerts') }}</label>
-				<MultiSelect v-model="selectedAlertTypes" :options="translatedAlertTypes" optionLabel="name"
-					:placeholder="$t('nonePlaceholder')" :showSelectAll="false" />
-			</div>
-			<Message v-if="errorMessage" class="error-message" severity="error">{{ errorMessage }}</Message>
 
-			<Button :disabled="isSubmitButtonDisabled" :label="$t('buttonCreateEvent')" raised type="submit" />
+			<!-- Bouton de soumission -->
+			<div class="flex justify-center">
+				<Button
+					:disabled="isSubmitButtonDisabled" :label="$t('buttonCreateEvent')" class="w-60"
+					type="submit"
+				/>
+			</div>
 		</form>
 
-		<Toast ref="toast" position="bottom-right" />
+		<Toast ref="toast" position="bottom-right"/>
 	</div>
 </template>
 
@@ -86,19 +141,26 @@ import Select from 'primevue/select';
 import InputNumber from 'primevue/inputnumber';
 import MultiSelect from 'primevue/multiselect';
 import Button from "primevue/button";
-import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import Toast from 'primevue/toast';
-import { eventSchema } from "@/schemas/eventSchemas.js";
-import { createEvent } from "@/services/eventServices.js";
-import { getAllMembersByFamilyId } from "@/services/memberServices.js";
-import { getMemberImage } from "@/services/memberServices.js";
+import {eventSchema} from "@/schemas/eventSchemas.js";
+import {createEvent} from "@/services/eventServices.js";
 import Avatar from "primevue/avatar";
 
 export default {
-	inject: ['token', 'user'],
+	inject: ['token', 'user', 'family'],
 	components: {
-		InputText, Textarea, ToggleSwitch, DatePicker, Select, InputNumber, MultiSelect, Button, Message, FloatLabel, Toast, Avatar
+		InputText,
+		Textarea,
+		ToggleSwitch,
+		DatePicker,
+		Select,
+		InputNumber,
+		MultiSelect,
+		Button,
+		FloatLabel,
+		Toast,
+		Avatar
 	},
 	data: () => {
 		return {
@@ -106,39 +168,39 @@ export default {
 			description: '',
 			checked: false,
 			isVisible: true,
-			startDate: '',
-			endDate: '',
+			startEvent: '',
+			endEvent: '',
 			allDay: false,
-			startTime: '',
-			endTime: '',
-			selectedFrequency: { name: 'Aucune', code: 'none' },
+			selectedFrequency: {name: 'Aucune', code: 'none'},
 			frequencies: [
-				{ labelKey: 'frequencies.none', code: 'none' },
-				{ labelKey: 'frequencies.daily', code: 'daily' },
-				{ labelKey: 'frequencies.weekly', code: 'weekly' },
-				{ labelKey: 'frequencies.monthly', code: 'monthly' },
-				{ labelKey: 'frequencies.annual', code: 'annual' }
+				{labelKey: 'frequencies.none', code: 'none'},
+				{labelKey: 'frequencies.daily', code: 'daily'},
+				{labelKey: 'frequencies.weekly', code: 'weekly'},
+				{labelKey: 'frequencies.monthly', code: 'monthly'},
+				{labelKey: 'frequencies.annual', code: 'annual'}
 			],
 			numberRepeats: '',
 			selectedAlertTypes: [],
 			alertTypes: [
-				{ labelKey: 'alertTypes.10min', code: '10min' },
-				{ labelKey: 'alertTypes.30min', code: '30min' },
-				{ labelKey: 'alertTypes.1hour', code: '1hour' },
-				{ labelKey: 'alertTypes.4hours', code: '4hours' },
-				{ labelKey: 'alertTypes.24hours', code: '24hours' },
+				{labelKey: 'alertTypes.10min', code: '10min'},
+				{labelKey: 'alertTypes.30min', code: '30min'},
+				{labelKey: 'alertTypes.1hour', code: '1hour'},
+				{labelKey: 'alertTypes.4hours', code: '4hours'},
+				{labelKey: 'alertTypes.24hours', code: '24hours'},
 			],
 			selectedParticipants: [],
 			allMembers: [],
 			periods: [],
 			members: [],
 			areValidDates: true,
-			errorMessage: ""
+			errorMessage: "",
+			isLoading: true
 		};
 	},
 	computed: {
 		isSubmitButtonDisabled() {
-			return (!this.name || !this.startDate || !this.endDate || this.selectedParticipants.length === 0 || !this.areValidDates);
+			return (!this.name || !this.startEvent || !this.endEvent || this.selectedParticipants.length === 0 ||
+				this.startEvent >= this.endEvent);
 		},
 		translatedFrequencies() {
 			return this.frequencies.map(frequency => ({
@@ -155,25 +217,11 @@ export default {
 	},
 	methods: {
 		async submitCreateEvent() {
-
-			// Empêcher l'envoi si le formulaire n'est pas valide
-			if (this.isSubmitButtonDisabled) {
-				this.$refs.toast.add({
-					severity: 'error',
-					summary: this.$t('toastErrorTitle'),
-					detail: this.$t('formContainsErrors'),
-					life: 5000
-				});
-				return;
-			}
-
 			const dataValidation = {
 				name: this.name,
 				description: this.description,
-				startDate: this.startDate,
-				endDate: this.endDate,
-				startTime: this.startTime,
-				endTime: this.endTime,
+				startEvent: this.startEvent,
+				endEvent: this.endEvent,
 				numberRepeats: this.numberRepeats,
 				selectedParticipants: this.selectedParticipants
 			}
@@ -187,6 +235,7 @@ export default {
 					detail: err.message,
 					life: 5000
 				});
+				return;
 			}
 
 			this.setIsVisible();
@@ -204,25 +253,22 @@ export default {
 				await createEvent(eventDetails, this.token);
 				this.$router.push('/events');
 			} catch {
-				this.errorMessage = this.$t('eventCreationFailure');
+				this.$refs.toast.add({
+					severity: 'error',
+					summary: this.$t('toastErrorTitle'),
+					detail: this.$t('eventCreationFailure'),
+					life: 5000
+				});
 			}
 		},
 		setIsVisible() {
-			if (this.checked) {
-				this.isVisible = false;
-			} else {
-				this.isVisible = true;
-			}
+			this.isVisible = !this.checked;
 		},
 		setPeriods() {
-
-			const initialStartDateTime = this.combineDateTime(this.startDate, this.startTime);
-			const initialEndDateTime = this.combineDateTime(this.endDate, this.endTime);
-
-			this.addToPeriods(initialStartDateTime, initialEndDateTime);
+			this.addToPeriods(this.startEvent, this.endEvent);
 
 			if (this.selectedFrequency.code && this.selectedFrequency.code !== 'none') {
-				this.handleFrequency(this.selectedFrequency.code, initialStartDateTime, initialEndDateTime);
+				this.handleFrequency(this.selectedFrequency.code, this.startEvent, this.endEvent);
 			}
 
 			if (this.selectedAlertTypes.length > 0) {
@@ -232,27 +278,15 @@ export default {
 			}
 		},
 		setTimeForAllDay() {
-			if (this.allDay) { // Si toute la journée a été sélectionnée, régler startTime à minuit et endTime à 23h59
-				if (!this.startTime) this.startTime = new Date();
-				if (!this.endTime) this.endTime = new Date();
-				this.startTime.setHours(0, 0, 0, 0);
-				this.endTime.setHours(23, 59, 0, 0);
-			}
-		},
-		combineDateTime(date, time) {
-			if (!date || !time) return null; // Vérifie si les deux valeurs existent
+			this.startEvent.setHours(0, 0, 0, 0);
+			this.endEvent.setHours(23, 59, 0, 0);
 
-			// Convertit date et time en chaînes pour obtenir les parties de date et d'heure
-			const datePart = date.toISOString().split('T')[0]; // YYYY-MM-DD
-
-			const hours = String(time.getHours()).padStart(2, '0');
-			const minutes = String(time.getMinutes()).padStart(2, '0');
-
-			// Combine les parties de date et d'heure dans un format ISO
-			return new Date(`${datePart}T${hours}:${minutes}:00`);
+			// Réassigner pour forcer la réactivité
+			this.startEvent = new Date(this.startEvent.getTime());
+			this.endEvent = new Date(this.endEvent.getTime());
 		},
 		addToPeriods(startDateTime, endDateTime) {
-			const newPeriod = { "startDateTime": startDateTime, "endDateTime": endDateTime, alerts: [] };
+			const newPeriod = {"startDateTime": startDateTime, "endDateTime": endDateTime, alerts: []};
 			this.periods.push(newPeriod);
 		},
 		handleFrequency(frequencyCode, initialStartDateTime, initialEndDateTime) {
@@ -327,101 +361,54 @@ export default {
 		isSelected(member) {
 			return this.selectedParticipants.includes(member.id);
 		},
-		async getAllFamilyMembers() {
-			try {
-				const familyMembers = await getAllMembersByFamilyId(this.token);
+		getAllFamilyMembers() {
+			this.allMembers = [
+				...this.family.accountMembers,
+				...this.family.guestMembers
+			];
 
-				this.allMembers = [
-					...familyMembers.accountMembers,
-					...familyMembers.guestMembers
-				];
+			this.sortMembersAlphabetically(this.allMembers);
 
-				this.allMembers.forEach(async member => {
-					member.imageUrl = await getMemberImage(this.token, member.id);
-				});
+			if (this.user) {
+				// Filtre pour retirer toute occurrence de `this.user` dans `allMembers` dans le but de l'ajouter au début de la liste
+				this.allMembers = this.allMembers.filter(member => member.id !== this.user.id);
 
-				if (this.user) {
-					// Filtre pour retirer toute occurrence de `this.user` dans `allMembers` dans le but de l'ajouter au début de la liste
-					this.allMembers = this.allMembers.filter(member => member.id !== this.user.id);
+				// Ajoute `this.user` au début de la liste
+				this.allMembers.unshift(this.user);
 
-					// Ajoute `this.user` au début de la liste
-					this.allMembers.unshift(this.user);
-
-					// Sélectionner l'utilisateur par défaut
-					if (!this.selectedParticipants.includes(this.user.id)) {
-						this.selectedParticipants.push(this.user.id);
-					}
+				// Sélectionner l'utilisateur par défaut
+				if (!this.selectedParticipants.includes(this.user.id)) {
+					this.selectedParticipants.push(this.user.id);
 				}
-			} catch (error) {
-				console.error('Erreur:', error);
 			}
 		},
-		initializeDate() {
-			this.startDate = new Date();
+		sortMembersAlphabetically(members) {
+			return members.sort((a, b) => a.name.localeCompare(b.name));
+		},
+		initializeEventSchedule() {
+			this.startEvent = new Date();
 
 			const now = new Date();
 			const date = now.getDate();
-
-			this.startDate.setDate(date);
-		},
-		initializeTime() {
-			this.startTime = new Date();
-
-			const now = new Date();
 			const hours = now.getHours();
 
-			this.startTime.setHours(hours);
+			this.startEvent.setDate(date);
+			this.startEvent.setHours(hours);
+
+			this.endEvent = new Date(this.startEvent);
+			this.endEvent.setHours(this.endEvent.getHours() + 1);
 		},
 		onDateChange() {
-			this.setTimeForAllDay();
-
-			const initialStartDateTime = this.combineDateTime(this.startDate, this.startTime);
-			const initialEndDateTime = this.combineDateTime(this.endDate, this.endTime);
-
-			this.validateDates(initialStartDateTime, initialEndDateTime)
-		},
-		validateDates(startDateTime, endDateTime) {
-			if (!startDateTime || !endDateTime) {
-				this.areValidDates = true; // Laissez passer tant que l'utilisateur n'a pas rempli toutes les valeurs
-				return;
+			if (this.startEvent > this.endEvent) {
+				this.endEvent = new Date(this.startEvent);
+				this.endEvent.setHours(this.endEvent.getHours() + 1);
 			}
-
-			this.areValidDates = endDateTime >= startDateTime;
 		}
-
 	},
 	mounted() {
 		this.getAllFamilyMembers();
-		this.initializeDate();
-		this.initializeTime();
+		this.initializeEventSchedule();
+		this.isLoading = false;
 	},
-	watch: {
-		startDate(newStartDate) {
-			if (!this.endDate || this.endDate < this.startDate) {
-				this.endDate = newStartDate;
-				this.onDateChange();
-			}
-		},
-		endDate(newEndDate) {
-			if (this.endDate < this.startDate) {
-				this.startDate = newEndDate;
-				this.onDateChange();
-			}
-		},
-		startTime(newStartTime) {
-			const endTime = new Date(newStartTime);
-			endTime.setHours(endTime.getHours() + 1);
-			this.endTime = endTime;
-			this.onDateChange();
-		},
-		endTime(newEndTime) {
-			if (newEndTime < this.startTime && this.startDate === this.endDate) {
-				const startTime = new Date(newEndTime);
-				startTime.setHours(startTime.getHours() - 1);
-				this.startTime = startTime;
-				this.onDateChange();
-			}
-		}
-	}
 };
 </script>
