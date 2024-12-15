@@ -354,7 +354,7 @@ export default {
 			// Vérifie si le code d'alerte est valide
 			if (alertCalculation[alertCode] !== undefined) {
 				for (let period of this.periods) {
-					const startDateTime = new Date(period.startDateTime);
+					const startDateTime = new Date(period.startEvent);
 					const alertTime = new Date(startDateTime.getTime() - alertCalculation[alertCode]);
 					period.alerts.push(alertTime);
 				}

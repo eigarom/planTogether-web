@@ -474,7 +474,7 @@ export default {
 
 			// Vérifie si le code d'alerte est valide
 			if (alertCalculation[alertCode] !== undefined) {
-				const startDateTime = new Date(this.startDateTime);
+				const startDateTime = new Date(this.startEvent);
 				const alertTime = new Date(startDateTime.getTime() - alertCalculation[alertCode]);
 				this.updatedAlerts.push(alertTime);
 			} else {
