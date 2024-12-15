@@ -10,13 +10,12 @@
 </template>
 
 <script>
-import Button from 'primevue/button';
 import WeeklyEvents from './WeeklyEvents.vue';
 import {getEventsList} from '@/services/eventServices.js';
 
 export default {
 	components: {
-		WeeklyEvents, Button
+		WeeklyEvents
 	},
 	inject: ['user'],
 	data() {

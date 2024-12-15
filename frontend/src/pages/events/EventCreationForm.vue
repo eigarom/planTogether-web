@@ -156,7 +156,6 @@ import Select from 'primevue/select';
 import InputNumber from 'primevue/inputnumber';
 import MultiSelect from 'primevue/multiselect';
 import Button from "primevue/button";
-import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import Toast from 'primevue/toast';
 import {eventSchema} from "@/schemas/eventSchemas.js";
@@ -174,7 +173,6 @@ export default {
 		InputNumber,
 		MultiSelect,
 		Button,
-		Message,
 		FloatLabel,
 		Toast,
 		Avatar

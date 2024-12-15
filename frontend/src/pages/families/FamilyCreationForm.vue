@@ -25,17 +25,15 @@
 <script>
 import InputText from 'primevue/inputtext';
 import Button from "primevue/button";
-import Message from 'primevue/message';
 import FloatLabel from "primevue/floatlabel";
 import ColorPicker from 'primevue/colorpicker';
 import {createFamily} from "@/services/familyServices.js";
 import {familySchema} from "@/schemas/familySchemas.js";
-import FloatingTitle from "@/components/AppHeader.vue";
 import Toast from "primevue/toast";
 
 export default {
 	components: {
-		Toast, FloatingTitle, InputText, Button, Message, FloatLabel, ColorPicker
+		Toast, InputText, Button, FloatLabel, ColorPicker
 	},
 	data: () => {
 		return {

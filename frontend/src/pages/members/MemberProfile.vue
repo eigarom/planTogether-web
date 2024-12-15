@@ -99,12 +99,10 @@ export default {
 	},
 	methods: {
 		async getMemberInformations(id) {
-			let member = this.family.guestMembers.find(member => member.id === parseInt(id));
-			if (member) {
-				this.isGuestMember = true;
-			} else {
-				member = this.family.accountMembers.find(member => member.id === parseInt(id));
-			}
+			const member = this.family.guestMembers.find(m => m.id === parseInt(id)) ||
+				this.family.accountMembers.find(m => m.id === parseInt(id));
+
+			if (this.family.guestMembers.includes(member)) this.isGuestMember = true;
 
 			this.name = member.name;
 			this.color = member.color;

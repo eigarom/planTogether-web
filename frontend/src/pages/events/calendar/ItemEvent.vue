@@ -76,17 +76,13 @@
 <script>
 import Avatar from "primevue/avatar";
 import AvatarGroup from "primevue/avatargroup";
-import InputText from "primevue/inputtext";
-import ColorPicker from "primevue/colorpicker";
-import FloatLabel from "primevue/floatlabel";
 import Button from "primevue/button";
 import Dialog from "primevue/dialog";
 
 export default {
 	name: 'ItemEvent',
 	components: {
-		Dialog, Button, FloatLabel, ColorPicker, InputText,
-		Avatar, AvatarGroup
+		Dialog, Button, Avatar, AvatarGroup
 	},
 	inject: ['token', 'family'],
 	props: {

@@ -61,7 +61,6 @@
 </template>
 
 <script>
-import Avatar from "primevue/avatar";
 import DailyEvents from "./DailyEvents.vue";
 import Button from "primevue/button";
 import DatePicker from 'primevue/datepicker';
@@ -69,7 +68,7 @@ import Popover from 'primevue/popover';
 
 
 export default {
-	components: {Avatar, DailyEvents, Button, DatePicker, Popover},
+	components: {DailyEvents, Button, DatePicker, Popover},
 	props: {
 		dates: Array
 	},
