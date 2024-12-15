@@ -36,8 +36,18 @@
 			<div class="flex flex-col">
 				<p class="text-xl font-semibold">{{ event.name }}</p>
 
+				<!-- Dates de l'événement -->
 				<div>
+					<!-- Événement dure toute la journée -->
 					<p v-if="isAllday()">{{ formatDate(event.period.startDateTime) }} - {{ $t('wholeDay') }}</p>
+
+					<!-- Événement dans la journée -->
+					<p v-else-if="formatDate(event.period.startDateTime) === formatDate(event.period.endDateTime)">
+						{{ formatDate(event.period.startDateTime) }} - {{ formatTime(event.period.startDateTime) }}
+						: {{ formatTime(event.period.endDateTime) }}
+					</p>
+
+					<!-- Événement sur plusieurs jours -->
 					<div v-else class="flex flex-col justify-left">
 						<p>{{ formatDate(event.period.startDateTime) }} - {{ formatTime(event.period.startDateTime) }}
 							-</p>
