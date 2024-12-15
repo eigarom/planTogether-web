@@ -1,6 +1,6 @@
 <template>
-	<div v-if="name" class="flex flex-col w-full gap-5">
-		<h1 class="text-3xl">{{ $t('memberTitle') }}</h1>
+	<div v-if="name" class="flex flex-col w-full gap-3">
+		<h1 class="text-2xl">{{ $t('memberTitle') }}</h1>
 
 		<!--Contenu principal-->
 		<div class="flex flex-col gap-8 p-5 w-[565px] bg-white border rounded-lg">

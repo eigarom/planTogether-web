@@ -1,6 +1,6 @@
 <template>
-	<div v-if="!isLoading" class="flex flex-col gap-5 min-h-fit w-full">
-		<h1 class="text-3xl">{{ $t('eventDetailTitle') }}</h1>
+	<div v-if="!isLoading" class="flex flex-col gap-3 min-h-fit w-full">
+		<h1 class="text-2xl">{{ $t('eventDetailTitle') }}</h1>
 
 		<!-- Contenu principal -->
 		<form id="eventForm" class="flex flex-col gap-8 bg-white border rounded-lg p-5"

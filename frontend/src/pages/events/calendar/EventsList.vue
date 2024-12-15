@@ -1,9 +1,9 @@
 <template>
-	<div class="flex flex-col gap-5 w-full">
+	<div class="flex flex-col gap-3 w-full">
 		<h1 class="text-2xl">{{ $t('eventsTitle') }}</h1>
 
 		<!-- Calendrier -->
-		<div v-if="!loading" class="flex bg-white border p-5 rounded-lg h-[calc(100vh-210px)]">
+		<div v-if="!loading" class="flex bg-white border p-5 rounded-lg h-[calc(100vh-192px)]">
 			<WeeklyEvents :dates="dates"/>
 		</div>
 	</div>
