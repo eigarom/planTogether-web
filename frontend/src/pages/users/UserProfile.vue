@@ -45,7 +45,7 @@
 				</div>
 
 				<!--Boutons de modification et suppression du compte-->
-				<div class="flex gap-8 justify-end">
+				<div class="flex gap-8 justify-center">
 					<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" class="w-32"
 							type="submit"/>
 					<Button :label="$t('deleteButton')" class="w-32" severity="danger"

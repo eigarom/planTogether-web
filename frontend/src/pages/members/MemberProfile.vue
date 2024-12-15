@@ -17,7 +17,7 @@
 				</div>
 
 				<!--Boutons-->
-				<div class="flex flex-wrap gap-8">
+				<div v-if="isGuestMember" class="flex flex-wrap gap-8">
 					<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
 								mode="basic" severity="secondary" @select="onImageSelect"/>
 					<Button :disabled="isDeleteImageButtonDisabled" :label="$t('deleteImageButton')" icon="pi pi-minus"
@@ -41,7 +41,7 @@
 
 
 				<!--Boutons de modification et suppression du compte-->
-				<div class="flex gap-8 justify-end">
+				<div class="flex gap-8 justify-center">
 					<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" class="w-32"
 							type="submit"/>
 					<Button v-if="isGuestMember" :label="$t('deleteButton')" class="w-32" severity="danger"
