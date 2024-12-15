@@ -34,7 +34,7 @@
 					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
 
 					<FloatLabel class="w-full" variant="on">
-						<InputText id="name" v-model.trim="name" class="w-full"/>
+						<InputText id="name" v-model.trim="name" :disabled="!isGuestMember" class="w-full"/>
 						<label for="name">{{ $t('memberName') }}</label>
 					</FloatLabel>
 				</div>
@@ -99,7 +99,13 @@ export default {
 	},
 	methods: {
 		async getMemberInformations(id) {
-			const member = this.family.guestMembers.find(member => member.id === parseInt(id));
+			let member = this.family.guestMembers.find(member => member.id === parseInt(id));
+			if (member) {
+				this.isGuestMember = true;
+			} else {
+				member = this.family.accountMembers.find(member => member.id === parseInt(id));
+			}
+
 			this.name = member.name;
 			this.color = member.color;
 			this.initialName = member.name;
@@ -166,8 +172,13 @@ export default {
 				this.initialName = this.name;
 				this.initialColor = this.color;
 
-				this.family.guestMembers.find(member => member.id === parseInt(this.id)).name = this.name;
-				this.family.guestMembers.find(member => member.id === parseInt(this.id)).color = this.color;
+				if (this.isGuestMember) {
+					this.family.guestMembers.find(member => member.id === parseInt(this.id)).name = this.name;
+					this.family.guestMembers.find(member => member.id === parseInt(this.id)).color = this.color;
+				} else {
+					this.family.accountMembers.find(member => member.id === parseInt(this.id)).name = this.name;
+					this.family.accountMembers.find(member => member.id === parseInt(this.id)).color = this.color;
+				}
 
 				this.$refs.toast.add({
 					severity: 'success',
