@@ -23,7 +23,7 @@ Permet de créer une nouvelle famille pour l'utilisateur authentifié.
 
 ```json
 {
-    "name": "John Doe",
+    "name": "Tremblay",
     "color": "#FF0000"
 }
 ```
