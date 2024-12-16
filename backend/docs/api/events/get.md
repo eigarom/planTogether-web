@@ -26,11 +26,11 @@ Fournit les informations sur les événements de la famille, pour un utilisateur
 		"periods": [
 			{
 				"id": 1,
-				"startDateTime": "2024-11-16T20:00:00.000Z",
-				"endDateTime": "2024-11-16T22:00:00.000Z"
+				"startDateTime": "2024-11-17T01:00:00.000Z",
+				"endDateTime": "2024-11-17T03:00:00.000Z",
+				"alerts": []
 			}
 		],
-		"alerts": [],
 		"members": [
 			{
 				"id": 1,
@@ -52,14 +52,14 @@ Fournit les informations sur les événements de la famille, pour un utilisateur
 		"periods": [
 			{
 				"id": 2,
-				"startDateTime": "2024-11-05T08:30:00.000Z",
-				"endDateTime": "2024-11-05T10:00:00.000Z"
-			}
-		],
-		"alerts": [
-			{
-				"id": 1,
-				"dateTime": "2024-11-05T07:30:00.000Z"
+				"startDateTime": "2024-11-05T13:30:00.000Z",
+				"endDateTime": "2024-11-05T15:00:00.000Z",
+				"alerts": [
+					{
+						"id": 1,
+						"dateTime": "2024-11-05T12:30:00.000Z"
+					}
+				]
 			}
 		],
 		"members": [
@@ -78,11 +78,32 @@ Fournit les informations sur les événements de la famille, pour un utilisateur
 		"periods": [
 			{
 				"id": 3,
-				"startDateTime": "2024-11-05T17:00:00.000Z",
-				"endDateTime": "2024-11-05T17:15:00.000Z"
+				"startDateTime": "2024-11-05T22:00:00.000Z",
+				"endDateTime": "2024-11-05T22:15:00.000Z",
+				"alerts": []
 			}
 		],
-		"alerts": [],
+		"members": [
+			{
+				"id": 2,
+				"name": "Diddy",
+				"color": "#E60514"
+			}
+		]
+	},
+	{
+		"id": 4,
+		"name": "Cadeau pour Dixie",
+		"description": "Acheter le cadeau pour Dixie.",
+		"isVisible": false,
+		"periods": [
+			{
+				"id": 4,
+				"startDateTime": "2024-10-23T22:00:00.000Z",
+				"endDateTime": "2024-10-23T22:15:00.000Z",
+				"alerts": []
+			}
+		],
 		"members": [
 			{
 				"id": 2,
@@ -95,7 +116,21 @@ Fournit les informations sur les événements de la famille, pour un utilisateur
 ```
 
 ## Opération échouée
-### Si le token utilisé contient l'id d'une famille inexistante.
+
+### Si le token fourni est incorrect.
+
+**Code** : `401 Unauthorized`
+
+**Contenu** :
+
+```json
+{
+    "status": 401,
+    "message": "Erreur lors de la récupération du token"
+}
+```
+
+### Si aucun événement n'est trouvé pour cet id de famille.
 
 **Code** : `404 Not found`
 
@@ -103,8 +138,8 @@ Fournit les informations sur les événements de la famille, pour un utilisateur
 
 ```json
 {
-    "status":404,
-    "message":"Famille introuvable"
+    "status": 404,
+    "message":"Événements pour la famille ${familyId} introuvables"
 }
 ```
 
@@ -116,7 +151,7 @@ Fournit les informations sur les événements de la famille, pour un utilisateur
 
 ```json
 {
-    "status":500,
+    "status": 500,
     "message":"[Message d'erreur correspondant]"
 }
 ```
