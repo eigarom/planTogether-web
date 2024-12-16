@@ -46,12 +46,12 @@ token fournit dans la requête.
 
 -   [Récupération de la liste des membres de la famille](members/get.md) : `GET /families/my-family/members`
 -   [Récupération des informations](members/get_id.md) `GET /families/my-family/members/{id}`
--   [Récupération de l'image de profil](members/get_image.md) : `GET /families/my-family/members/:id/image`
+-   [Récupération de l'image de profil](members/get_image.md) : `GET /families/my-family/members/{id}/image`
 -   [Création d'un nouveau membre](members/post.md) : `POST /families/my-family/members`
--   [Modification des informations](members/put.md) : ; `PUT /families/my-family/members/:id`
--   [Modification de l'image de profil](members/put_image.md) : `PUT /families/my-family/members/:id/image`
--   [Suppression d'un membre](members/delete.md) : `DELETE /families/my-family/members/:id`
--   [Suppression de l'image de profil](members/delete_image.md) : `DELETE /families/my-family/members/:id/image`
+-   [Modification des informations](members/put.md) : ; `PUT /families/my-family/members/{id}`
+-   [Modification de l'image de profil](members/put_image.md) : `PUT /families/my-family/members/{id}/image`
+-   [Suppression d'un membre](members/delete.md) : `DELETE /families/my-family/members/{id}`
+-   [Suppression de l'image de profil](members/delete_image.md) : `DELETE /families/my-family/members/{id}/image`
 
 ### Événement
 
