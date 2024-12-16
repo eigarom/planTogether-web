@@ -18,7 +18,7 @@ Permet de récupérer les informations d'un membre spécifique de la famille en 
 
 **Code** : `200 OK`
 
-**Contenu** :
+**Exemple de contenu** :
 
 ```json
 {

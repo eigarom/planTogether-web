@@ -14,7 +14,7 @@ Permet de récupérer la liste des membres de la famille de l'utilisateur authen
 
 **Code** : `200 OK`
 
-**Contenu** :
+**Exemple de contenu** :
 
 ```json
 {

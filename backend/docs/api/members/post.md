@@ -32,7 +32,7 @@ Permet d'ajouter un nouveau membre non inscrit à la famille de l'utilisateur au
 
 **Code** : `201 Created`
 
-**Contenu** :
+**Exemple de contenu** :
 
 ```json
 {

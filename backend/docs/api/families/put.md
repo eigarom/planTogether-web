@@ -32,7 +32,7 @@ Permet de mettre à jour les informations de la famille de l'utilisateur authent
 
 **Code** : `200 OK`
 
-**Contenu** :
+**Exemple de contenu** :
 
 ```json
 {

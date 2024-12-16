@@ -36,7 +36,7 @@ Permet de mettre à jour les informations (nom et couleur) d'un membre de la fam
 
 **Code** : `200 OK`
 
-**Contenu** :
+**Exemple de contenu** :
 
 ```json
 {

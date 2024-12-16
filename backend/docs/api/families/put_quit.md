@@ -14,7 +14,7 @@ Permet à l'utilisateur authentifié de quitter sa famille.
 
 **Code** : `200 OK`
 
-**Contenu** :
+**Exemple de contenu** :
 
 ```json
 {

@@ -32,7 +32,7 @@ Permet de créer une nouvelle famille pour l'utilisateur authentifié.
 
 **Code** : `201 Created`
 
-**Contenu** :
+**Exemple de contenu** :
 
 ```json
 {
