@@ -2,7 +2,7 @@
 
 Fourni l'image de profil du membre correspondant à l'id.
 
-**URL** : `/families/my-family/members/:id/image`
+**URL** : `/families/my-family/members/{id}/image`
 
 **Méthode** : `GET`
 
