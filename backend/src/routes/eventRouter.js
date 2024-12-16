@@ -32,7 +32,9 @@ router.get('/', verifyJWT, async (req, res, next) => {
 
 router.get('/:id/periods/:periodId', verifyJWT, verifyEventId, async (req, res, next) => {
 	const userId = req.user.userId;
+
 	const eventId = req.params.id;
+
 	const periodId = req.params.periodId
 
 	try {
