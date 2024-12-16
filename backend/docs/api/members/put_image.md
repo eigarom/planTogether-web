@@ -2,7 +2,7 @@
 
 Fourni l'image de profil du membre correspondant à l'id.
 
-**URL** : `/members/:id/image`
+**URL** : `/families/my-family/members/:id/image`
 
 **Méthode** : `GET`
 
@@ -23,6 +23,7 @@ Image .jpg ou .png.
 Image de profil du membre.
 
 ## Opération échouée
+
 ### Si le token fourni est incorrect.
 
 **Code** : `401 Unauthorized`
@@ -31,8 +32,8 @@ Image de profil du membre.
 
 ```json
 {
-    "status":401,
-    "message":"Erreur lors de la récupération du token"
+    "status": 401,
+    "message": "Erreur lors de la récupération du token"
 }
 ```
 
@@ -44,8 +45,8 @@ Image de profil du membre.
 
 ```json
 {
-	"status":403,
-	"message":"Accès non autorisé aux données de ce membre"
+    "status": 403,
+    "message": "Accès non autorisé aux données de ce membre"
 }
 ```
 
@@ -57,8 +58,8 @@ Image de profil du membre.
 
 ```json
 {
-    "status":404,
-    "message":"Image du membre introuvable"
+    "status": 404,
+    "message": "Image du membre introuvable"
 }
 ```
 
@@ -70,7 +71,7 @@ Image de profil du membre.
 
 ```json
 {
-    "status":500,
-    "message":"[Message d'erreur correspondant]"
+    "status": 500,
+    "message": "[Message d'erreur correspondant]"
 }
 ```

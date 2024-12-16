@@ -2,7 +2,7 @@
 
 Permet de mettre à jour les informations (nom et couleur) d'un membre de la famille de l'utilisateur.
 
-**URL** : `/members/:id`
+**URL** : `/families/my-family/members/:id`
 
 **Méthode** : `PUT`
 

@@ -34,7 +34,7 @@ requête.
 -   [Modification des informations](families/put.md) : `PUT /families/my-family`
 -   [Modification de l'image de la famille](families/put_image.md) : `PUT /families/my-family/image`
 -   [Création d'un code d'invitation](families/put_invite.md) : `PUT /families/my-family/invite`
--   [Rejoindre une famille](families/put_join.md) : `PUT /families/my-family/join`
+-   [Rejoindre une famille](families/put_join.md) : `PUT /families/join`
 -   [Quitter une famille](families/put_quit.md) : `PUT /families/my-family/quit`
 -   [Suppression de la famille](families/delete.md) : `DELETE /families/my-family`
 -   [Suppression de l'image de la famille](families/delete_image.md) : `DELETE /families/my-family/image`
@@ -44,13 +44,13 @@ requête.
 Chaque route manipule ou fournit de l'information associée à un membre de la famille de l'utilisateur correspondant au
 token fournit dans la requête.
 
--   [Récupération de la liste des membres de la famille](members/get.md) : `GET /members`
--   [Récupération des informations](members/get_id.md) `GET /members/{id}`
+-   [Récupération de la liste des membres de la famille](members/get.md) : `GET /families/my-family/members`
+-   [Récupération des informations](members/get_id.md) `GET /families/my-family/members/{id}`
 -   [Récupération de l'image de profil](members/get_image.md) : `GET /families/my-family/members/:id/image`
--   [Création d'un nouveau membre](members/post.md) : `POST /members`
--   [Modification des informations](members/put.md) : ; `PUT /members/:id`
+-   [Création d'un nouveau membre](members/post.md) : `POST /families/my-family/members`
+-   [Modification des informations](members/put.md) : ; `PUT /families/my-family/members/:id`
 -   [Modification de l'image de profil](members/put_image.md) : `PUT /families/my-family/members/:id/image`
--   [Suppression d'un membre](members/delete.md) : `DELETE /members/:id`
+-   [Suppression d'un membre](members/delete.md) : `DELETE /families/my-family/members/:id`
 -   [Suppression de l'image de profil](members/delete_image.md) : `DELETE /families/my-family/members/:id/image`
 
 ### Événement

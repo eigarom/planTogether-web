@@ -2,7 +2,7 @@
 
 Permet de récupérer la liste des membres de la famille de l'utilisateur authentifié.
 
-**URL** : `/members`
+**URL** : `/families/my-family/members`
 
 **Méthode** : `GET`
 
