@@ -23,7 +23,7 @@ Permet de mettre à jour les informations de la famille de l'utilisateur authent
 
 ```json
 {
-    "name": "John Doe",
+    "name": "Tremblay",
     "color": "#FF0000"
 }
 ```
