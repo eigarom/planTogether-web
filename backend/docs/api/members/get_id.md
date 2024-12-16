@@ -22,9 +22,9 @@ Permet de récupérer les informations d'un membre spécifique de la famille en 
 
 ```json
 {
-    "id": "memberId",
-    "name": "result.name",
-    "color": "result.color"
+    "id": "1",
+    "name": "Tremblay",
+    "color": "#FF0000"
 }
 ```
 

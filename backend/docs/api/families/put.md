@@ -36,9 +36,9 @@ Permet de mettre à jour les informations de la famille de l'utilisateur authent
 
 ```json
 {
-    "id": "ID de la famille",
-    "name": "Nom de la famille",
-    "color": "Couleur de la famille"
+    "id": "1",
+    "name": "Tremblay",
+    "color": "#FF0000"
 }
 ```
 

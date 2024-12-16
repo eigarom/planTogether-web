@@ -18,7 +18,7 @@ Permet à l'utilisateur authentifié de quitter sa famille.
 
 ```json
 {
-    "token": "Nouveau token d'authentification"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
 ```
 

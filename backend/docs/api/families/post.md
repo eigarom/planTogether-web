@@ -37,10 +37,10 @@ Permet de créer une nouvelle famille pour l'utilisateur authentifié.
 ```json
 {
     "family": {
-        "name": "Nom de la famille",
-        "color": "Couleur de la famille"
+        "name": "Tremblay",
+        "color": "#FF0000"
     },
-    "token": "Nouveau token d'authentification"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ..."
 }
 ```
 

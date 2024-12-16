@@ -20,16 +20,16 @@ Permet de récupérer la liste des membres de la famille de l'utilisateur authen
 {
     "accountMembers": [
         {
-            "id": "accountMember.id_member",
-            "name": "accountMember.name",
-            "color": "accountMember.color"
+            "id": "1",
+            "name": "John",
+            "color": "#FF0000"
         }
     ],
     "guestMembers": [
         {
-            "id": "guestMember.id_member",
-            "name": "guestMember.name",
-            "color": "guestMember.color"
+            "id": "2",
+            "name": "Jeanne",
+            "color": "#FF0000"
         }
     ]
 }
