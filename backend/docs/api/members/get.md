@@ -2,7 +2,7 @@
 
 Permet de récupérer la liste des membres de la famille de l'utilisateur authentifié.
 
-**URL** : `/members`
+**URL** : `/families/my-family/members`
 
 **Méthode** : `GET`
 
@@ -14,22 +14,22 @@ Permet de récupérer la liste des membres de la famille de l'utilisateur authen
 
 **Code** : `200 OK`
 
-**Contenu** :
+**Exemple de contenu** :
 
 ```json
 {
     "accountMembers": [
         {
-            "id": "accountMember.id_member",
-            "name": "accountMember.name",
-            "color": "accountMember.color"
+            "id": "1",
+            "name": "John",
+            "color": "#FF0000"
         }
     ],
     "guestMembers": [
         {
-            "id": "guestMember.id_member",
-            "name": "guestMember.name",
-            "color": "guestMember.color"
+            "id": "2",
+            "name": "Jeanne",
+            "color": "#FF0000"
         }
     ]
 }

@@ -2,7 +2,7 @@
 
 Permet d'ajouter un nouveau membre non inscrit à la famille de l'utilisateur authentifié.
 
-**URL** : `/members`
+**URL** : `/families/my-family/members`
 
 **Méthode** : `POST`
 
@@ -32,7 +32,7 @@ Permet d'ajouter un nouveau membre non inscrit à la famille de l'utilisateur au
 
 **Code** : `201 Created`
 
-**Contenu** :
+**Exemple de contenu** :
 
 ```json
 {

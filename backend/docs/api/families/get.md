@@ -19,11 +19,12 @@ Fourni les informations de la famille de l'utilisateur authentifié.
 ```json
 {
     "name": "Famille Bleau",
-	"color": "#FF0000"
+    "color": "#FF0000"
 }
 ```
 
 ## Opération échouée
+
 ### Si le token fourni est incorrect.
 
 **Code** : `401 Unauthorized`
@@ -32,8 +33,8 @@ Fourni les informations de la famille de l'utilisateur authentifié.
 
 ```json
 {
-    "status":401,
-    "message":"Erreur lors de la récupération du token"
+    "status": 401,
+    "message": "Erreur lors de la récupération du token"
 }
 ```
 
@@ -45,8 +46,8 @@ Fourni les informations de la famille de l'utilisateur authentifié.
 
 ```json
 {
-    "status":404,
-    "message":"Famille introuvable"
+    "status": 404,
+    "message": "Famille introuvable"
 }
 ```
 
@@ -58,7 +59,7 @@ Fourni les informations de la famille de l'utilisateur authentifié.
 
 ```json
 {
-    "status":500,
-    "message":"[Message d'erreur correspondant]"
+    "status": 500,
+    "message": "[Message d'erreur correspondant]"
 }
 ```

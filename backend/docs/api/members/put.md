@@ -2,7 +2,7 @@
 
 Permet de mettre à jour les informations (nom et couleur) d'un membre de la famille de l'utilisateur.
 
-**URL** : `/members/:id`
+**URL** : `/families/my-family/members/{id}`
 
 **Méthode** : `PUT`
 
@@ -36,13 +36,13 @@ Permet de mettre à jour les informations (nom et couleur) d'un membre de la fam
 
 **Code** : `200 OK`
 
-**Contenu** :
+**Exemple de contenu** :
 
 ```json
 {
-    "id": "ID du membre",
-    "name": "Nom mis à jour",
-    "color": "Couleur mise à jour"
+    "id": "1",
+    "name": "John",
+    "color": "#FF0000"
 }
 ```
 

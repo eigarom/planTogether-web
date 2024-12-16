@@ -14,11 +14,11 @@ Permet à l'utilisateur authentifié de quitter sa famille.
 
 **Code** : `200 OK`
 
-**Contenu** :
+**Exemple de contenu** :
 
 ```json
 {
-    "token": "Nouveau token d'authentification"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
 ```
 

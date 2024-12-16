@@ -2,7 +2,7 @@
 
 Permet de récupérer les informations d'un membre spécifique de la famille en utilisant son identifiant.
 
-**URL** : `/members/{id}`
+**URL** : `/families/my-family/members/{id}`
 
 **Méthode** : `GET`
 
@@ -18,13 +18,13 @@ Permet de récupérer les informations d'un membre spécifique de la famille en 
 
 **Code** : `200 OK`
 
-**Contenu** :
+**Exemple de contenu** :
 
 ```json
 {
-    "id": "memberId",
-    "name": "result.name",
-    "color": "result.color"
+    "id": "1",
+    "name": "Tremblay",
+    "color": "#FF0000"
 }
 ```
 

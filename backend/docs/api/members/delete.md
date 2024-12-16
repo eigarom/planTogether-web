@@ -2,7 +2,7 @@
 
 Permet de supprimer un membre non inscrit de la famille en utilisant son identifiant.
 
-**URL** : `/members/:id`
+**URL** : `/families/my-family/members/{id}`
 
 **Méthode** : `DELETE`
 
