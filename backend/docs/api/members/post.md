@@ -10,10 +10,23 @@ Permet d'ajouter un nouveau membre non inscrit à la famille de l'utilisateur au
 
 **Permissions requises** : Aucune
 
-## Paramètres de la requête
+**Contraintes de données**
 
--   **name** (string, requis) : Le nom du nouveau membre.
--   **color** (string, requis) : La couleur associée au membre.
+```json
+{
+    "name": "[nom valide]",
+    "color": "[couleur valide]"
+}
+```
+
+**Exemple de données**
+
+```json
+{
+    "name": "John Doe",
+    "color": "#FF0000"
+}
+```
 
 ## Opération réussie
 
