@@ -61,7 +61,7 @@ describe("Family Routes", () => {
         it("should return 400 for invalid family name", async () => {
             const response = await request(app)
                 .post("/families")
-                .send({ name: "Bob!", color: "color" })
+                .send({name: "", color: "color"})
                 .expect(400);
 
             expect(response.body.message).toContain('"name"');

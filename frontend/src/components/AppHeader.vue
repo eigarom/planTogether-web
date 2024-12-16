@@ -1,19 +1,29 @@
 <template>
 	<div class="fixed top-0 left-0 flex items-center justify-between bg-white w-full px-8 py-3 border-b z-50">
 		<span class="text-xl font-semibold">PLAN<span class="text-blue-300">TOGETHER</span></span>
-		<div class="card flex justify-center">
-			<Button aria-controls="overlay_menu"
-					aria-haspopup="true"
-					icon="pi pi-language"
-					severity="secondary"
-					size="small"
-					@click="toggle"
+
+		<div class="card flex gap-5">
+			<Button
+				aria-controls="overlay_menu"
+				aria-haspopup="true"
+				icon="pi pi-language"
+				severity="secondary"
+				size="small"
+				@click="toggle"
 			/>
 			<Menu
 				id="overlay_menu"
 				ref="menu"
 				:model="items"
-				:popup="true"/>
+				:popup="true"
+			/>
+
+			<Button v-if="user"
+					icon="pi pi-sign-out"
+					severity="secondary"
+					size="small"
+					@click="logout"
+			/>
 		</div>
 	</div>
 </template>
@@ -21,8 +31,11 @@
 <script>
 import Button from 'primevue/button';
 import Menu from 'primevue/menu';
+import enLocale from '../locales/en/primevue.json';
+import frLocale from '../locales/fr/primevue.json';
 
 export default {
+	inject: ['user', 'logout'],
 	components: {
 		Button, Menu
 	},
@@ -39,6 +52,12 @@ export default {
 			this.$refs.menu.toggle(event);
 		},
 		changeLanguage(lang) {
+			const locales = {
+				en: enLocale,
+				fr: frLocale
+			};
+
+			this.$primevue.config.locale = locales[lang];
 			this.$i18n.locale = lang;
 			this.$cookies.set('language', lang);
 		}

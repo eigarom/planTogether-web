@@ -130,7 +130,7 @@ describe('PUT /members/:id', () => {
 		mockMemberServices.isMemberInFamily.mockResolvedValue(true);
         const response = await request(app)
             .put('/families/my-family/members/1')
-            .send({ name: '!', color: '#00FF00' })
+			.send({name: '', color: '#00FF00'})
             .expect('Content-Type', /json/)
             .expect(400);
 

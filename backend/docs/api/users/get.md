@@ -20,12 +20,13 @@ Fourni les informations de l'utilisateur authentifié.
 {
     "id": 1,
     "email": "johndoe@exemple.com",
-	"name": "John Doe",
-	"color": "#FF0000"
+    "name": "John Doe",
+    "color": "#FF0000"
 }
 ```
 
 ## Opération échouée
+
 ### Si le token fourni est incorrect.
 
 **Code** : `401 Unauthorized`
@@ -34,8 +35,8 @@ Fourni les informations de l'utilisateur authentifié.
 
 ```json
 {
-    "status":401,
-    "message":"Erreur lors de la récupération du token"
+    "status": 401,
+    "message": "Erreur lors de la récupération du token"
 }
 ```
 
@@ -47,8 +48,8 @@ Fourni les informations de l'utilisateur authentifié.
 
 ```json
 {
-    "status":404,
-    "message":"Utilisateur introuvable"
+    "status": 404,
+    "message": "Utilisateur introuvable"
 }
 ```
 
@@ -60,8 +61,8 @@ Fourni les informations de l'utilisateur authentifié.
 
 ```json
 {
-    "status":404,
-    "message":"Utilisateur introuvable"
+    "status": 404,
+    "message": "Utilisateur introuvable"
 }
 ```
 
@@ -73,7 +74,7 @@ Fourni les informations de l'utilisateur authentifié.
 
 ```json
 {
-    "status":500,
-    "message":"[Message d'erreur correspondant]"
+    "status": 500,
+    "message": "[Message d'erreur correspondant]"
 }
 ```

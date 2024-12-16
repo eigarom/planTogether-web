@@ -6,11 +6,13 @@
     "email": "Courriel",
     "updateImageButton": "Choisir une image",
     "deleteImageButton": "Supprimer l'image",
-    "updateButton": "Mettre à jour",
+	"updateButton": "Enregistrer",
     "colorInvalid": "La couleur n'est pas valide",
     "colorRequired": "La couleur est requise",
     "submitButton": "Soumettre",
     "deleteButton": "Supprimer",
+    "deleteAccount": "Supprimer le compte",
+    "deleteMember": "Supprimer le membre",
     "cancelButton": "Annuler",
     "quitButton": "Quitter",
     "deleteAccountConfirm": "Voulez-vous vraiment supprimer votre compte ?",
@@ -21,5 +23,7 @@
     "toastUpdateImageSuccessMessage": "L'image a été mis à jour",
     "toastDeleteImageSuccessMessage": "L'image a été supprimée",
     "errorUpdateMessage": "Erreur lors de la mise à jour",
-    "errorDeleteMessage": "Erreur lors de la suppression"
+    "errorDeleteMessage": "Erreur lors de la suppression",
+    "createMemberSuccessMessage": "Le membre a été créé",
+    "createMemberErrorMessage": "Erreur lors de la création du membre"
 }
