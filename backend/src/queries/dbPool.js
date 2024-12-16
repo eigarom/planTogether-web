@@ -6,10 +6,7 @@ const dbConfig = {
     host: process.env.PGHOST,
     database: process.env.PGDATABASE,
     password: process.env.PGPASSWORD,
-    port: process.env.PGPORT,
-    ssl: {
-        rejectUnauthorized: false,
-    },
+    port: process.env.PGPORT
 };
 
 module.exports = new Pool(dbConfig);

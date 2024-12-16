@@ -21,25 +21,25 @@ Depuis le répertoire `database` :
 
 1. Exécutez le script SQL `01_create_database.sql` (par exemple dans pgAdmin) pour créer la base de données.
 2. Choisissez un **nom d'utilisateur** et un **mot de passe** pour l'accès à cette nouvelle base de données.
-3. Exécutez le script `02_create_user.sql` après avoir remplacé `{{DB_USER}}` par le nom d'utilisateur choisi et
-   `{{DB_PASSWORD}}` par le mot de passe.
+3. Exécutez le script `02_create_user.sql` après avoir remplacé `{{PGUSER}}` par le nom d'utilisateur choisi et
+   `{{PGPASSWORD}}` par le mot de passe.
 4. Exécutez le script `03_create_tables.sql` pour créer les tables nécessaires à l'application.
 5. (Optionnel - pour les tests) Exécutez le script `04_insert_data.sql` pour insérer des données de test.
-6. Exécutez le script `05_grant_backend_user.sql` après avoir remplacé `{{DB_USER}}` par le nom d'utilisateur choisi
+6. Exécutez le script `05_grant_backend_user.sql` après avoir remplacé `{{PGUSER}}` par le nom d'utilisateur choisi
    pour accorder les permissions nécessaires à l'utilisateur de la base de données.
 
 ### Back-end (Node.js Express)
 
 1. Créez un fichier `.env` à la racine du répertoire `backend` et renseignez les variables suivantes :
     ```bash
-    DB_HOST=localhost
-    DB_PORT=5432
-    DB_DATABASE=plantogether
-    DB_USER={{DB_USER}}
-    DB_PASSWORD={{DB_PASSWORD}}
+    PGHOST=localhost
+    PGPORT=5432
+    PGDATABASE=plantogether
+    PGUSER={{PGUSER}}
+    PGPASSWORD={{PGPASSWORD}}
     JWT_SECRET={{Secret}}
     ```
-   Remplacez `{{DB_USER}}` et `{{DB_PASSWORD}}` par les informations choisies lors de la configuration de la base de
+   Remplacez `{{PGUSER}}` et `{{PGPASSWORD}}` par les informations choisies lors de la configuration de la base de
    données.
    Remplacer `{{Secret}}`par le code de votre choix.
 
