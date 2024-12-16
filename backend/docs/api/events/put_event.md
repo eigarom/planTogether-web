@@ -18,10 +18,10 @@ Modifie un événement de la famille, pour un utilisateur authentifié, en utili
 
 ```json
 {
-		"name": "[nom valide]",
-		"description": "[description facultative, mais doit être valide si présente]",
-		"isVisible": "[booléen]",
-		"members": "[tableau de id de membres valides, contenant un id de membre au minimum]"
+	"name": "[nom valide]",
+	"description": "[description facultative, mais doit être valide si présente]",
+	"isVisible": "[booléen]",
+	"members": "[tableau de id de membres valides, contenant un id de membre au minimum]"
 }
 ```
 
@@ -29,12 +29,12 @@ Modifie un événement de la famille, pour un utilisateur authentifié, en utili
 
 ```json
 {
-		"name": "Yoga tous ensemble",
-		"description": "Séances de yoga tous ensemble",
-		"isVisible": true,
-		"members": [
-			1, 3, 2
-		]
+	"name": "Yoga tous ensemble",
+	"description": "Séances de yoga tous ensemble",
+	"isVisible": true,
+	"members": [
+		1, 3, 2
+	]
 }
 ```
 

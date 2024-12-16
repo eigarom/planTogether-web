@@ -19,7 +19,7 @@ Supprime une période pour un événement de la famille, pour un utilisateur aut
 
 **Code** : `200 OK`
 
-**Exemple de contenu**
+**Contenu**
 
 ```json
 {}

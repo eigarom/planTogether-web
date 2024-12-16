@@ -19,11 +19,11 @@ Modifie les informations d'une période pour un événement de la famille, pour 
 
 ```json
 {
-		"startDateTime": "[format date/heure valide]",
-		"endDateTime": "[format date/heure valide]",
-		"alerts": [
-				"[tableau de date/heure d'alertes facultatif]"
-		]
+	"startDateTime": "[format date/heure valide]",
+	"endDateTime": "[format date/heure valide]",
+	"alerts": [
+		"[tableau de date/heure d'alertes facultatif]"
+	]
 }
 ```
 
@@ -31,11 +31,11 @@ Modifie les informations d'une période pour un événement de la famille, pour 
 
 ```json
 {
-		"startDateTime": "2024-11-25T22:00:00.000Z",
-		"endDateTime": "2024-11-25T23:00:00.000Z",
-		"alerts": [
-				"2024-11-25T21:30:00.000Z"
-		]
+	"startDateTime": "2024-11-25T22:00:00.000Z",
+	"endDateTime": "2024-11-25T23:00:00.000Z",
+	"alerts": [
+		"2024-11-25T21:30:00.000Z"
+	]
 }
 ```
 

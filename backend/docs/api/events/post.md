@@ -14,19 +14,19 @@ Ajoute un nouvel événement à la famille, pour un utilisateur authentifié.
 
 ```json
 {
-		"name": "[nom valide]",
-		"description": "[description facultative, mais doit être valide si présente]",
-		"isVisible": "[booléen]",
-		"periods": ["[tableau de périodes valides, contenant un objet période au minimum]"
-			{
-				"startDateTime": "[format date/heure valide]",
-				"endDateTime": "[format date/heure valide]",
-				"alerts": [
-						"[tableau de date/heure d'alertes facultatif]"
-				]
-			}
-		],
-		"members": "[tableau de id de membres valides, contenant un id de membre au minimum]"
+	"name": "[nom valide]",
+	"description": "[description facultative, mais doit être valide si présente]",
+	"isVisible": "[booléen]",
+	"periods": ["[tableau de périodes valides, contenant un objet période au minimum]"
+		{
+			"startDateTime": "[format date/heure valide]",
+			"endDateTime": "[format date/heure valide]",
+			"alerts": [
+				"[tableau de date/heure d'alertes facultatif]"
+			]
+		}
+	],
+	"members": "[tableau de id de membres valides, contenant un id de membre au minimum]"
 }
 ```
 
@@ -34,35 +34,35 @@ Ajoute un nouvel événement à la famille, pour un utilisateur authentifié.
 
 ```json
 {
-		"name": "Yoga",
-		"description": "Séances de yoga entre filles",
-		"isVisible": true,
-		"periods": [
-			{
-				"startDateTime": "2024-11-12T22:00:00.000Z",
-				"endDateTime": "2024-11-12T23:00:00.000Z",
-				"alerts": [
+	"name": "Yoga",
+	"description": "Séances de yoga entre filles",
+	"isVisible": true,
+	"periods": [
+		{
+			"startDateTime": "2024-11-12T22:00:00.000Z",
+			"endDateTime": "2024-11-12T23:00:00.000Z",
+			"alerts": [
 						"2024-11-12T21:30:00.000Z"
-				]
-			},
-			{
-				"startDateTime": "2024-11-19T22:00:00.000Z",
-				"endDateTime": "2024-11-19T23:00:00.000Z",
-				"alerts": [
+			]
+		},
+		{
+			"startDateTime": "2024-11-19T22:00:00.000Z",
+			"endDateTime": "2024-11-19T23:00:00.000Z",
+			"alerts": [
 						"2024-11-19T21:30:00.000Z"
-				]
-			},
-			{
-				"startDateTime": "2024-11-26T22:00:00.000Z",
-				"endDateTime": "2024-11-26T23:00:00.000Z",
-				"alerts": [
-				"2024-11-26T21:30:00.000Z"
-				]
-			}
-		],
-		"members": [
-			1, 3
-		]
+			]
+		},
+		{
+			"startDateTime": "2024-11-26T22:00:00.000Z",
+			"endDateTime": "2024-11-26T23:00:00.000Z",
+			"alerts": [
+			"2024-11-26T21:30:00.000Z"
+			]
+		}
+	],
+	"members": [
+		1, 3
+	]
 }
 ```
 

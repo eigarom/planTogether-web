@@ -18,7 +18,7 @@ Supprime un événement de la famille, pour un utilisateur authentifié, en util
 
 **Code** : `200 OK`
 
-**Exemple de contenu**
+**Contenu**
 
 ```json
 {}
