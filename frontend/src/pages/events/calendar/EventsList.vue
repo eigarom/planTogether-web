@@ -1,22 +1,21 @@
 <template>
-	<div class="top-20 w-96 gap-3 flex flex-col pt-20 pb-16">
-		<h1 class="text-3xl mb-4 text-center">{{ $t('eventsTitle') }}</h1>
-		<Button as="router-link" :label="$t('buttonCreateEvent')" to="/events/add" />
-		<div v-if="!loading" class="flex flex-col border p-3 rounded-lg gap-3">
-			<DailyEvents v-for="date in dates" :key="date.id" :id="date.id" :events="date.events" />
+	<div class="flex flex-col gap-3 w-full">
+		<h1 class="text-2xl">{{ $t('eventsTitle') }}</h1>
+
+		<!-- Calendrier -->
+		<div v-if="!loading" class="flex bg-white border p-5 rounded-lg h-[calc(100vh-192px)]">
+			<WeeklyEvents :dates="dates"/>
 		</div>
 	</div>
-
 </template>
 
 <script>
-import Button from 'primevue/button';
-import DailyEvents from './DailyEvents.vue';
-import { getEventsList } from '../../services/eventServices';
+import WeeklyEvents from './WeeklyEvents.vue';
+import {getEventsList} from '@/services/eventServices.js';
 
 export default {
 	components: {
-		DailyEvents, Button
+		WeeklyEvents
 	},
 	inject: ['user'],
 	data() {
@@ -42,18 +41,16 @@ export default {
 			this.visibleEvents.forEach(event => {
 				event.periods.forEach(period => {
 					// Initialiser une boucle qui parcourt chaque jour dans l'intervalle de la période
+					const endDateTimeEndOfDay = new Date(new Date(period.endDateTime).setHours(23, 59, 59, 999));
+
 					for (
 						let dt = new Date(period.startDateTime);
 						// Vérifie si la date courante (dt) est avant ou égale à la fin de la journée du endDateTime
-						dt <= new Date(new Date(period.endDateTime).setHours(23, 59, 59, 999));
+						dt < endDateTimeEndOfDay;
 						dt.setDate(dt.getDate() + 1)
 					) {
-
-						// Convertir `dt` du fuseau horaire UTC à local
-						const localDate = new Date(dt.getTime() - dt.getTimezoneOffset() * 60 * 1000);
-
 						// Format de la date locale en "YYYY-MM-DD"
-						const dayId = `${localDate.getFullYear()}-${String(localDate.getMonth() + 1).padStart(2, '0')}-${String(localDate.getDate()).padStart(2, '0')}`;
+						const dayId = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
 
 						// Vérifier si un objet `date` avec cet `id` existe déjà
 						let dateObj = this.dates.find(date => date.id === dayId);
@@ -71,14 +68,15 @@ export default {
 						dateObj.events.push({
 							id: event.id,
 							name: event.name,
+							description: event.description,
 							period, // Ajout de la période entière ici
 							members: event.members
 						});
 					}
-				})
-			})
+				});
+			});
 			this.loading = false;
-		},
+		}
 	},
 	computed: {
 		visibleEvents() {

@@ -5,9 +5,10 @@ import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
 import ConfirmationService from 'primevue/confirmationservice';
 import i18n from './locales/i18n.js';
+import frLocale from './locales/fr/primevue.json';
 
 import App from './App.vue';
-import EventsList from './pages/events/EventsList.vue';
+import EventsList from './pages/events/calendar/EventsList.vue';
 import EventDetails from './pages/events/EventDetails.vue';
 import EventCreationForm from './pages/events/EventCreationForm.vue';
 import LoginForm from "@/pages/auth/LoginForm.vue";
@@ -16,7 +17,6 @@ import FamilyCreationForm from "@/pages/families/FamilyCreationForm.vue";
 import FamilyJoinForm from "@/pages/families/FamilyJoinForm.vue";
 import FamilyProfile from "@/pages/families/FamilyProfile.vue";
 import RegisterForm from "@/pages/auth/RegisterForm.vue";
-import MemberCreationForm from "@/pages/members/MemberCreationForm.vue";
 import UserProfile from "@/pages/users/UserProfile.vue";
 import MemberProfile from './pages/members/MemberProfile.vue';
 
@@ -32,9 +32,12 @@ app.use(PrimeVue, {
 		options: {
 			darkModeSelector: '.my-app-dark',
 		}
-	}
+	},
+	locale: frLocale
 });
 app.use(ConfirmationService);
+
+app.config.globalProperties.$primevue = { config: app.config.globalProperties.$primevue.config };
 
 // Cookies
 app.use(VueCookies, {expires: '100d'});
@@ -52,7 +55,6 @@ const router = createRouter({
 		{path: '/families/add', component: FamilyCreationForm},
 		{path: '/families/join', component: FamilyJoinForm},
 		{path: '/my-family', component: FamilyProfile},
-		{path: '/members/add', component: MemberCreationForm},
 		{path: '/members/:id', component: MemberProfile, props: true},
 		{path: '/profile', component: UserProfile},
 		{path: '/', redirect: '/events'}

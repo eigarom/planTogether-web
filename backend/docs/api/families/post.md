@@ -10,10 +10,23 @@ Permet de créer une nouvelle famille pour l'utilisateur authentifié.
 
 **Permissions requises** : Aucune
 
-## Paramètres de la requête
+**Contraintes de données**
 
--   **name** (string, requis) : Le nom de la famille à créer.
--   **color** (string, requis) : La couleur associée à la famille.
+```json
+{
+    "name": "[nom valide]",
+    "color": "[couleur valide]"
+}
+```
+
+**Exemple de données**
+
+```json
+{
+    "name": "Tremblay",
+    "color": "#FF0000"
+}
+```
 
 ## Opération réussie
 
