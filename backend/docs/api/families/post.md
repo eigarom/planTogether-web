@@ -10,10 +10,6 @@ Permet de créer une nouvelle famille pour l'utilisateur authentifié.
 
 **Permissions requises** : Aucune
 
-## Paramètres de la requête
-
--   **id** (string, requis) : L'identifiant du user dont les informations doivent être mises à jour.
-
 **Contraintes de données**
 
 ```json
