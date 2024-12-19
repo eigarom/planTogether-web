@@ -13,7 +13,7 @@
 				<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
 					<!-- Nom, description, visibilité -->
-					<div class="flex flex-col gap-5 sm:gap-8 p-5 bg-white border rounded-lg shadow">
+					<div class="flex flex-col gap-5 sm:gap-8 p-5 bg-white border rounded-lg sm:shadow">
 						<!-- Nom -->
 						<FloatLabel class="w-full" variant="on">
 							<InputText id="name" v-model.trim="name" class="w-full"/>
@@ -35,7 +35,7 @@
 
 					<!-- Dates, heures, alertes -->
 					<form id="periodForm"
-						  class="flex flex-col gap-5 sm:gap-8 border rounded-lg p-5 h-fit bg-white shadow"
+						  class="flex flex-col gap-5 sm:gap-8 border rounded-lg p-5 h-fit bg-white sm:shadow"
 						  @submit.prevent="submitUpdatePeriod">
 
 						<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -88,7 +88,8 @@
 				</div>
 
 				<!-- Participants -->
-				<div class="grid grid-cols-1 sm:grid-cols-4 gap-5">
+				<div
+					class="grid grid-cols-1 sm:grid-cols-4 gap-5 p-5 sm:p-0 bg-white rounded-lg border sm:border-none">
 					<Button
 						v-for="member in allMembers"
 						:key="member.id"
@@ -110,14 +111,15 @@
 					</Button>
 				</div>
 
-				<div class="flex gap-8 justify-between sm:justify-center">
+				<div class="flex flex-col sm:flex-row gap-5 sm:gap-8 justify-between sm:justify-center">
 					<Button
-						:disabled="isSubmitEventButtonDisabled" :label="$t('buttonUpdateEvent')" class="w-60"
+						:disabled="isSubmitEventButtonDisabled" :label="$t('buttonUpdateEvent')" class="w-full sm:w-60"
 						type="submit"
 					/>
 
 					<Button
-						:label="$t('deleteButton')" class=" w-60" severity="danger" @click="promptDeleteOption($event)"
+						:label="$t('deleteButton')" class="w-full sm:w-60" severity="danger"
+						@click="promptDeleteOption($event)"
 					/>
 				</div>
 			</div>

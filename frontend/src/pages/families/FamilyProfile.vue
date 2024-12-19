@@ -10,7 +10,7 @@
 			<div class="flex flex-col gap-5 sm:gap-8">
 
 				<!--Nom, image, couleur-->
-				<div class="flex flex-col gap-5 sm:gap-8 bg-white p-5 border rounded-lg w-fit shadow">
+				<div class="flex flex-col gap-5 sm:gap-8 bg-white p-5 border rounded-lg w-fit sm:shadow">
 					<!--Image-->
 					<div class="flex flex-col sm:flex-row items-center gap-5 sm:gap-8">
 						<img v-if="family.imageUrl" :src="family.imageUrl" alt="Image"
@@ -56,7 +56,7 @@
 				<div class="flex flex-wrap gap-5 sm:gap-8 justify-between">
 
 					<!--Membres principaux-->
-					<div class="flex flex-col flex-grow gap-5 bg-white p-5 border rounded-lg shadow">
+					<div class="flex flex-col flex-grow gap-5 bg-white p-5 border rounded-lg sm:shadow">
 						<h2 class="text-2xl text-center">{{ $t('accountMembers') }}</h2>
 
 						<div>
@@ -104,7 +104,7 @@
 					</div>
 
 					<!--Membres secondaires-->
-					<div class="flex flex-col flex-grow p-5 gap-5 bg-white border rounded-lg  h-fit shadow">
+					<div class="flex flex-col flex-grow p-5 gap-5 bg-white border rounded-lg  h-fit sm:shadow">
 						<h2 class="text-2xl text-center">{{ $t('guestMembers') }}</h2>
 
 						<div v-if="guestMembers.length > 0">
@@ -131,7 +131,7 @@
 			</div>
 
 			<!--Boutons pour quitter et supprimer la famille-->
-			<div class="flex flex-col gap-5 sm:gap-8 bg-white border rounded-lg h-fit p-5 shadow">
+			<div class="flex flex-col gap-5 sm:gap-8 sm:bg-white sm:border rounded-lg h-fit sm:p-5 sm:shadow">
 				<Button :label="$t('quitFamily')" class="w-full sm:w-[180px]" outlined
 						severity="danger" @click="submitQuitFamily($event)"/>
 				<Button :label="$t('deleteFamilyButton')" class="w-full sm:w-[180px]"

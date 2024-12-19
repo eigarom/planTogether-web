@@ -3,17 +3,17 @@
 		<h1 class="text-2xl">{{ $t('newEvent') }}</h1>
 
 		<!-- Contenu principal -->
-		<form id="eventForm" class="flex flex-col gap-8 sm:bg-white sm:border sm:rounded-lg sm:p-5"
+		<form id="eventForm" class="flex flex-col gap-5 sm:gap-8 sm:bg-white sm:border sm:rounded-lg sm:p-5"
 			  @submit.prevent="submitCreateEvent"
 		>
 			<!-- Renseignements -->
-			<div class="flex flex-col gap-8">
+			<div class="flex flex-col gap-5 sm:gap-8">
 
 				<!-- Première ligne -->
 				<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
 					<!-- Nom, description, visibilité -->
-					<div class="flex flex-col gap-5 sm:gap-8 p-5 bg-white border rounded-lg shadow">
+					<div class="flex flex-col gap-5 sm:gap-8 p-5 bg-white border rounded-lg sm:shadow">
 						<!-- Nom -->
 						<FloatLabel class="w-full" variant="on">
 							<InputText id="name" v-model.trim="name" class="w-full"/>
@@ -34,7 +34,7 @@
 					</div>
 
 					<!-- Dates, heures, répétition -->
-					<div class="flex flex-col gap-5 sm:gap-8 border rounded-lg bg-white p-5 h-fit shadow">
+					<div class="flex flex-col gap-5 sm:gap-8 border rounded-lg bg-white p-5 h-fit sm:shadow">
 
 						<div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-8">
 							<!-- Date début -->
@@ -96,7 +96,7 @@
 				</div>
 
 				<!-- Participants -->
-				<div class="grid grid-cols-1 sm:grid-cols-4 gap-5">
+				<div class="grid grid-cols-1 sm:grid-cols-4 gap-5 bg-white border sm:border-none rounded-lg p-5 sm:p-0">
 					<Button
 						v-for="member in allMembers"
 						:key="member.id"
