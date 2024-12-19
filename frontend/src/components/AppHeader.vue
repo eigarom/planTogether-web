@@ -8,7 +8,7 @@
 					@click="$emit('toggle-sidebar')"
 			/>
 
-			<span class="text-xl font-semibold">PLAN<span class="text-blue-300">TOGETHER</span></span>
+			<a class="text-xl font-semibold" href="/">PLAN<span class="text-blue-300">TOGETHER</span></a>
 		</div>
 
 		<div class="flex sm:gap-5 gap-3">
