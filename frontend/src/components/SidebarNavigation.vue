@@ -52,7 +52,7 @@ export default {
 	components: {
 		Menu, Image, Avatar
 	},
-	inject: ['token', 'user', 'family'],
+	inject: ['token', 'user', 'family', 'sidebar'],
 	data() {
 		return {};
 	},

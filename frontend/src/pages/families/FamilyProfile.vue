@@ -1,52 +1,59 @@
 <template>
-	<div v-if="family" class="flex flex-col gap-3 min-h-fit">
+	<div v-if="family" class="flex flex-col gap-3 min-h-fit w-full p-5 sm:p-0">
 		<h1 class="text-2xl">{{ $t('myFamily') }}</h1>
 
 		<!--Contenu principal-->
-		<div class="flex flex-wrap gap-8 w-fit border rounded-lg bg-white p-5">
+		<div
+			class="flex flex-col sm:flex-row flex-wrap gap-5 sm:gap-8 w-fit sm:border sm:rounded-lg sm:bg-white sm:p-5">
 
 			<!--Informations de la famille-->
-			<div class="flex flex-col gap-8">
+			<div class="flex flex-col gap-5 sm:gap-8">
 
 				<!--Nom, image, couleur-->
-				<div class="flex flex-col gap-8 bg-white p-5 border rounded-lg w-fit shadow">
+				<div class="flex flex-col gap-5 sm:gap-8 bg-white p-5 border rounded-lg w-fit shadow">
 					<!--Image-->
-					<div class="flex items-center gap-8">
+					<div class="flex flex-col sm:flex-row items-center gap-5 sm:gap-8">
 						<img v-if="family.imageUrl" :src="family.imageUrl" alt="Image"
-							 class="shadow-md rounded-xl w-40"/>
+							 class="shadow-md rounded-xl sm:w-40"/>
 
-						<span v-else class="border-dashed border-2 rounded-xl h-24 w-40 bg-gray-100"></span>
+						<span v-else class="border-dashed border-2 rounded-xl h-24 w-full sm:w-40 bg-gray-100"></span>
 
-						<div class="flex flex-wrap gap-8">
-							<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined w-[180px]"
+						<div class="flex flex-col sm:flex-row flex-wrap w-full gap-5 sm:gap-8">
+							<FileUpload :chooseLabel="$t('updateImageButton')" auto
+										class="custom-file-button w-full sm:w-[180px] p-button-outlined"
 										customUpload mode="basic"
-										raised severity="secondary" @select="onImageSelect"/>
+										raised severity="secondary" @select="onImageSelect"
+							/>
 
 							<Button :disabled="isDeleteImageButtonDisabled" :label="$t('deleteImageButton')"
-									class="w-[180px]" icon="pi pi-minus"
+									class="w-full sm:w-[180px]" icon="pi pi-minus"
 									outlined severity="warn"
-									@click="deleteFamilyImage"/>
+									@click="deleteFamilyImage"
+							/>
 						</div>
 					</div>
 
 					<!--Nom, couleur-->
-					<form id="profileForm" class="flex flex-wrap items-center gap-8 w-full"
+					<form id="profileForm" class="flex flex-wrap items-center gap-5 sm:gap-8 w-full"
 						  @submit.prevent="submitUpdateFamily">
 
-						<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
+						<div class="inline-flex gap-5 sm:gap-8 flex-grow">
+							<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
 
-						<FloatLabel class="flex-grow" variant="on">
-							<InputText id="name" v-model.trim="name" class="w-full"/>
-							<label for="name">{{ $t('familyName') }}</label>
-						</FloatLabel>
+							<FloatLabel class="flex-grow" variant="on">
+								<InputText id="name" v-model.trim="name" class="w-full"/>
+								<label for="name">{{ $t('familyName') }}</label>
+							</FloatLabel>
+						</div>
 
-						<Button :disabled="isSubmitButtonDisabled" :label="$t('saveModifications')" class="w-40"
+						<Button :disabled="isSubmitButtonDisabled" :label="$t('saveModifications')"
+								class="w-full sm:w-40"
 								type="submit"/>
 					</form>
 				</div>
 
 				<!--Membres de la famille-->
-				<div class="flex flex-wrap gap-8 justify-between">
+				<div class="flex flex-wrap gap-5 sm:gap-8 justify-between">
 
 					<!--Membres principaux-->
 					<div class="flex flex-col flex-grow gap-5 bg-white p-5 border rounded-lg shadow">
@@ -61,14 +68,13 @@
 
 									<p>{{ user.name }}</p>
 
-									<Avatar v-if="user.imageUrl" :image="user.imageUrl"
-											:style="{ borderColor: user.color }" class="border-4"
-											shape="circle" size="small"/>
-									<Avatar v-else :label="user.name[0].toUpperCase()"
-											:style="`background-color: ${user.color}`"
-											class="font-semibold text-white"
-											shape="circle"
-											size="small"/>
+									<Avatar v-if="user.imageUrl"
+											:class="user.imageUrl ? 'border-4' : 'font-semibold text-white'"
+											:image="user.imageUrl"
+											:label="!user.imageUrl ? user.name[0].toUpperCase() : ''"
+											:style="user.imageUrl ? { borderColor: user.color } : { backgroundColor: user.color }"
+											shape="circle" size="small"
+									/>
 								</div>
 							</router-link>
 
@@ -125,11 +131,11 @@
 			</div>
 
 			<!--Boutons pour quitter et supprimer la famille-->
-			<div class="flex flex-col gap-8 bg-white border rounded-lg h-fit p-5 shadow">
-				<Button :label="$t('quitFamily')" outlined severity="danger"
-						@click="submitQuitFamily($event)"/>
-				<Button :label="$t('deleteFamilyButton')" severity="danger"
-						@click="submitDeleteFamily($event)"/>
+			<div class="flex flex-col gap-5 sm:gap-8 bg-white border rounded-lg h-fit p-5 shadow">
+				<Button :label="$t('quitFamily')" class="w-full sm:w-[180px]" outlined
+						severity="danger" @click="submitQuitFamily($event)"/>
+				<Button :label="$t('deleteFamilyButton')" class="w-full sm:w-[180px]"
+						severity="danger" @click="submitDeleteFamily($event)"/>
 			</div>
 		</div>
 
@@ -143,8 +149,8 @@
 
 		<!--Créer un membre-->
 		<Dialog v-model:visible="dialogMemberCreationVisible" :header="$t('addMemberTitle')" modal>
-			<form id="profileForm" class="flex flex-col gap-8" @submit.prevent="submitCreateMember">
-				<div class="flex flex-inline gap-8 mt-2">
+			<form id="profileForm" class="flex flex-col gap-5 sm:gap-8" @submit.prevent="submitCreateMember">
+				<div class="flex flex-inline gap-5 sm:gap-8 mt-2">
 					<FloatLabel variant="on">
 						<InputText id="name" v-model.trim="newMemberName" class="w-60"/>
 						<label for="name">{{ $t('memberName') }}</label>
@@ -157,7 +163,7 @@
 			</form>
 		</Dialog>
 
-		<ConfirmDialog></ConfirmDialog>
+		<ConfirmDialog class="m-5"></ConfirmDialog>
 
 		<Toast ref="toast" position="bottom-right"/>
 	</div>
@@ -447,5 +453,9 @@ export default {
 .custom-color-picker {
 	--p-colorpicker-preview-width: 42px;
 	--p-colorpicker-preview-height: 42px;
+}
+
+.custom-file-button {
+	width: 400px;
 }
 </style>

@@ -1,19 +1,20 @@
 <template>
 
 	<!-- Affichage de l'événement -->
-	<div :style="eventBackgroundColorClass" class="flex flex-col gap-3 p-3 rounded hover:bg-slate-100 cursor-pointer"
+	<div :style="eventBackgroundColorClass"
+		 class="flex flex-col gap-3 p-1 sm:p-3 rounded cursor-pointer"
 		 @click="showDialog = true">
 
 		<div class="flex flex-col">
 			<!-- Nom de l'événement -->
-			<p class="truncate">{{ event.name }}</p>
+			<p class="overflow-hidden sm:truncate text-xs sm:text-xl">{{ event.name }}</p>
 
 			<!-- Affichage de l'heure de début et de fin -->
-			<p class="text-xs truncate">{{ getEventTime() }}</p>
+			<p class="text-xs truncate hidden sm:inline">{{ getEventTime() }}</p>
 		</div>
 
 		<!-- Membres de l'événement -->
-		<div class="flex justify-left">
+		<div class="justify-left hidden sm:inline">
 			<AvatarGroup>
 				<Avatar
 					v-for="member in event.members"
@@ -29,8 +30,8 @@
 	</div>
 
 	<!-- Dialog pour afficher les détails de l'événement -->
-	<Dialog v-model:visible="showDialog" :header="$t('eventsTitle')" modal>
-		<div class="flex flex-col gap-4 w-96">
+	<Dialog v-model:visible="showDialog" :header="$t('eventsTitle')" class="w-full sm:w-fit m-5" modal>
+		<div class="flex flex-col gap-4 sm:w-96">
 
 			<!-- Nom et horaires de l'événement -->
 			<div class="flex flex-col">

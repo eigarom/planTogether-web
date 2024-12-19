@@ -1,21 +1,25 @@
 <template>
-	<div v-if="user" class="flex flex-col w-full gap-3">
+	<div v-if="user" class="flex flex-col gap-3 w-full p-5 sm:p-0">
 		<h1 class="text-2xl">{{ $t('userTitle') }}</h1>
 
 		<!--Contenu principal-->
-		<div class="flex flex-col gap-8 p-5 bg-white border rounded-lg w-[565px]">
+		<div class="flex flex-col gap-8 p-5 bg-white border rounded-lg w-full sm:w-[565px]">
 
 			<!--Image de l'utilisateur-->
-			<div class="flex gap-8 items-center">
+			<div class="flex sm:gap-8 justify-between items-center">
 
 				<!--Image-->
-				<Avatar v-if="user.imageUrl" :image="user.imageUrl" alt="Image" class="custom-avatar"
-						shape="circle"/>
-				<Avatar v-else :label="userInitial" :style="`background-color: ${user.color}`"
-						class="custom-avatar font-semibold text-white" shape="circle"/>
+				<Avatar
+					:image="user.imageUrl || null"
+					:label="!user.imageUrl ? userInitial : ''"
+					:style="!user.imageUrl ? `background-color: ${user.color}` : ''"
+					alt="Image"
+					class="custom-avatar font-semibold text-white flex-shrink-0"
+					shape="circle"
+				/>
 
 				<!--Boutons-->
-				<div class="flex gap-8">
+				<div class="flex flex-col sm:flex-row gap-5 sm:gap-8">
 					<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined w-[180px]"
 								customUpload
 								mode="basic" severity="secondary" @select="onImageSelect"/>
@@ -30,13 +34,15 @@
 			<form id="userProfileForm" class="flex flex-col gap-8 w-full" @submit.prevent="submitUpdateUser">
 
 				<!--Inputs-->
-				<div class="flex gap-8 w-full">
-					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
+				<div class="flex flex-col sm:flex-row gap-8">
+					<div class="inline-flex gap-5 sm:gap-8">
+						<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
 
-					<FloatLabel variant="on">
-						<InputText id="name" v-model.trim="name" class="w-full"/>
-						<label for="name">{{ $t('memberName') }}</label>
-					</FloatLabel>
+						<FloatLabel class="flex-grow" variant="on">
+							<InputText id="name" v-model.trim="name" class="w-full"/>
+							<label for="name">{{ $t('memberName') }}</label>
+						</FloatLabel>
+					</div>
 
 					<FloatLabel class="flex-grow" variant="on">
 						<InputText id="email" v-model.trim="email" class="w-full"/>
@@ -45,7 +51,7 @@
 				</div>
 
 				<!--Boutons de modification et suppression du compte-->
-				<div class="flex gap-8 justify-center">
+				<div class="flex gap-8 justify-between sm:justify-center">
 					<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" class="w-32"
 							type="submit"/>
 					<Button :label="$t('deleteButton')" class="w-32" severity="danger"
@@ -55,7 +61,7 @@
 		</div>
 
 
-		<ConfirmDialog></ConfirmDialog>
+		<ConfirmDialog class="m-5"></ConfirmDialog>
 		<Toast ref="toast" position="bottom-right"/>
 	</div>
 </template>
@@ -74,7 +80,7 @@ import {deleteMemberImage, uploadMemberImage} from "@/services/memberServices.js
 import Avatar from "primevue/avatar";
 
 export default {
-	inject: ['user', 'token', 'family'],
+	inject: ['user', 'token', 'family', 'isDesktop'],
 	components: {
 		Avatar, InputText, Button, FloatLabel, ColorPicker, FileUpload, Toast, ConfirmDialog
 	},

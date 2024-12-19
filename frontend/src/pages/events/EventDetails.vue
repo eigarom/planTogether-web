@@ -1,19 +1,19 @@
 <template>
-	<div v-if="!isLoading" class="flex flex-col gap-3 min-h-fit w-full">
+	<div v-if="!isLoading" class="flex flex-col gap-3 min-h-fit w-full p-5 sm:p-0">
 		<h1 class="text-2xl">{{ $t('eventDetailTitle') }}</h1>
 
 		<!-- Contenu principal -->
-		<form id="eventForm" class="flex flex-col gap-8 bg-white border rounded-lg p-5"
+		<form id="eventForm" class="flex flex-col sm:bg-white sm:border sm:rounded-lg sm:p-5"
 			  @submit.prevent="submitUpdateEvent"
 		>
 			<!-- Renseignements -->
-			<div class="flex flex-col gap-8">
+			<div class="flex flex-col gap-5 sm:gap-8">
 
 				<!-- Première ligne -->
-				<div class="grid grid-cols-2 gap-5">
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
 					<!-- Nom, description, visibilité -->
-					<div class="flex flex-col gap-8 p-5 bg-white border rounded-lg shadow">
+					<div class="flex flex-col gap-5 sm:gap-8 p-5 bg-white border rounded-lg shadow">
 						<!-- Nom -->
 						<FloatLabel class="w-full" variant="on">
 							<InputText id="name" v-model.trim="name" class="w-full"/>
@@ -27,17 +27,18 @@
 						</FloatLabel>
 
 						<!-- Visibilité -->
-						<div class="flex items-center gap-3">
+						<div class="flex items-center gap-3 justify-between sm:justify-start">
 							<p>{{ $t('visibility') }}</p>
 							<ToggleSwitch id="isVisible" v-model.trim="checked"/>
 						</div>
 					</div>
 
 					<!-- Dates, heures, alertes -->
-					<form id="periodForm" class="flex flex-col gap-8 border rounded-lg p-5 h-fit bg-white shadow"
+					<form id="periodForm"
+						  class="flex flex-col gap-5 sm:gap-8 border rounded-lg p-5 h-fit bg-white shadow"
 						  @submit.prevent="submitUpdatePeriod">
 
-						<div class="grid grid-cols-2 gap-5">
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
 							<!-- Date début -->
 							<FloatLabel class="w-full" variant="on">
 								<DatePicker v-model="startEvent" class="w-full" iconDisplay="input" inputId="startDate"
@@ -55,7 +56,7 @@
 						</div>
 
 						<!-- Toute la journée -->
-						<div class="gap-8 grid grid-cols-2">
+						<div class="gap-8 grid grid-cols-1 sm:grid-cols-2">
 							<div class="flex items-center justify-between">
 								<p>{{ $t('wholeDay') }}</p>
 
@@ -64,7 +65,7 @@
 						</div>
 
 						<!-- Alertes -->
-						<div class="grid grid-cols-2 gap-8">
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
 							<FloatLabel class="w-full" variant="on">
 								<MultiSelect v-model="translatedSelectedAlertTypes" :options="translatedAlertTypes"
 											 class="w-full"
@@ -77,7 +78,8 @@
 						<!-- Bouton de soumission -->
 						<div class="flex justify-center">
 							<Button
-								:disabled="isSubmitPeriodButtonDisabled" :label="$t('buttonUpdatePeriod')" class="w-60"
+								:disabled="isSubmitPeriodButtonDisabled" :label="$t('buttonUpdatePeriod')"
+								class="w-full sm:w-60"
 								type="submit"
 							/>
 						</div>
@@ -86,7 +88,7 @@
 				</div>
 
 				<!-- Participants -->
-				<div class="grid grid-cols-4 gap-5">
+				<div class="grid grid-cols-1 sm:grid-cols-4 gap-5">
 					<Button
 						v-for="member in allMembers"
 						:key="member.id"
@@ -108,7 +110,7 @@
 					</Button>
 				</div>
 
-				<div class="flex gap-8 justify-center">
+				<div class="flex gap-8 justify-between sm:justify-center">
 					<Button
 						:disabled="isSubmitEventButtonDisabled" :label="$t('buttonUpdateEvent')" class="w-60"
 						type="submit"
@@ -121,7 +123,8 @@
 			</div>
 		</form>
 
-		<ConfirmDialog></ConfirmDialog>
+		<ConfirmDialog class="m-5"></ConfirmDialog>
+
 		<Toast ref="toast" position="bottom-right"/>
 	</div>
 </template>
