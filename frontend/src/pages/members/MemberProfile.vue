@@ -1,5 +1,5 @@
 <template>
-	<div v-if="name" class="flex flex-col gap-3 w-full p-5 sm:p-0">
+	<div v-if="member" class="flex flex-col gap-3 w-full p-5 sm:p-0">
 		<h1 class="text-2xl">{{ $t('memberTitle') }}</h1>
 
 		<!--Contenu principal-->
@@ -85,6 +85,7 @@ export default {
 	},
 	data: () => {
 		return {
+			member: '',
 			name: '',
 			color: '',
 			initialName: '',
@@ -106,7 +107,7 @@ export default {
 	},
 	methods: {
 		async getMemberInformations(id) {
-			const member = this.family.guestMembers.find(m => m.id === parseInt(id)) ||
+			this.member = this.family.guestMembers.find(m => m.id === parseInt(id)) ||
 				this.family.accountMembers.find(m => m.id === parseInt(id));
 
 			if (this.family.guestMembers.includes(member)) this.isGuestMember = true;
