@@ -2,12 +2,12 @@
 
 	<!-- Affichage de l'événement -->
 	<div :style="eventBackgroundColorClass"
-		 class="flex flex-col gap-3 p-1 sm:p-3 rounded cursor-pointer"
+		 class="flex flex-col gap-3 p-1 rounded cursor-pointer"
 		 @click="showDialog = true">
 
 		<div class="flex flex-col">
 			<!-- Nom de l'événement -->
-			<p class="overflow-hidden sm:truncate text-xs sm:text-xl">{{ event.name }}</p>
+			<p class="overflow-hidden sm:truncate text-xs">{{ event.name }}</p>
 
 			<!-- Affichage de l'heure de début et de fin -->
 			<p class="text-xs truncate hidden sm:inline">{{ getEventTime() }}</p>
