@@ -112,11 +112,11 @@ export default {
 
 			if (this.family.guestMembers.includes(member)) this.isGuestMember = true;
 
-			this.name = member.name;
-			this.color = member.color;
-			this.initialName = member.name;
-			this.initialColor = member.color;
-			this.imageUrl = member.imageUrl;
+			this.name = this.member.name;
+			this.color = this.member.color;
+			this.initialName = this.member.name;
+			this.initialColor = this.member.color;
+			this.imageUrl = this.member.imageUrl;
 		},
 		async onImageSelect(event) {
 			const formData = new FormData();
