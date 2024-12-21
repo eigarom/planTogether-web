@@ -110,7 +110,7 @@ export default {
 			this.member = this.family.guestMembers.find(m => m.id === parseInt(id)) ||
 				this.family.accountMembers.find(m => m.id === parseInt(id));
 
-			if (this.family.guestMembers.includes(member)) this.isGuestMember = true;
+			if (this.family.guestMembers.includes(this.member)) this.isGuestMember = true;
 
 			this.name = this.member.name;
 			this.color = this.member.color;
