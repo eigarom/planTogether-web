@@ -12,21 +12,6 @@
 			<!-- Affichage de l'heure de début et de fin -->
 			<p class="text-xs truncate hidden sm:inline">{{ getEventTime() }}</p>
 		</div>
-
-		<!-- Membres de l'événement -->
-		<div class="justify-left hidden sm:inline">
-			<AvatarGroup>
-				<Avatar
-					v-for="member in event.members"
-					:key="member.id"
-					:image="member.imageUrl"
-					:label="!member.imageUrl ? memberInitials(member) : null"
-					:style="!member.imageUrl ? avatarColorClass : null"
-					shape="circle"
-					size="small"
-				/>
-			</AvatarGroup>
-		</div>
 	</div>
 
 	<!-- Dialog pour afficher les détails de l'événement -->
