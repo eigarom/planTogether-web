@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col gap-2 border p-2 w-full pb-7">
+	<div class="flex flex-col gap-2 border py-2 sm:p-2 w-full pb-7">
 		<ItemEvent
 			v-for="event in sortedEvents"
 			:key="event.id"

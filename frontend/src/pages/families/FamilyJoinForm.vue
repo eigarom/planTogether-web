@@ -1,8 +1,8 @@
 <template>
 	<FloatingTitle/>
 
-	<div class="fixed top-0 left-0 h-screen w-screen flex justify-center items-center">
-		<div class="flex flex-col gap-8 bg-white p-5 border rounded-lg w-[350px]">
+	<div class="fixed top-0 left-0 h-screen w-screen flex justify-center items-center p-5">
+		<div class="flex flex-col gap-8 bg-white p-5 border rounded-lg w-full sm:w-[350px]">
 			<h1 class="text-3xl text-center font-medium">{{ $t('joinFamily') }}</h1>
 
 			<form id="familyJoinForm" class="flex flex-col gap-8" @submit.prevent="submitJoinFamily">

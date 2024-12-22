@@ -1,23 +1,26 @@
 <template>
-	<div v-if="name" class="flex flex-col w-full gap-3">
+	<div v-if="member" class="flex flex-col gap-3 w-full p-5 sm:p-0">
 		<h1 class="text-2xl">{{ $t('memberTitle') }}</h1>
 
 		<!--Contenu principal-->
-		<div class="flex flex-col gap-8 p-5 w-[565px] bg-white border rounded-lg">
+		<div class="flex flex-col gap-8 p-5 bg-white border rounded-lg w-full sm:w-[565px]">
 
 			<!--Image de l'utilisateur-->
-			<div class="flex gap-8 items-center">
+			<div class="flex sm:gap-8 justify-between items-center">
 
 				<!--Image-->
 				<div class="w-fit">
-					<Avatar v-if="imageUrl" :image="imageUrl" alt="Image" class="custom-avatar"
-							shape="circle"/>
-					<Avatar v-else :label="memberInitial" :style="`background-color: ${color}`"
-							class="custom-avatar font-semibold text-white" shape="circle"/>
+					<Avatar
+						:image="imageUrl || null"
+						:label="!imageUrl ? memberInitial : ''"
+						:style="!imageUrl ? `background-color: ${color}` : ''"
+						alt="Image" class="custom-avatar font-semibold text-white flex-shrink-0"
+						shape="circle"
+					/>
 				</div>
 
 				<!--Boutons-->
-				<div v-if="isGuestMember" class="flex flex-wrap gap-8">
+				<div v-if="isGuestMember" class="flex flex-col sm:flex-row gap-5 sm:gap-8">
 					<FileUpload :chooseLabel="$t('updateImageButton')" auto class="p-button-outlined" customUpload
 								mode="basic" severity="secondary" @select="onImageSelect"/>
 					<Button :disabled="isDeleteImageButtonDisabled" :label="$t('deleteImageButton')" icon="pi pi-minus"
@@ -30,7 +33,7 @@
 			<form id="memberProfileForm" class="flex flex-col gap-8 w-full" @submit.prevent="submitUpdateMember">
 
 				<!--Inputs-->
-				<div class="flex gap-8">
+				<div class="inline-flex gap-5 sm:gap-8">
 					<ColorPicker v-model="color" class="custom-color-picker" format="hex" inputId="color"/>
 
 					<FloatLabel class="w-full" variant="on">
@@ -41,11 +44,15 @@
 
 
 				<!--Boutons de modification et suppression du compte-->
-				<div class="flex gap-8 justify-center">
-					<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" class="w-32"
+				<div :class="{'flex gap-8 justify-between sm:justify-center': isGuestMember,
+				'flex gap-8 justify-center':
+				!isGuestMember}">
+					<Button :disabled="isSubmitButtonDisabled" :label="$t('updateButton')" class="w-full sm:w-32"
 							type="submit"/>
-					<Button v-if="isGuestMember" :label="$t('deleteButton')" class="w-32" severity="danger"
-							@click="confirm($event)"/>
+
+					<Button v-if="isGuestMember" :label="$t('deleteButton')"
+							class="w-full sm:w-32"
+							severity="danger" @click="confirm($event)"/>
 				</div>
 
 			</form>
@@ -78,6 +85,7 @@ export default {
 	},
 	data: () => {
 		return {
+			member: '',
 			name: '',
 			color: '',
 			initialName: '',
@@ -99,16 +107,16 @@ export default {
 	},
 	methods: {
 		async getMemberInformations(id) {
-			const member = this.family.guestMembers.find(m => m.id === parseInt(id)) ||
+			this.member = this.family.guestMembers.find(m => m.id === parseInt(id)) ||
 				this.family.accountMembers.find(m => m.id === parseInt(id));
 
-			if (this.family.guestMembers.includes(member)) this.isGuestMember = true;
+			if (this.family.guestMembers.includes(this.member)) this.isGuestMember = true;
 
-			this.name = member.name;
-			this.color = member.color;
-			this.initialName = member.name;
-			this.initialColor = member.color;
-			this.imageUrl = member.imageUrl;
+			this.name = this.member.name;
+			this.color = this.member.color;
+			this.initialName = this.member.name;
+			this.initialColor = this.member.color;
+			this.imageUrl = this.member.imageUrl;
 		},
 		async onImageSelect(event) {
 			const formData = new FormData();

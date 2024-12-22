@@ -1,20 +1,24 @@
 <template>
-	<div class="flex flex-col gap-1 w-full h-full">
+	<div class="flex flex-col w-full sm:bg-white sm:border sm:p-5 rounded-lg h-[calc(100vh-192px)]">
 		<!-- Entête -->
-		<div class="flex flex-col">
+		<div class="flex flex-col bg-white border sm:border-0 rounded-t-lg">
 
-			<div class="inline-flex justify-between">
+			<div class="inline-flex justify-between p-3 sm:p-0">
 				<!-- Navigation -->
-				<div class="inline-flex items-center gap-5">
-					<!-- Bouton aujourd'hui -->
-					<Button :label="$t('today')" class="custom-button-today" severity="info" @click="thisDay"/>
+				<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-5 sm:mb-2">
 
-					<!-- Boutons semaines précédente / suivante -->
-					<div class="inline-flex">
-						<Button class="custom-button-left" icon="pi pi-chevron-left" severity="info"
-								@click="previousWeek"/>
-						<Button class="custom-button-right" icon="pi pi-chevron-right" severity="info"
-								@click="nextWeek"/>
+					<!-- Boutons navigation -->
+					<div class="inline-flex items-center gap-5">
+						<!-- Bouton aujourd'hui -->
+						<Button :label="$t('today')" class="custom-button-today" severity="info" @click="thisDay"/>
+
+						<!-- Boutons semaines précédente / suivante -->
+						<div class="inline-flex">
+							<Button class="custom-button-left" icon="pi pi-chevron-left" severity="info"
+									@click="previousWeek"/>
+							<Button class="custom-button-right" icon="pi pi-chevron-right" severity="info"
+									@click="nextWeek"/>
+						</div>
 					</div>
 
 					<!-- Mois -->
@@ -31,20 +35,30 @@
 				</div>
 
 				<!-- Ajouter un événement -->
-				<Button as="router-link" class="custom-add-button" icon="pi pi-calendar-plus" severity="info"
-						to="/events/add"/>
+				<Button
+					as="router-link"
+					class="custom-add-button"
+					icon="pi pi-calendar-plus"
+					severity="info"
+					to="/events/add"
+				/>
 			</div>
-		</div>
 
-		<!-- Dates du jour -->
-		<div class="grid grid-cols-7 w-full">
-			<p v-for="day in week" :key="day.id" class="text-xl pl-2">
-				{{ dayNumber(day) }}
-			</p>
+			<!-- Dates du jour -->
+			<div class="grid grid-cols-7 w-full">
+				<p v-for="day in week" :key="day.id" class="text-xl pl-2">
+					{{ dayNumber(day) }}
+				</p>
 
-			<p v-for="i in 7" :key="i" class="text-xs pl-2">
-				{{ getDay(new Date(currentWeekStart).setDate(currentWeekStart.getDate() + (i - 1))) }}
-			</p>
+				<p v-for="i in 7" :key="i" class="text-xs pl-2">
+					<span class="hidden sm:inline">{{
+							getDay(new Date(currentWeekStart).setDate(currentWeekStart.getDate() + (i - 1)))
+						}}</span>
+					<span class="inline sm:hidden">{{
+							getDay(new Date(currentWeekStart).setDate(currentWeekStart.getDate() + (i - 1))).slice(0, 3)
+						}}</span>
+				</p>
+			</div>
 		</div>
 
 		<!-- Événements -->

@@ -1,19 +1,19 @@
 <template>
-	<div v-if="!isLoading" class="flex flex-col gap-3 min-h-fit w-full">
+	<div v-if="!isLoading" class="flex flex-col gap-3 min-h-fit w-full p-5 sm:p-0">
 		<h1 class="text-2xl">{{ $t('newEvent') }}</h1>
 
 		<!-- Contenu principal -->
-		<form id="eventForm" class="flex flex-col gap-8 bg-white border rounded-lg p-5"
+		<form id="eventForm" class="flex flex-col gap-5 sm:gap-8 sm:bg-white sm:border sm:rounded-lg sm:p-5"
 			  @submit.prevent="submitCreateEvent"
 		>
 			<!-- Renseignements -->
-			<div class="flex flex-col gap-8">
+			<div class="flex flex-col gap-5 sm:gap-8">
 
 				<!-- Première ligne -->
-				<div class="grid grid-cols-2 gap-5">
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
 					<!-- Nom, description, visibilité -->
-					<div class="flex flex-col gap-8 p-5 border rounded-lg shadow">
+					<div class="flex flex-col gap-5 sm:gap-8 p-5 bg-white border rounded-lg sm:shadow">
 						<!-- Nom -->
 						<FloatLabel class="w-full" variant="on">
 							<InputText id="name" v-model.trim="name" class="w-full"/>
@@ -27,16 +27,16 @@
 						</FloatLabel>
 
 						<!-- Visibilité -->
-						<div class="flex items-center gap-8">
+						<div class="flex items-center sm:gap-8 justify-between sm:justify-start">
 							<p>{{ $t('visibility') }}</p>
 							<ToggleSwitch id="isVisible" v-model.trim="checked"/>
 						</div>
 					</div>
 
 					<!-- Dates, heures, répétition -->
-					<div class="flex flex-col gap-8 border rounded-lg p-5 h-fit shadow">
+					<div class="flex flex-col gap-5 sm:gap-8 border rounded-lg bg-white p-5 h-fit sm:shadow">
 
-						<div class="grid grid-cols-2 gap-8">
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-8">
 							<!-- Date début -->
 							<FloatLabel class="w-full" variant="on">
 								<DatePicker v-model="startEvent" class="w-full" iconDisplay="input" inputId="startDate"
@@ -53,7 +53,7 @@
 						</div>
 
 						<!-- Toute la journée -->
-						<div class="gap-8 grid grid-cols-2">
+						<div class="gap-8 grid grid-cols-1 sm:grid-cols-2">
 							<div class="flex items-center justify-between">
 								<p>{{ $t('wholeDay') }}</p>
 
@@ -62,7 +62,7 @@
 						</div>
 
 						<!-- Répétition et alertes -->
-						<div class="grid grid-cols-2 gap-8">
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
 							<!-- Répétition -->
 							<FloatLabel class="w-full" variant="on">
 								<Select
@@ -83,7 +83,7 @@
 						</div>
 
 						<!-- Alertes -->
-						<div class="grid grid-cols-2 gap-8">
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
 							<FloatLabel class="w-full" variant="on">
 								<MultiSelect v-model="selectedAlertTypes" :options="translatedAlertTypes"
 											 class="w-full"
@@ -96,7 +96,7 @@
 				</div>
 
 				<!-- Participants -->
-				<div class="grid grid-cols-4 gap-5">
+				<div class="grid grid-cols-1 sm:grid-cols-4 gap-5 bg-white border sm:border-none rounded-lg p-5 sm:p-0">
 					<Button
 						v-for="member in allMembers"
 						:key="member.id"
@@ -122,7 +122,7 @@
 			<!-- Bouton de soumission -->
 			<div class="flex justify-center">
 				<Button
-					:disabled="isSubmitButtonDisabled" :label="$t('buttonCreateEvent')" class="w-60"
+					:disabled="isSubmitButtonDisabled" :label="$t('buttonCreateEvent')" class="w-full sm:w-60"
 					type="submit"
 				/>
 			</div>

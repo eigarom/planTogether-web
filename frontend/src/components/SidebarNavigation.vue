@@ -1,5 +1,11 @@
 <template>
-	<Menu id="sidebar" :model="items" class="fixed left-5 z-40 p-2 h-[calc(100%-148px)] w-52">
+	<Menu
+		id="sidebar"
+		:model="items"
+		:pt="isDesktop
+		?{root: { style: 'border: 1px solid #E5E7EB' }}
+		:{root: { style: 'border: none' }}"
+	>
 		<template #item="{ item, props }">
 			<!-- Item du profil -->
 			<template v-if="item.route === '/profile'">
@@ -14,7 +20,7 @@
 							shape="circle"
 							size="small"
 						/>
-
+			
 						<div class="flex flex-col justify-between">
 							<p class="truncate">{{ user.name }}</p>
 							<p class="text-xs">{{ family.name }}</p>
@@ -52,7 +58,7 @@ export default {
 	components: {
 		Menu, Image, Avatar
 	},
-	inject: ['token', 'user', 'family'],
+	inject: ['token', 'user', 'family', 'isDesktop'],
 	data() {
 		return {};
 	},

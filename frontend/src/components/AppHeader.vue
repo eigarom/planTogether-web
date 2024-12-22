@@ -1,8 +1,17 @@
 <template>
-	<div class="fixed top-0 left-0 flex items-center justify-between bg-white w-full px-8 py-3 border-b z-50">
-		<span class="text-xl font-semibold">PLAN<span class="text-blue-300">TOGETHER</span></span>
+	<div class="fixed top-0 left-0 flex items-center justify-between bg-white w-full sm:px-8 px-3 py-3 border-b z-50">
+		<div class="flex gap-3 items-center">
+			<Button v-if="!isDesktop"
+					icon="pi pi-bars"
+					severity="secondary"
+					size="small"
+					@click="$emit('toggle-sidebar')"
+			/>
 
-		<div class="card flex gap-5">
+			<a class="text-xl font-semibold" href="/">PLAN<span class="text-blue-300">TOGETHER</span></a>
+		</div>
+
+		<div class="flex sm:gap-5 gap-3">
 			<Button
 				aria-controls="overlay_menu"
 				aria-haspopup="true"
@@ -35,7 +44,7 @@ import enLocale from '../locales/en/primevue.json';
 import frLocale from '../locales/fr/primevue.json';
 
 export default {
-	inject: ['user', 'logout'],
+	inject: ['user', 'logout', 'sidebar', 'isDesktop'],
 	components: {
 		Button, Menu
 	},

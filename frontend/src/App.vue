@@ -1,13 +1,19 @@
 <template>
-	<AppHeader/>
+	<AppHeader @toggle-sidebar="sidebar = !sidebar"/>
 
-	<main v-if="!isLoading" class="flex gap-8 h-full pl-[260px] pr-5 pt-20 pb-[68px] overflow-auto">
-		<SidebarNavigation v-if="user && family"/>
+	<main v-if="!isLoading" class="flex gap-8 h-full sm:pl-[260px] sm:pr-5 sm:pt-20 pt-14 pb-[68px] overflow-auto">
+		<SidebarNavigation v-if="user && family && isDesktop" class="fixed left-5 z-40 p-2 h-[calc(100%-148px)] w-52"/>
 
 		<router-view></router-view>
 	</main>
 
 	<AppFooter/>
+
+	<Drawer v-model:visible="sidebar" class="!w-52">
+		<template #container="{ closeCallback }">
+			<SidebarNavigation v-if="user && family" @click="closeCallback"/>
+		</template>
+	</Drawer>
 </template>
 
 <script>
@@ -20,17 +26,18 @@ import AppHeader from './components/AppHeader.vue';
 import AppFooter from "@/components/AppFooter.vue";
 import enLocale from "@/locales/en/primevue.json";
 import frLocale from "@/locales/fr/primevue.json";
+import Drawer from "primevue/drawer";
 
 export default {
 	components: {
-		AppFooter,
-		AppHeader, SidebarNavigation
+		AppFooter, AppHeader, SidebarNavigation, Drawer
 	},
 	data() {
 		return {
 			token: '',
 			user: null,
 			family: '',
+			sidebar: false,
 			isLoading: true
 		};
 	},
@@ -114,13 +121,18 @@ export default {
 		await this.getFamilyDetails();
 		this.chargeLanguage();
 		this.isLoading = false;
-	}
-	,
+	},
+	computed: {
+		isDesktop() {
+			return window.innerWidth >= 1024;
+		}
+	},
 	provide() {
 		return {
 			token: computed(() => this.token),
 			user: computed(() => this.user),
 			family: computed(() => this.family),
+			isDesktop: computed(() => this.isDesktop),
 			logout: this.logout
 		}
 	}
