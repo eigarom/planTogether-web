@@ -1,7 +1,7 @@
 <template>
 	<div class="fixed top-0 left-0 flex items-center justify-between bg-white w-full sm:px-8 px-3 py-3 border-b z-50">
 		<div class="flex gap-3 items-center">
-			<Button v-if="!isDesktop"
+			<Button v-if="!isDesktop && user"
 					icon="pi pi-bars"
 					severity="secondary"
 					size="small"
