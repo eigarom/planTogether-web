@@ -13,6 +13,13 @@
 		{
 			"src": "/api/(.*)",
 			"dest": "https://plan-together-backend-eigaroms-projects.vercel.app/$1"
+		},
+		{
+			"handle": "filesystem"
+		},
+		{
+			"src": "/(.*)",
+			"dest": "/index.html"
 		}
 	]
 }
