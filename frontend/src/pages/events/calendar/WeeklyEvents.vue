@@ -62,7 +62,7 @@
 		</div>
 
 		<!-- Événements -->
-		<div class="overflow-auto h-full border bg-surface-100">
+		<div class="overflow-auto h-full border">
 			<div class="grid grid-cols-7 w-full h-full">
 				<DailyEvents
 					v-for="day in week"
