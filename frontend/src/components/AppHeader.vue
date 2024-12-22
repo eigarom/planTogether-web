@@ -44,7 +44,7 @@ import enLocale from '../locales/en/primevue.json';
 import frLocale from '../locales/fr/primevue.json';
 
 export default {
-	inject: ['user', 'logout', 'sidebar', 'isDesktop'],
+	inject: ['user', 'logout', 'isDesktop'],
 	components: {
 		Button, Menu
 	},
