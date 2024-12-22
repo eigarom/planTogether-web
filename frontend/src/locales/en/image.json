@@ -1,0 +1,5 @@
+{
+	"fileRequired": "File is required",
+	"fileTypeInvalid": "File type is not supported",
+	"fileSizeInvalid": "File size is too large"
+}

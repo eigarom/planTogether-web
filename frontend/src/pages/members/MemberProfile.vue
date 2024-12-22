@@ -74,6 +74,7 @@ import ConfirmDialog from 'primevue/confirmdialog';
 import {memberSchema} from "@/schemas/memberSchemas.js";
 import {deleteMember, deleteMemberImage, updateMemberById, uploadMemberImage} from "@/services/memberServices.js";
 import Avatar from "primevue/avatar";
+import {imageSchema} from "@/schemas/imageSchemas.js";
 
 export default {
 	inject: ['token', 'family'],
@@ -124,6 +125,7 @@ export default {
 			formData.append('member-image', file);
 
 			try {
+				await imageSchema.validate({image: file});
 				this.imageUrl = await uploadMemberImage(this.token, this.id, formData);
 				this.family.guestMembers.find(member => member.id === parseInt(this.id)).imageUrl = this.imageUrl;
 
@@ -133,13 +135,22 @@ export default {
 					detail: this.$t('toastUpdateImageSuccessMessage'),
 					life: 3000
 				});
-			} catch {
-				this.$refs.toast.add({
-					severity: 'error',
-					summary: this.$t('toastErrorTitle'),
-					detail: this.$t('errorUpdateMessage'),
-					life: 5000
-				});
+			} catch (err) {
+				if (err.name === 'ValidationError') {
+					this.$refs.toast.add({
+						severity: 'error',
+						summary: this.$t('toastErrorTitle'),
+						detail: err.message,
+						life: 5000
+					});
+				} else {
+					this.$refs.toast.add({
+						severity: 'error',
+						summary: this.$t('toastErrorTitle'),
+						detail: this.$t('errorUpdateMessage'),
+						life: 5000
+					});
+				}
 			}
 		},
 		async submitDeleteMemberImage() {
