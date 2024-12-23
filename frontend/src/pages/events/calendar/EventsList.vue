@@ -3,7 +3,7 @@
 		<h1 class="text-2xl">{{ $t('eventsTitle') }}</h1>
 
 		<!-- Calendrier -->
-		<div v-if="!loading" class="flex">
+		<div v-if="!loading" class="flex h-[calc(100vh-80px)] sm:h-[calc(100vh-192px)]">
 			<MonthlyEvents v-if="calendarType === 'monthly'" :dates="dates" @switchCalendarType="switchCalendarType"/>
 			<WeeklyEvents v-else-if="calendarType === 'weekly'" :dates="dates"
 						  @switchCalendarType="switchCalendarType"/>
