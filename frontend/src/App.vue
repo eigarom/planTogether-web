@@ -1,7 +1,7 @@
 <template>
 	<AppHeader @toggle-sidebar="sidebar = !sidebar"/>
 
-	<main v-if="!isLoading" class="flex gap-8 h-full sm:pl-[260px] sm:pr-5 sm:pt-20 pt-14 sm:pb-[68px] overflow-auto">
+	<main v-if="!isLoading" class="flex gap-8 h-full sm:pl-[260px] sm:pr-5 sm:pt-20 pt-14 sm:pb-[68px] overflow-y-auto">
 		<SidebarNavigation v-if="user && family && isDesktop" class="fixed left-5 z-40 p-2 h-[calc(100%-148px)] w-52"/>
 
 		<router-view></router-view>
