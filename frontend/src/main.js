@@ -19,6 +19,7 @@ import FamilyProfile from "@/pages/families/FamilyProfile.vue";
 import RegisterForm from "@/pages/auth/RegisterForm.vue";
 import UserProfile from "@/pages/users/UserProfile.vue";
 import MemberProfile from './pages/members/MemberProfile.vue';
+import LandingPage from "@/pages/landing/LandingPage.vue";
 
 const app = createApp(App);
 
@@ -37,7 +38,7 @@ app.use(PrimeVue, {
 });
 app.use(ConfirmationService);
 
-app.config.globalProperties.$primevue = { config: app.config.globalProperties.$primevue.config };
+app.config.globalProperties.$primevue = {config: app.config.globalProperties.$primevue.config};
 
 // Cookies
 app.use(VueCookies, {expires: '100d'});
@@ -46,6 +47,7 @@ app.use(VueCookies, {expires: '100d'});
 const router = createRouter({
 	history: createWebHistory(),
 	routes: [
+		{path: '/', component: LandingPage},
 		{path: '/login', component: LoginForm},
 		{path: '/register', component: RegisterForm},
 		{path: '/events', component: EventsList},
@@ -57,17 +59,19 @@ const router = createRouter({
 		{path: '/my-family', component: FamilyProfile},
 		{path: '/members/:id', component: MemberProfile, props: true},
 		{path: '/profile', component: UserProfile},
-		{path: '/', redirect: '/events'}
+		{path: '/:pathMatch(.*)*', redirect: '/events'} // Route catch-all
 	]
 });
 router.beforeEach((to, from, next) => {
 		const token = app.config.globalProperties.$cookies.get('jwtToken');
 		if (to.path === '/register' && !token) {
 			next();
-		} else if (to.path !== '/login' && !token) {
-			next('/login');
-		} else if (to.path === '/login' && token) {
+		} else if (to.path === '/login' && !token) {
+			next();
+		} else if (to.path !== '/' && !token) {
 			next('/');
+		} else if (to.path === '/' && token) {
+			next('/events');
 		} else {
 			next();
 		}

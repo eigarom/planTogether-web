@@ -63,8 +63,9 @@
 			</div>
 
 			<div class="flex justify-center gap-2 mt-4">
-				<Button :to="`/events/${event.id}/periods/${event.period.id}`" as="router-link" class="w-40"
-						label="Modifier"/>
+				<Button :label="$t('buttonEditEvent')" :to="`/events/${event.id}/periods/${event.period.id}`"
+						as="router-link"
+						class="w-40"/>
 			</div>
 		</div>
 	</Dialog>

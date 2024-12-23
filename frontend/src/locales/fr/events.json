@@ -4,6 +4,7 @@
 	"noAlerts": "Pas d'alertes",
 	"buttonCreateEvent": "Ajouter l'événement",
 	"buttonUpdateEvent": "Mettre à jour",
+	"buttonEditEvent": "Modifier",
 	"toastUpdateEventSuccessMessage": "L'événement a été mis à jour",
 	"descriptionMax": "La description ne doit pas dépasser 500 caractères",
 	"buttonUpdatePeriod": "Mettre à jour la période",
