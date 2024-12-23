@@ -56,7 +56,7 @@
 
 			<!-- Dates du jour -->
 			<div class="grid grid-cols-7 w-full">
-				<p v-for="day in week" :key="day.id" class="text-xl pl-2">
+				<p v-for="day in week" :key="day.id" class="font-semibold sm:font-medium text-xs sm:text-xl pl-2">
 					{{ dayNumber(day) }}
 				</p>
 
