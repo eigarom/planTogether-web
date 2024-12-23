@@ -7,7 +7,7 @@
 
 		<div class="flex flex-col">
 			<!-- Nom de l'événement -->
-			<p class="overflow-hidden sm:truncate text-xs">{{ event.name }}</p>
+			<p class="overflow-hidden truncate text-xs">{{ event.name }}</p>
 
 			<!-- Affichage de l'heure de début et de fin -->
 			<p class="text-xs truncate hidden sm:inline">{{ getEventTime() }}</p>

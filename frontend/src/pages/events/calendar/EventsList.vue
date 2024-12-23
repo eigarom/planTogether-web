@@ -4,25 +4,29 @@
 
 		<!-- Calendrier -->
 		<div v-if="!loading" class="flex">
-			<WeeklyEvents :dates="dates"/>
+			<MonthlyEvents v-if="calendarType === 'monthly'" :dates="dates" @switchCalendarType="switchCalendarType"/>
+			<WeeklyEvents v-else-if="calendarType === 'weekly'" :dates="dates"
+						  @switchCalendarType="switchCalendarType"/>
 		</div>
 	</div>
 </template>
 
 <script>
 import WeeklyEvents from './WeeklyEvents.vue';
+import MonthlyEvents from './MonthlyEvents.vue';
 import {getEventsList} from '@/services/eventServices.js';
 
 export default {
 	components: {
-		WeeklyEvents
+		WeeklyEvents, MonthlyEvents
 	},
 	inject: ['user'],
 	data() {
 		return {
 			eventsList: [],
 			dates: [],
-			loading: true
+			loading: true,
+			calendarType: 'monthly'
 		};
 	},
 	methods: {
@@ -76,6 +80,9 @@ export default {
 				});
 			});
 			this.loading = false;
+		},
+		switchCalendarType(type) {
+			this.calendarType = type;
 		}
 	},
 	computed: {

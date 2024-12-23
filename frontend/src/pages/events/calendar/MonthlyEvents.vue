@@ -15,7 +15,7 @@
 						<!-- Boutons semaines précédente / suivante -->
 						<div class="inline-flex">
 							<Button class="custom-button-left" icon="pi pi-chevron-left" severity="info"
-									@click="previousWeek"/>
+									@click="previousMonth"/>
 							<Button class="custom-button-right" icon="pi pi-chevron-right" severity="info"
 									@click="nextWeek"/>
 						</div>
@@ -23,7 +23,7 @@
 
 					<!-- Mois -->
 					<div class="inline-flex items-center gap-2">
-						<h2 class="font-semibold">{{ formattedMonth }}</h2>
+						<h2 class="font-semibold">{{ getCurrentMonthAndYear }}</h2>
 
 						<i class="pi pi-angle-down" @click="toggle"/>
 
@@ -40,7 +40,7 @@
 						class="custom-button"
 						icon="pi pi-calendar"
 						severity="info"
-						@click="$emit('switchCalendarType', 'monthly')"
+						@click="$emit('switchCalendarType', 'weekly')"
 					/>
 
 					<!-- Ajouter un événement -->
@@ -54,29 +54,22 @@
 				</div>
 			</div>
 
-			<!-- Dates du jour -->
-			<div class="grid grid-cols-7 w-full">
-				<p v-for="day in week" :key="day.id" class="text-xl pl-2">
-					{{ dayNumber(day) }}
-				</p>
-
-				<p v-for="i in 7" :key="i" class="text-xs pl-2">
-					<span class="hidden sm:inline">{{
-							getDay(new Date(currentWeekStart).setDate(currentWeekStart.getDate() + (i - 1)))
-						}}</span>
-					<span class="inline sm:hidden">{{
-							getDay(new Date(currentWeekStart).setDate(currentWeekStart.getDate() + (i - 1))).slice(0, 3)
-						}}</span>
+			<!-- Noms du jour -->
+			<div class="grid grid-cols-7 w-full pb-1">
+				<p v-for="(day, index) in getWeekDays()" :key="index" class="text-xs pl-2">
+					<span class="hidden sm:inline">{{ day }}</span>
+					<span class="inline sm:hidden">{{ day.slice(0, 3) }}</span>
 				</p>
 			</div>
 		</div>
 
 		<!-- Événements -->
-		<div class="overflow-auto h-full border">
-			<div class="grid grid-cols-7 w-full h-full">
-				<WeeklyDailyEvents
-					v-for="day in week"
+		<div class="h-full border overflow-hidden">
+			<div :class="month.length > 35 ? 'grid-rows-6' : 'grid-rows-5'" class="grid grid-cols-7 w-full h-full">
+				<MonthlyDailyEvents
+					v-for="day in month"
 					:key="day.id"
+					:currentMonth="currentMonth"
 					:day="day"
 				/>
 			</div>
@@ -85,80 +78,89 @@
 </template>
 
 <script>
-import WeeklyDailyEvents from "./WeeklyDailyEvents.vue";
 import Button from "primevue/button";
 import DatePicker from 'primevue/datepicker';
 import Popover from 'primevue/popover';
-
+import MonthlyDailyEvents from "@/pages/events/calendar/MonthlyDailyEvents.vue";
 
 export default {
-	components: {WeeklyDailyEvents, Button, DatePicker, Popover},
+	components: {MonthlyDailyEvents, Button, DatePicker, Popover},
 	props: {
 		dates: Array
 	},
 	data() {
 		return {
-			currentWeekStart: this.getMonday(new Date()),
+			currentMonth: new Date(),
 			selectedDate: new Date()
 		};
 	},
 	computed: {
-		week() {
-			const week = [];
-			for (let i = 0; i < 7; i++) {
-				const date = new Date(this.currentWeekStart);
-				date.setDate(this.currentWeekStart.getDate() + i);
+		month() {
+			const month = [];
+			const firstDay = this.getCalendarFirstDay(this.currentMonth);
+			const lastDay = this.getCalendarLastDay(this.currentMonth);
 
+			for (let date = new Date(firstDay); date <= lastDay; date.setDate(date.getDate() + 1)) {
 				const formattedDate = date.toLocaleDateString('fr-CA');
 				const day = this.dates.find(d => d.id === formattedDate) || {id: formattedDate, events: []};
 
-				week.push({
-					date,
+				month.push({
+					date: new Date(date),
 					id: formattedDate,
 					events: day.events
 				});
 			}
-			return week;
+			return month;
 		},
-		formattedMonth() {
-			const start = this.formatDate(this.currentWeekStart);
-			const end = this.formatDate(new Date(this.currentWeekStart).setDate(this.currentWeekStart.getDate() + 6));
-
-
-			if (start === end) {
-				return `${start}`;
-			} else {
-				return `${start} - ${end}`;
-			}
-		}
+		getCurrentMonthAndYear() {
+			const locale = this.$i18n.locale;
+			return new Intl.DateTimeFormat(locale, {month: 'long', year: 'numeric'}).format(new Date);
+		},
 	},
 	methods: {
-		getMonday(d) {
+		getMonthFirstDay(d) {
 			const date = new Date(d);
+			date.setDate(1);
+			return date;
+		},
+		getCalendarFirstDay(d) {
+			const date = new Date(d);
+			date.setDate(1); // Premier jour du mois
 			const day = date.getDay();
-			const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-			return new Date(date.setDate(diff));
+			const diff = day === 0 ? -6 : 1 - day; // Ajuster pour obtenir le lundi précédent
+			return new Date(date.setDate(date.getDate() + diff));
 		},
-		formatDate(date) {
-			const locale = this.$i18n.locale;
-			return new Intl.DateTimeFormat(locale, {month: 'long', year: 'numeric'}).format(date);
+		getCalendarLastDay(d) {
+			const date = new Date(d);
+			const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0); // Dernier jour du mois
+			const day = lastDay.getDay();
+			const diff = day === 0 ? 0 : 8 - day; // Ajuster pour obtenir le dimanche suivant
+			return new Date(lastDay.setDate(lastDay.getDate() + diff));
 		},
-		previousWeek() {
-			const newDate = new Date(this.currentWeekStart);
-			newDate.setDate(this.currentWeekStart.getDate() - 7);
-			this.currentWeekStart = newDate;
+		getWeekDays() {
+			const days = [];
+			const startDate = new Date(this.currentMonth);
+			startDate.setDate(startDate.getDate() - (startDate.getDay() === 0 ? 6 : startDate.getDay() - 1));
+			for (let i = 0; i < 7; i++) {
+				const date = new Date(startDate);
+				date.setDate(startDate.getDate() + i);
+				days.push(this.getDay(date));
+			}
+			return days;
+		},
+		previousMonth() {
+			const newDate = new Date(this.currentMonth);
+			newDate.setMonth(this.currentMonth.getMonth() - 1);
+			this.currentMonth = newDate;
 		},
 		nextWeek() {
-			const newDate = new Date(this.currentWeekStart);
-			newDate.setDate(this.currentWeekStart.getDate() + 7);
-			this.currentWeekStart = newDate;
+			const newDate = new Date(this.currentMonth);
+			newDate.setMonth(this.currentMonth.getMonth() + 1);
+			this.currentMonth = newDate;
 		},
 		thisDay() {
 			const today = new Date();
-			this.currentWeekStart = this.getMonday(today);
-		},
-		dayNumber(day) {
-			return day.date.getDate().toString().padStart(2, '0');
+			this.currentMonth = this.getMonthFirstDay(today);
 		},
 		getDay(date) {
 			const options = {weekday: 'long'};
@@ -170,7 +172,7 @@ export default {
 			this.$refs.op.toggle(event);
 		},
 		selectDay() {
-			this.currentWeekStart = this.getMonday(this.selectedDate);
+			this.currentMonth = this.getMonthFirstDay(this.selectedDate);
 			this.$refs.op.hide();
 		}
 	}
