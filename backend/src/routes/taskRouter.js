@@ -9,7 +9,7 @@ const verifyTaskListId = async (req, res, next) => {
 	const taskListId = req.params.id;
 
 	if (!await TaskServices.isTaskListInFamily(taskListId, req.user.familyId)) {
-		return next(new HttpError(403, "Accès non autorisé aux données de cet liste de tâches"));
+		return next(new HttpError(403, "Accès non autorisé aux données de cette liste de tâches"));
 	}
 	next();
 };
