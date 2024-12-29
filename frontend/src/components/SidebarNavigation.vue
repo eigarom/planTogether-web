@@ -71,6 +71,7 @@ export default {
 			let familyImageItem = this.family.imageUrl ? {type: 'familyImage'} : null;
 			let baseItems = [
 				{label: this.$t('calendarMenu'), icon: 'pi pi-calendar', route: '/events'},
+				{label: this.$t('tasksListsMenu'), icon: 'pi pi-list', route: '/tasks-lists'},
 				{label: this.$t('familyMenu'), icon: 'pi pi-users', route: '/my-family'},
 			];
 			return familyImageItem

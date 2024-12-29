@@ -124,7 +124,7 @@ export default {
 	},
 	computed: {
 		isDesktop() {
-			return window.innerWidth >= 1024;
+			return window.innerWidth >= 720;
 		}
 	},
 	provide() {

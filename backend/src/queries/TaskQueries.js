@@ -33,7 +33,8 @@ class TaskQueries {
 		const result = await pool.query(
 			`SELECT id_task, name, description, is_checked
              FROM task
-             WHERE id_tasks_list = $1`,
+             WHERE id_tasks_list = $1
+             ORDER BY name`,
 			[tasksListId]
 		);
 		return result.rows;

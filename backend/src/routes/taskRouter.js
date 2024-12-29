@@ -3,7 +3,7 @@ const router = express.Router();
 const HttpError = require("../middlewares/error/HttpError");
 const TaskServices = require("../services/TaskServices");
 const verifyJWT = require("../middlewares/auth/authMiddleware");
-const {taskSListSchema, taskSchema} = require("../schemas/taskSchemas");
+const {tasksListSchema, taskSchema} = require("../schemas/taskSchemas");
 
 const verifyTaskListId = async (req, res, next) => {
 	const taskListId = req.params.id;
@@ -31,7 +31,7 @@ router.get('/', verifyJWT, async (req, res, next) => {
 });
 
 router.post('/', verifyJWT, async (req, res, next) => {
-	const {error} = taskSListSchema.validate(req.body);
+	const {error} = tasksListSchema.validate(req.body);
 	if (error) {
 		return next(new HttpError(400, error.message));
 	}
@@ -51,7 +51,7 @@ router.post('/', verifyJWT, async (req, res, next) => {
 });
 
 router.put('/:id', verifyJWT, verifyTaskListId, async (req, res, next) => {
-	const {error} = taskSListSchema.validate(req.body);
+	const {error} = tasksListSchema.validate(req.body);
 	if (error) {
 		return next(new HttpError(400, error.message));
 	}
