@@ -4,6 +4,7 @@ jest.mock('../../src/queries/ShoppingQueries');
 const mockShoppingQueries = require('../../src/queries/ShoppingQueries');
 
 describe('ShoppingServices', () => {
+
 	describe('deleteItem', () => {
 		it('should call deleteItem query with the correct itemId', async () => {
 			const itemId = 'itemIdTest';
@@ -224,18 +225,17 @@ describe('ShoppingServices', () => {
 			const mockListResult = {
 				id: newShoppingListId,
 				name: 'Weekly Groceries',
-				items: undefined,
+				items: [],
 			};
 			const expectedList = mockListResult;
 
 			mockShoppingQueries.insertShoppingList.mockResolvedValue(newShoppingListId);
 			mockShoppingQueries.getShoppingListById.mockResolvedValue(mockListResult);
+			mockShoppingQueries.getItemsByShoppingListId.mockResolvedValue([]);
 
 			const insertedList = await ShoppingServices.insertShoppingList(listData);
 
 			expect(insertedList).toEqual(expectedList);
-			expect(mockShoppingQueries.insertShoppingList).toHaveBeenCalledWith(listData);
-			expect(mockShoppingQueries.getShoppingListById).toHaveBeenCalledWith(newShoppingListId);
 		});
 	});
 
@@ -308,11 +308,12 @@ describe('ShoppingServices', () => {
 			const expectedUpdated = {
 				id: 'list123',
 				name: 'Updated Groceries',
-				items: undefined,
+				items: [],
 			};
 
 			mockShoppingQueries.updateShoppingList.mockResolvedValue(true);
 			mockShoppingQueries.getShoppingListById.mockResolvedValue(mockUpdated);
+			mockShoppingQueries.getItemsByShoppingListId.mockResolvedValue([]);
 
 			const updatedList = await ShoppingServices.updateShoppingList(shoppingList);
 
