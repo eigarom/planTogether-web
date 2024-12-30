@@ -29,7 +29,7 @@ class TaskServices {
 
 		if (result) {
 			const tasks = [];
-			for (let task of result) {
+			for (const task of result) {
 				tasks.push({
 					id: task.id_task,
 					name: task.name,
@@ -61,7 +61,7 @@ class TaskServices {
 		const familyTasksLists = await TaskQueries.getTasksLists(familyId);
 		const tasksLists = [];
 
-		for (let tasksList of familyTasksLists) {
+		for (const tasksList of familyTasksLists) {
 			tasksLists.push(await this.getTasksListById(tasksList.id_tasks_list));
 		}
 

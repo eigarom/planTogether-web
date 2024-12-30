@@ -28,7 +28,7 @@ class ShoppingServices {
 
 		if (result) {
 			const items = [];
-			for (let item of result) {
+			for (const item of result) {
 				items.push({
 					id: item.id_shopping_item,
 					name: item.name,
@@ -59,7 +59,7 @@ class ShoppingServices {
 		const familyShoppingLists = await ShoppingQueries.getShoppingLists(familyId);
 		const shoppingLists = [];
 
-		for (let shoppingList of familyShoppingLists) {
+		for (const shoppingList of familyShoppingLists) {
 			shoppingLists.push(await this.getShoppingListById(shoppingList.id_shopping_list));
 		}
 

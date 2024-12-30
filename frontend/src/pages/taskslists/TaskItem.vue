@@ -126,7 +126,7 @@ export default {
 				await deleteTask(this.token, this.tasksListId, this.id);
 				this.$emit('taskDeleted', this.id);
 
-			} catch (err) {
+			} catch {
 				this.$refs.toast.add({
 					severity: 'error',
 					summary: this.$t('toastErrorTitle'),

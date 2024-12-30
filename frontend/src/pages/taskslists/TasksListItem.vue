@@ -54,7 +54,7 @@
 	>
 		<form id="profileForm" class="flex flex-col gap-4 pt-2" @submit.prevent="editTaskList">
 			<FloatLabel class="pb-[6px]" variant="on">
-				<InputText id="name" v-model.trim="tasksList.name" class="w-full"/>
+				<InputText id="name" v-model.trim="name" class="w-full"/>
 				<label for="name">{{ $t('tasksListName') }}</label>
 			</FloatLabel>
 
@@ -77,7 +77,6 @@ import TaskItem from "./TaskItem.vue";
 import Button from "primevue/button";
 import Dialog from "primevue/dialog";
 import FloatLabel from "primevue/floatlabel";
-import ColorPicker from "primevue/colorpicker";
 import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
 import {taskSchema, tasksListSchema} from "@/schemas/taskSchemas.js";
@@ -87,7 +86,7 @@ import Toast from "primevue/toast";
 export default {
 	inject: ['token'],
 	components: {
-		Toast, InputText, ColorPicker, FloatLabel, TaskItem, Divider, Button, Dialog, Textarea
+		Toast, InputText, FloatLabel, TaskItem, Divider, Button, Dialog, Textarea
 	},
 	props: {
 		tasksList: {
@@ -98,11 +97,12 @@ export default {
 	emits: ['tasksListDeleted', 'tasksListUpdated'],
 	data: () => {
 		return {
+			name: '',
+			initialTasksListName: '',
 			showEditDialog: false,
 			showNewTaskDialog: false,
 			newTaskName: '',
 			newTaskDescription: '',
-			initialTasksListName: ''
 		};
 	},
 	computed: {
@@ -110,7 +110,7 @@ export default {
 			return this.newTaskName === '';
 		},
 		isEditTasksListSubmitButtonDisabled() {
-			return this.tasksList.name === '' || this.tasksList.name === this.initialTasksListName;
+			return this.name === '' || this.name === this.initialName;
 		},
 		sortedTasks() {
 			return this.tasksList.tasks.slice().sort((a, b) => a.name.localeCompare(b.name));
@@ -126,10 +126,19 @@ export default {
 
 			try {
 				await taskSchema.validate(task);
+
 				const newTask = await createTask(this.token, this.tasksList.id, task);
-				this.tasksList.tasks.push(newTask);
+
+				const updatedTasksList = {
+					...this.tasksList,
+					items: [...this.tasksList.items, newTask]
+				};
+
+				this.$emit('tasksListUpdated', updatedTasksList);
+
 				this.newTaskName = '';
 				this.newTaskDescription = '';
+
 				this.$refs.toast.add({
 					severity: 'success',
 					summary: this.$t('toastSuccessTitle'),
@@ -155,12 +164,20 @@ export default {
 			this.showEditDialog = false;
 
 			const tasksList = {
-				name: this.tasksList.name
+				name: this.name
 			}
 
 			try {
 				await tasksListSchema.validate(tasksList);
+
 				await updateTasksList(this.token, tasksList, this.tasksList.id);
+
+				const updatedTasksList = {
+					...this.tasksList,
+					name: this.name
+				};
+
+				this.$emit('tasksListUpdated', updatedTasksList);
 
 				this.$refs.toast.add({
 					severity: 'success',
@@ -188,7 +205,7 @@ export default {
 				await deleteTasksList(this.token, this.tasksList.id);
 				this.$emit('tasksListDeleted', this.tasksList.id);
 
-			} catch (err) {
+			} catch {
 				this.$refs.toast.add({
 					severity: 'error',
 					summary: this.$t('toastErrorTitle'),
@@ -210,6 +227,7 @@ export default {
 		}
 	},
 	created() {
+		this.name = this.tasksList.name;
 		this.initialTasksListName = this.tasksList.name;
 	}
 };

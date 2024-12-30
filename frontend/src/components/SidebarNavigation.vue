@@ -84,9 +84,3 @@ export default {
 	}
 }
 </script>
-
-<style scoped>
-.menu-custom {
-	@apply border-none sm:border sm:border-gray-300 !important;
-}
-</style>

@@ -86,7 +86,7 @@ export default {
 			return !this.newShoppingListName;
 		},
 		sortedShoppingLists() {
-			return this.shoppingLists.sort((a, b) => a.name.localeCompare(b.name));
+			return [...this.shoppingLists].sort((a, b) => a.name.localeCompare(b.name));
 		}
 	},
 	methods: {

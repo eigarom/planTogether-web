@@ -61,7 +61,7 @@
 <script>
 
 import {createTasksList, getTasksLists} from "@/services/tasksListsService.js";
-import TasksListsItem from "./TaskListItem.vue";
+import TasksListsItem from "./TasksListItem.vue";
 import InputText from "primevue/inputtext";
 import Dialog from "primevue/dialog";
 import Button from "primevue/button";
@@ -85,7 +85,7 @@ export default {
 			return !this.newTasksListName;
 		},
 		sortedTasksLists() {
-			return this.tasksLists.sort((a, b) => a.name.localeCompare(b.name));
+			return [...this.tasksLists].sort((a, b) => a.name.localeCompare(b.name));
 		}
 	},
 	methods: {

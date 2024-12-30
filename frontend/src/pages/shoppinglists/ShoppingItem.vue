@@ -18,10 +18,6 @@
 
 <script>
 import Checkbox from "primevue/checkbox";
-import Button from "primevue/button";
-import FloatLabel from "primevue/floatlabel";
-import Textarea from "primevue/textarea";
-import InputText from "primevue/inputtext";
 import {shoppingItemSchema} from "@/schemas/shoppingSchemas.js";
 import {deleteItem, updateItem} from "@/services/shoppingListsService.js";
 import Toast from "primevue/toast";
@@ -29,7 +25,7 @@ import Toast from "primevue/toast";
 export default {
 	inject: ['token'],
 	components: {
-		Toast, InputText, Textarea, FloatLabel, Button, Checkbox
+		Toast, Checkbox
 	},
 	props: {
 		item: {
@@ -97,7 +93,7 @@ export default {
 				await deleteItem(this.token, this.shoppingListId, this.id);
 				this.$emit('itemDeleted', this.id);
 
-			} catch (err) {
+			} catch {
 				this.$refs.toast.add({
 					severity: 'error',
 					summary: this.$t('toastErrorTitle'),
