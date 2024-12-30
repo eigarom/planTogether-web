@@ -39,7 +39,7 @@
 	<!--Créer une liste de tâches-->
 	<Dialog
 		v-model:visible="showNewTasksListDialog"
-		:header="$t('addTaskTitle')"
+		:header="$t('addTaskListTitle')"
 		class="w-full sm:w-80 mx-5"
 		modal
 	>
@@ -49,7 +49,7 @@
 				<label for="name">{{ $t('tasksListName') }}</label>
 			</FloatLabel>
 
-			<Button :disabled="isAddTasksListSubmitButtonDisabled" :label="$t('buttonAddTasksList')" raised
+			<Button :disabled="isAddTasksListSubmitButtonDisabled" :label="$t('buttonAddTasksList')"
 					type="submit"
 					@click="showNewTasksListDialog = false"/>
 		</form>

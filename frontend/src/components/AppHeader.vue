@@ -1,7 +1,8 @@
 <template>
 	<div class="fixed top-0 left-0 flex items-center justify-between bg-white w-full sm:px-8 px-3 py-3 border-b z-50">
 		<div class="flex gap-3 items-center">
-			<Button v-if="!isDesktop && user"
+			<Button v-if="user"
+					class="custom-button"
 					icon="pi pi-bars"
 					severity="secondary"
 					size="small"
@@ -44,7 +45,7 @@ import enLocale from '../locales/en/primevue.json';
 import frLocale from '../locales/fr/primevue.json';
 
 export default {
-	inject: ['user', 'logout', 'isDesktop'],
+	inject: ['user', 'logout'],
 	components: {
 		Button, Menu
 	},
@@ -73,3 +74,9 @@ export default {
 	}
 };
 </script>
+
+<style scoped>
+.custom-button {
+	@apply block sm:hidden;
+}
+</style>

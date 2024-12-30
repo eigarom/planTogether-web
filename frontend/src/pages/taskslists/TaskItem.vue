@@ -31,7 +31,7 @@
 				<label for="description">{{ $t('taskDescription') }}</label>
 			</FloatLabel>
 
-			<Button :disabled="isEditTaskSubmitButtonDisabled" :label="$t('buttonEditTask')" raised type="submit"
+			<Button :disabled="isEditTaskSubmitButtonDisabled" :label="$t('buttonEditTask')" type="submit"
 					@click="this.showEditTaskDialog = false;"/>
 		</form>
 	</Dialog>

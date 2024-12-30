@@ -2,12 +2,13 @@
 	<AppHeader @toggle-sidebar="sidebar = !sidebar"/>
 
 	<main v-if="!isLoading" class="flex gap-8 h-full sm:pl-[260px] sm:pr-5 sm:pt-20 pt-14 sm:pb-[68px] overflow-y-auto">
-		<SidebarNavigation v-if="user && family && isDesktop" class="fixed left-5 z-40 p-2 h-[calc(100%-148px)] w-52"/>
+		<SidebarNavigation v-if="user && family"
+						   class="fixed left-5 z-40 p-2 h-[calc(100%-148px)] w-52 hidden sm:block"/>
 
 		<router-view></router-view>
 	</main>
 
-	<AppFooter v-if="isDesktop"/>
+	<AppFooter class="hidden sm:flex"/>
 
 	<Drawer v-model:visible="sidebar" class="!w-52">
 		<template #container="{ closeCallback }">
@@ -122,17 +123,11 @@ export default {
 		this.chargeLanguage();
 		this.isLoading = false;
 	},
-	computed: {
-		isDesktop() {
-			return window.innerWidth >= 720;
-		}
-	},
 	provide() {
 		return {
 			token: computed(() => this.token),
 			user: computed(() => this.user),
 			family: computed(() => this.family),
-			isDesktop: computed(() => this.isDesktop),
 			logout: this.logout
 		}
 	}

@@ -20,7 +20,7 @@
 							shape="circle"
 							size="small"
 						/>
-			
+
 						<div class="flex flex-col justify-between">
 							<p class="truncate">{{ user.name }}</p>
 							<p class="text-xs">{{ family.name }}</p>
@@ -58,9 +58,11 @@ export default {
 	components: {
 		Menu, Image, Avatar
 	},
-	inject: ['token', 'user', 'family', 'isDesktop'],
+	inject: ['token', 'user', 'family'],
 	data() {
-		return {};
+		return {
+			isDesktop: window.innerWidth >= 640
+		};
 	},
 	computed: {
 		userInitial() {
@@ -71,7 +73,8 @@ export default {
 			let familyImageItem = this.family.imageUrl ? {type: 'familyImage'} : null;
 			let baseItems = [
 				{label: this.$t('calendarMenu'), icon: 'pi pi-calendar', route: '/events'},
-				{label: this.$t('tasksListsMenu'), icon: 'pi pi-list', route: '/tasks-lists'},
+				{label: this.$t('tasksListsMenu'), icon: 'pi pi-list-check', route: '/tasks-lists'},
+				{label: this.$t('shoppingListsMenu'), icon: 'pi pi-shopping-cart', route: '/shopping-lists'},
 				{label: this.$t('familyMenu'), icon: 'pi pi-users', route: '/my-family'},
 			];
 			return familyImageItem
@@ -81,3 +84,9 @@ export default {
 	}
 }
 </script>
+
+<style scoped>
+.menu-custom {
+	@apply border-none sm:border sm:border-gray-300 !important;
+}
+</style>

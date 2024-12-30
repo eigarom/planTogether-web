@@ -21,6 +21,7 @@ import RegisterForm from "@/pages/auth/RegisterForm.vue";
 import UserProfile from "@/pages/users/UserProfile.vue";
 import MemberProfile from './pages/members/MemberProfile.vue';
 import LandingPage from "@/pages/landing/LandingPage.vue";
+import ShoppingLists from "@/pages/shoppinglists/ShoppingLists.vue";
 
 const app = createApp(App);
 
@@ -55,6 +56,7 @@ const router = createRouter({
 		{path: '/events/:id/periods/:periodId', component: EventDetails, props: true},
 		{path: '/events/add', component: EventCreationForm},
 		{path: '/tasks-lists', component: TasksLists},
+		{path: '/shopping-lists', component: ShoppingLists},
 		{path: '/families/add-or-join', component: FamilyOptions},
 		{path: '/families/add', component: FamilyCreationForm},
 		{path: '/families/join', component: FamilyJoinForm},

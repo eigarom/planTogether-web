@@ -28,7 +28,7 @@ export async function createTasksList(token, tasksList) {
 	if (response.ok) {
 		return result;
 	} else {
-		throw new Error(result.message || "Le membre n'a pas pu être créé:");
+		throw new Error(result.message || "La liste de tâches n'a pas pu être créé:");
 	}
 }
 

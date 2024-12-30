@@ -40,7 +40,7 @@
 				<label for="description">{{ $t('taskDescription') }}</label>
 			</FloatLabel>
 
-			<Button :disabled="isAddTaskSubmitButtonDisabled" :label="$t('buttonAddTask')" raised type="submit"
+			<Button :disabled="isAddTaskSubmitButtonDisabled" :label="$t('buttonAddTask')" type="submit"
 					@click="showNewTaskDialog = false"/>
 		</form>
 	</Dialog>
@@ -59,7 +59,7 @@
 			</FloatLabel>
 
 			<div class="flex flex-col sm:flex-row gap-5">
-				<Button :disabled="isEditTasksListSubmitButtonDisabled" :label="$t('buttonEditTaskList')" raised
+				<Button :disabled="isEditTasksListSubmitButtonDisabled" :label="$t('buttonEditTaskList')"
 						type="submit" @click="showEditDialog=false"/>
 				<Button :label="$t('buttonDeleteTasksList')" severity="danger"
 						@click="showEditDialog=false; deleteTasksList()"/>
