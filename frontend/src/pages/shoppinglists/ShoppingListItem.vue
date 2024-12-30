@@ -97,7 +97,7 @@ export default {
 
 				const updatedShoppingList = {
 					...this.shoppingList,
-					items: [...this.shoppingList.items, newItem]
+					items: [...(this.shoppingList.items || []), newItem]
 				};
 
 				this.$emit('shoppingListUpdated', updatedShoppingList);

@@ -131,7 +131,7 @@ export default {
 
 				const updatedTasksList = {
 					...this.tasksList,
-					items: [...this.tasksList.items, newTask]
+					tasks: [...(this.tasksList.tasks || []), newTask]
 				};
 
 				this.$emit('tasksListUpdated', updatedTasksList);
