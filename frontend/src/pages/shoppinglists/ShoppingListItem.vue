@@ -8,7 +8,7 @@
 
 		<!-- Ajouter un produit -->
 		<input v-model.trim="newItemName" :placeholder="$t('addItemPlaceholder')"
-			   class="flex-grow outline-none px-5 pb-2" type="text" @keyup.enter="addItem"/>
+			   class="flex-grow outline-none px-5 pb-2" type="text" @blur="addItem" @keyup.enter="addItem"/>
 
 		<!-- Liste de courses -->
 		<div class="flex flex-col gap-3 px-5 pb-5">

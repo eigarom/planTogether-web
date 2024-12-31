@@ -22,10 +22,10 @@
 					</div>
 
 					<!-- Mois -->
-					<div class="inline-flex items-center gap-2">
+					<div class="inline-flex items-center gap-2 cursor-pointer" @click="toggle">
 						<h2 class="font-semibold">{{ getCurrentMonthAndYear }}</h2>
 
-						<i class="pi pi-angle-down" @click="toggle"/>
+						<i class="pi pi-angle-down"/>
 
 						<Popover ref="op">
 							<DatePicker v-model="selectedDate" class="custom-datepicker" inline
@@ -90,7 +90,7 @@ export default {
 	},
 	data() {
 		return {
-			currentMonth: new Date(),
+			currentMonth: this.getMonthFirstDay(new Date()),
 			selectedDate: new Date()
 		};
 	},
