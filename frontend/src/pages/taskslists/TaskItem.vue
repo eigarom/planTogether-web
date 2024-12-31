@@ -16,7 +16,7 @@
 	<!-- Éditer la tâche -->
 	<Dialog
 		v-model:visible="showEditTaskDialog"
-		:header="$t('addTaskTitle')"
+		:header="$t('editTaskTitle')"
 		class="w-full sm:w-80 mx-5"
 		modal
 	>

@@ -25,5 +25,6 @@
 	"buttonDeleteTasksList": "Delete Tasks List",
 	"toastDeleteTasksListSuccessMessage": "Tasks list deleted successfully",
 	"deleteTasksListErrorMessage": "Error during tasks list deletion",
-	"noTasksListsTitle": "No tasks list exists at the moment"
+	"noTasksListsTitle": "No tasks list exists at the moment",
+	"editTaskTitle": "Edit Task"
 }

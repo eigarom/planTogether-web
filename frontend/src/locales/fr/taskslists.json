@@ -25,5 +25,6 @@
 	"buttonDeleteTasksList": "Supprimer la liste de tâches",
 	"toastDeleteTasksListSuccessMessage": "Liste de tâches supprimée avec succès",
 	"deleteTasksListErrorMessage": "Erreur lors de la suppression de la liste de tâches",
-	"noTasksListsTitle": "Aucune liste de tâches n'existe pour le moment"
+	"noTasksListsTitle": "Aucune liste de tâches n'existe pour le moment",
+	"editTaskTitle": "Modifier la tâche"
 }

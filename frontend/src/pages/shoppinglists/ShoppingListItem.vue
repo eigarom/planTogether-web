@@ -13,7 +13,7 @@
 		<!-- Liste de courses -->
 		<div class="flex flex-col gap-3 px-5 pb-5">
 			<ShoppingItem v-for="item in sortedItems" :key="item.id" :item="item" :shoppingListId="shoppingList.id"
-						  @itemDeleted="removeItem"/>
+						  @itemDeleted="removeItem" @itemUpdated="updateItem"/>
 		</div>
 	</div>
 
@@ -190,6 +190,11 @@ export default {
 				detail: this.$t('toastDeleteItemSuccessMessage'),
 				life: 3000
 			});
+		},
+		updateItem(updatedItem) {
+			const updatedItems = this.shoppingList.items.map(item => item.id === updatedItem.id ? updatedItem : item);
+			const updatedShoppingList = {...this.shoppingList, items: updatedItems};
+			this.$emit('shoppingListUpdated', updatedShoppingList);
 		}
 	},
 	created() {

@@ -37,7 +37,7 @@ export default {
 			required: true
 		}
 	},
-	emits: ['itemDeleted'],
+	emits: ['itemDeleted', 'itemUpdated'],
 	data: () => {
 		return {
 			id: '',
@@ -59,7 +59,17 @@ export default {
 
 			try {
 				await shoppingItemSchema.validate(item);
+
 				await updateItem(this.token, this.shoppingListId, item, this.id);
+
+				const updatedItem = {
+					...this.item,
+					name: this.name,
+					isChecked: this.isChecked
+				};
+
+				this.$emit('itemUpdated', updatedItem);
+
 				this.initialName = this.name;
 
 				this.$refs.toast.add({
