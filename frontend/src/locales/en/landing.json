@@ -1,5 +1,8 @@
 {
-	"landingTitle": "Family calendar",
-	"landingSubtitle": "Organize your family life, simply and effectively.",
-	"landingButton": "Get started"
+	"landingTitle": "Family planning",
+	"landingSubtitle": "Organize your family life effectively.",
+	"landingButton": "Get started",
+	"feature-calendar": "Create and manage events",
+	"feature-taskslists": "Create and manage tasks lists",
+	"feature-shoppinglists": "Create and manage shopping lists"
 }

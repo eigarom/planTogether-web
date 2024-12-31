@@ -1,5 +1,8 @@
 {
-	"landingTitle": "Calendrier familial",
-	"landingSubtitle": "Organisez votre vie de famille, simplement et efficacement.",
-	"landingButton": "Commencer"
+	"landingTitle": "Planification familiale",
+	"landingSubtitle": "Organisez votre vie de famille efficacement.",
+	"landingButton": "Commencer",
+	"feature-calendar": "Créer et gérer des événements",
+	"feature-taskslists": "Créer et gérer des listes de tâches",
+	"feature-shoppinglists": "Créer et gérer des listes de courses"
 }
