@@ -12,7 +12,7 @@
 						<!-- Bouton aujourd'hui -->
 						<Button :label="$t('today')" class="custom-button-today" severity="info" @click="thisDay"/>
 
-						<!-- Boutons semaines précédente / suivante -->
+						<!-- Boutons mois précédent / suivant -->
 						<div class="inline-flex">
 							<Button class="custom-button-left" icon="pi pi-chevron-left" severity="info"
 									@click="previousMonth"/>
@@ -114,7 +114,7 @@ export default {
 		},
 		getCurrentMonthAndYear() {
 			const locale = this.$i18n.locale;
-			return new Intl.DateTimeFormat(locale, {month: 'long', year: 'numeric'}).format(new Date);
+			return new Intl.DateTimeFormat(locale, {month: 'long', year: 'numeric'}).format(this.currentMonth);
 		},
 	},
 	methods: {
