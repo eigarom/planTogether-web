@@ -1,7 +1,7 @@
 <template>
 	<div class="fixed top-0 left-0 w-screen h-screen overflow-y-auto">
 		<div
-			class="flex flex-col sm:flex-row h-fit pt-24 sm:pt-32 bg-gradient-to-r from-blue-300 to-blue-100 clip-path-mobile clip-path-desktop">
+			class="flex / sm:flex-row h-fit pt-24 sm:pt-32 bg-gradient-to-r from-blue-300 to-blue-100 clip-path-mobile clip-path-desktop">
 			<!-- Accroche -->
 			<div class="flex flex-col gap-5 px-10 sm:pl-28 sm:w-[1200px]">
 

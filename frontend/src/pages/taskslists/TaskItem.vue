@@ -36,7 +36,7 @@
 		</form>
 	</Dialog>
 
-	<Toast ref="toast" position="bottom-right"/>
+	<Toast ref="toast" :pt="{root: { style: 'width: 400px' }}" position="bottom-right"/>
 </template>
 
 <script>
