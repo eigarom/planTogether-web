@@ -18,7 +18,7 @@
 			</form>
 		</div>
 
-		<Toast ref="toast" :pt="{root: { style: 'width: 400px' }}" position="bottom-right"/>
+		<Toast ref="toast" :pt="{root: { style: 'width: 90% ; max-width: 400px' }}" position="bottom-right"/>
 	</div>
 </template>
 
