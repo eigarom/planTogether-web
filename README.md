@@ -24,8 +24,7 @@ Depuis le répertoire `database` :
 3. Exécutez le script `02_create_user.sql` après avoir remplacé `{{PGUSER}}` par le nom d'utilisateur choisi et
    `{{PGPASSWORD}}` par le mot de passe.
 4. Exécutez le script `03_create_tables.sql` pour créer les tables nécessaires à l'application.
-5. (Optionnel - pour les tests) Exécutez le script `04_insert_data.sql` pour insérer des données de test.
-6. Exécutez le script `05_grant_backend_user.sql` après avoir remplacé `{{PGUSER}}` par le nom d'utilisateur choisi
+5. Exécutez le script `05_grant_backend_user.sql` après avoir remplacé `{{PGUSER}}` par le nom d'utilisateur choisi
    pour accorder les permissions nécessaires à l'utilisateur de la base de données.
 
 ### Back-end (Node.js Express)
@@ -65,16 +64,6 @@ Depuis le répertoire `database` :
     ```bash
     npm run dev
     ```
-
-## Tests
-
-Pour tester l'application avec un jeu de données préexistant (une famille et un utilisateur), assurez-vous d'avoir
-exécuté l'étape 5 de l'installation de la base de données.
-
-Utilisez les identifiants suivants pour vous connecter à l'application :
-
-- **Courriel** : diddy_kong@banana.com
-- **Mot de passe** : Motdepasse12345*
 
 ## Documentation API
 
