@@ -1,10 +1,10 @@
 # planTogether-web
 
-**planTogether** est une application conçue pour simplifier la planification des activités familiales. Face aux emplois
-du temps souvent chargés des membres d'une famille, coordonner les horaires et les tâches devient un véritable défi.
+**planTogether** est une application conçue pour simplifier la planification des activités familiales.
 Cette application agit comme un assistant centralisé en regroupant toutes les informations relatives aux événements, aux
-listes de tâches et aux listes de courses. Elle optimise ainsi l'organisation quotidienne et facilite la communication
-entre les membres de la famille.
+listes de tâches et aux listes de courses.
+
+![image](./frontend/src/assets/images/webSampleFr.png)
 
 ## Fonctionnalités principales
 
